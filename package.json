@@ -2,7 +2,7 @@
   "name": "quan-stewart-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Quan Stewart public portfolio with internal analytics.",
+  "description": "QuanBuilds public portfolio with internal analytics.",
   "dependencies": {
     "@netlify/blobs": "^8.2.0"
   }
