@@ -262,12 +262,21 @@
       async function load() {
         status.textContent = "Loading...";
         const token = readToken();
+        if (!token) {
+          status.textContent = "Access token needed. Open the private analytics link once to unlock this browser.";
+          return;
+        }
         const response = await fetch(endpoint + "?limit=800", {
           cache: "no-store",
           headers: token ? { "x-portfolio-analytics-token": token } : {},
         });
         const data = await response.json();
-        if (!data.ok) throw new Error(data.error || "analytics failed");
+        if (!data.ok) {
+          if (data.error === "analytics_token_required") {
+            throw new Error("Access token needed. Open the private analytics link once to unlock this browser.");
+          }
+          throw new Error(data.error || "analytics failed");
+        }
 
         const summary = data.summary || {};
         const byType = summary.byType || {};
