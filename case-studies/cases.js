@@ -20,7 +20,7 @@ window.CASE_STUDIES = [
       "Dashboard/Source Truth Map.md",
       "PortfolioSite/index.html"
     ],
-    images: [],
+    images: ["/assets/previews/stewartos.png", "/assets/previews/botler-shell.png", "/assets/previews/contact-sheet.png"],
     sections: [
       ["What We Built", "A private operating layer that ties together agents, daily reports, project memory, calendars, open loops, and decision context."],
       ["Why It Exists", "The goal was not a polished dashboard first. It was survival-grade usefulness: know what moved, what is blocked, what is safe to automate, and what needs a human decision."],
@@ -228,7 +228,7 @@ window.CASE_STUDIES = [
       "Downloads/deadstroke/deadstroke-native/README.md",
       "Memory: DeadStroke native AR regression testing"
     ],
-    images: [],
+    images: ["/assets/previews/deadstroke.png", "/assets/previews/contact-sheet.png", "/assets/previews/more-builds.png"],
     sections: [
       ["What We Built", "A sports-coaching product with camera setup guidance, pose analysis, AI coaching functions, sessions, shots, badges, and native AR work."],
       ["Why It Exists", "Pool players need immediate form feedback without stopping to review video manually or wearing special sensors."],
@@ -288,7 +288,7 @@ window.CASE_STUDIES = [
       ".openclaw/agents/botler/workspace/botler/",
       "PortfolioSite/index.html"
     ],
-    images: [],
+    images: ["/assets/previews/botler-shell.png", "/assets/previews/stewartos.png", "/assets/previews/family-os.png"],
     sections: [
       ["What We Built", "A visual and operational layer for watching agent work, household rhythm, projects, finance, and recovery status."],
       ["Why It Exists", "Agent systems need a face that makes them accountable to the human operator, not just logs buried in folders."],

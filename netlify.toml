@@ -26,11 +26,6 @@
   status = 301
 
 [[redirects]]
-  from = "/case-studies/:slug/"
-  to = "/case-studies/index.html"
-  status = 200
-
-[[redirects]]
   from = "/case-studies/:slug"
-  to = "/case-studies/index.html"
-  status = 200
+  to = "/case-studies/:slug/"
+  status = 301
