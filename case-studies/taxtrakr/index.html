@@ -158,6 +158,34 @@
         border: 1px solid var(--line);
         background: var(--panel);
       }
+      .external-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 2px;
+      }
+      .external-links:empty {
+        display: none;
+      }
+      .external-links a {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 10px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+      }
+      .external-links a:hover {
+        color: var(--gold);
+        border-color: var(--gold);
+        transform: translateY(-1px);
+      }
       .meta-row {
         display: grid;
         gap: 4px;
@@ -452,6 +480,7 @@
             <div class="meta-row"><span class="meta-label">Status</span><strong id="caseStatus">Fallback runtime healthy; branded DNS/canonical host unresolved in latest source report.</strong></div>
             <div class="meta-row"><span class="meta-label">Last Edited</span><strong id="caseEdited">TaxTrakr repo last git commit observed 2026-06-08; latest DNS/runtime report updated 2026-06-13.</strong></div>
             <div class="meta-row"><span class="meta-label">Business Model</span><strong id="caseBusiness">Beta product for self-employed tax professionals and self-employed workers. Specific pricing was not documented in the inspected source files.</strong></div>
+            <div class="meta-row" id="externalRow"><span class="meta-label">External Links</span><div class="external-links" id="caseExternalLinks"><a href="https://taxtrack.f100rd.com/" rel="noopener">Public site</a><a href="https://taxtrack.f100rd.com/for-agents" rel="noopener">For agents</a></div></div>
           </aside>
         </div>
       </section>
@@ -636,6 +665,19 @@
 
       listItems("caseUnknowns", item.unknowns);
       listItems("caseSources", item.sources);
+
+      const externalLinks = Array.isArray(item.externalLinks) ? item.externalLinks : [];
+      const externalRow = document.getElementById("externalRow");
+      const externalTarget = document.getElementById("caseExternalLinks");
+      externalTarget.replaceChildren(...externalLinks.map((link) => {
+        const anchor = document.createElement("a");
+        anchor.href = link.url;
+        anchor.textContent = link.label;
+        anchor.rel = "noopener";
+        anchor.addEventListener("click", () => track("click", { label: `external_link: ${link.label}`, target: link.url }));
+        return anchor;
+      }));
+      externalRow.hidden = externalLinks.length === 0;
 
       const jumptrack = document.getElementById("jumptrack");
       const slides = document.getElementById("slides");

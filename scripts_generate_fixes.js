@@ -45,6 +45,11 @@ function headFor(item) {
     <link rel="manifest" href="/site.webmanifest" />`;
 }
 function liList(values) { return (values || []).map(v => `<li>${esc(v)}</li>`).join("\\n"); }
+function externalLinksFor(item) {
+  const links = item.externalLinks || [];
+  if (!links.length) return `<div class="meta-row" id="externalRow" hidden><span class="meta-label">External Links</span><div class="external-links" id="caseExternalLinks"></div></div>`;
+  return `<div class="meta-row" id="externalRow"><span class="meta-label">External Links</span><div class="external-links" id="caseExternalLinks">${links.map(link => `<a href="${attr(link.url)}" rel="noopener">${esc(link.label)}</a>`).join("")}</div></div>`;
+}
 function slidesFor(item) {
   const hasImages = item.images && item.images.length;
   return (item.sections || []).map((section, i) => {
@@ -78,6 +83,7 @@ function pageFor(item) {
   html = html.replace(/<strong id="caseStatus">[\s\S]*?<\/strong>/, `<strong id="caseStatus">${esc(item.status)}</strong>`);
   html = html.replace(/<strong id="caseEdited">[\s\S]*?<\/strong>/, `<strong id="caseEdited">${esc(item.lastEdited)}</strong>`);
   html = html.replace(/<strong id="caseBusiness">[\s\S]*?<\/strong>/, `<strong id="caseBusiness">${esc(item.businessModel)}</strong>`);
+  html = html.replace(/<div class="meta-row" id="externalRow">[\s\S]*?<\/div><\/div>/, externalLinksFor(item));
   html = html.replace(/<div class="jumptrack" id="jumptrack"><\/div>/, `<div class="jumptrack" id="jumptrack">${linksFor(item)}</div>`);
   html = html.replace(/<section class="slides" id="slides" aria-label="Scrollytelling case study"><\/section>/, `<section class="slides" id="slides" aria-label="Scrollytelling case study">
         ${slidesFor(item)}
