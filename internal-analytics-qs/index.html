@@ -82,11 +82,42 @@
         padding: 10px 14px;
       }
 
+      input {
+        min-height: 38px;
+        width: min(320px, 100%);
+        border: 1px solid var(--line);
+        background: rgba(247, 245, 239, 0.07);
+        color: var(--fg);
+        font: inherit;
+        font-size: 13px;
+        padding: 10px 12px;
+      }
+
       .toolbar {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 10px;
+      }
+
+      .access-panel {
+        display: none;
+        margin-top: 6px;
+        max-width: 680px;
+        border: 1px solid var(--line);
+        background: rgba(247, 245, 239, 0.045);
+        padding: 16px;
+      }
+
+      body.is-locked .access-panel {
+        display: block;
+      }
+
+      .access-panel form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
       }
 
       .grid {
@@ -119,6 +150,11 @@
       .value {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         font-size: clamp(24px, 4vw, 52px);
+      }
+
+      body.is-locked .value {
+        color: var(--muted);
+        font-size: clamp(18px, 3vw, 34px);
       }
 
       .sections {
@@ -188,13 +224,20 @@
           <button id="sendTest" type="button">Send test event</button>
           <p id="status">Loading...</p>
         </div>
+        <div class="access-panel" id="accessPanel">
+          <p>This dashboard is locked. Enter the private analytics key once and this browser will remember it.</p>
+          <form id="accessForm">
+            <input id="accessToken" type="password" autocomplete="current-password" placeholder="Analytics key" aria-label="Analytics key" />
+            <button type="submit">Unlock</button>
+          </form>
+        </div>
       </header>
 
       <section class="grid" aria-label="Metrics">
-        <div class="card metric"><span class="label">Events</span><span class="value" id="total">0</span></div>
-        <div class="card metric"><span class="label">Pageviews</span><span class="value" id="pageviews">0</span></div>
-        <div class="card metric"><span class="label">Clicks</span><span class="value" id="clicks">0</span></div>
-        <div class="card metric"><span class="label">Errors</span><span class="value bad" id="errors">0</span></div>
+        <div class="card metric"><span class="label">Events</span><span class="value" id="total">Locked</span></div>
+        <div class="card metric"><span class="label">Pageviews</span><span class="value" id="pageviews">Locked</span></div>
+        <div class="card metric"><span class="label">Clicks</span><span class="value" id="clicks">Locked</span></div>
+        <div class="card metric"><span class="label">Errors</span><span class="value bad" id="errors">Locked</span></div>
       </section>
 
       <section class="sections">
@@ -220,15 +263,57 @@
     <script>
       const endpoint = "/.netlify/functions/analytics";
       const status = document.querySelector("#status");
+      const metricIds = ["total", "pageviews", "clicks", "errors"];
+
+      function storeToken(token) {
+        try {
+          localStorage.setItem("portfolioAnalyticsToken", token);
+        } catch {
+          sessionStorage.setItem("portfolioAnalyticsToken", token);
+        }
+      }
+
+      function savedToken() {
+        try {
+          return localStorage.getItem("portfolioAnalyticsToken") || sessionStorage.getItem("portfolioAnalyticsToken") || "";
+        } catch {
+          return sessionStorage.getItem("portfolioAnalyticsToken") || "";
+        }
+      }
+
+      function clearToken() {
+        try {
+          localStorage.removeItem("portfolioAnalyticsToken");
+        } catch {
+          // Session storage fallback is still cleared below.
+        }
+        sessionStorage.removeItem("portfolioAnalyticsToken");
+      }
 
       function readToken() {
         const params = new URLSearchParams(location.search);
-        const token = params.get("token") || localStorage.getItem("portfolioAnalyticsToken") || "";
+        const token = params.get("token") || savedToken();
         if (params.get("token")) {
-          localStorage.setItem("portfolioAnalyticsToken", params.get("token"));
+          storeToken(params.get("token"));
           history.replaceState(null, "", location.pathname);
         }
         return token;
+      }
+
+      function setLocked(message) {
+        document.body.classList.add("is-locked");
+        status.textContent = message;
+        metricIds.forEach((id) => {
+          document.querySelector(`#${id}`).textContent = "Locked";
+        });
+        table("#paths", [], [], "Unlock analytics to view traffic.");
+        table("#recentClicks", [], [], "Unlock analytics to view clicks.");
+        table("#recentErrors", [], [], "Unlock analytics to view errors.");
+        table("#events", [], [], "Unlock analytics to view events.");
+      }
+
+      function setUnlocked() {
+        document.body.classList.remove("is-locked");
       }
 
       function escapeHtml(value) {
@@ -263,7 +348,7 @@
         status.textContent = "Loading...";
         const token = readToken();
         if (!token) {
-          status.textContent = "Access token needed. Open the private analytics link once to unlock this browser.";
+          setLocked("Access key needed. Paste the private analytics key to unlock this browser.");
           return;
         }
         const response = await fetch(endpoint + "?limit=800", {
@@ -273,11 +358,14 @@
         const data = await response.json();
         if (!data.ok) {
           if (data.error === "analytics_token_required") {
-            throw new Error("Access token needed. Open the private analytics link once to unlock this browser.");
+            clearToken();
+            setLocked("That key did not unlock analytics. Paste the current private key.");
+            return;
           }
           throw new Error(data.error || "analytics failed");
         }
 
+        setUnlocked();
         const summary = data.summary || {};
         const byType = summary.byType || {};
         document.querySelector("#total").textContent = summary.total || 0;
@@ -336,6 +424,18 @@
       document.querySelector("#sendTest").addEventListener("click", () => sendTest().catch((error) => {
         status.textContent = error.message;
       }));
+      document.querySelector("#accessForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const token = document.querySelector("#accessToken").value.trim();
+        if (!token) {
+          setLocked("Paste the private analytics key to unlock this browser.");
+          return;
+        }
+        storeToken(token);
+        load().catch((error) => {
+          status.textContent = error.message;
+        });
+      });
 
       load().catch((error) => {
         status.textContent = error.message;
