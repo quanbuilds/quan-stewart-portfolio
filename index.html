@@ -243,7 +243,7 @@
         width: min(calc(100vw - 24px), 980px);
         padding: 8px;
         border: 1px solid var(--glass-edge);
-        border-radius: 999px;
+        border-radius: 32px;
         background:
           linear-gradient(90deg, transparent 0 3%, var(--gold-soft) 18%, transparent 34% 66%, var(--gold-soft) 82%, transparent 97%),
           radial-gradient(circle at var(--rail-x, 50%) var(--rail-y, 50%), rgba(255, 255, 255, 0.34), transparent 28%),
@@ -284,15 +284,16 @@
 
       .project-rail-item {
         flex: 0 0 auto;
-        width: 122px;
-        height: 46px;
+        width: 162px;
+        height: 72px;
         display: grid;
-        grid-template-columns: 36px minmax(0, 1fr);
+        grid-template-rows: 32px minmax(0, 1fr);
+        justify-items: center;
         align-items: center;
-        gap: 8px;
-        padding: 5px 10px 5px 5px;
+        gap: 5px;
+        padding: 7px 12px 9px;
         border: 1px solid transparent;
-        border-radius: 999px;
+        border-radius: 24px;
         background: transparent;
         color: var(--fg);
         cursor: pointer;
@@ -303,9 +304,9 @@
       .project-rail-item::after {
         content: "";
         position: absolute;
-        left: 47px;
-        right: 13px;
-        bottom: 7px;
+        left: 18px;
+        right: 18px;
+        bottom: 8px;
         height: 1px;
         background: var(--gold);
         opacity: 0;
@@ -336,9 +337,9 @@
       }
 
       .project-rail-thumb {
-        width: 36px;
-        height: 28px;
-        border-radius: 999px;
+        width: 54px;
+        height: 32px;
+        border-radius: 18px;
         overflow: hidden;
         background: var(--panel);
         box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gold) 18%, transparent);
@@ -362,10 +363,13 @@
 
       .project-rail-label {
         overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        text-align: center;
         font-size: 10px;
         font-weight: 800;
+        line-height: 1.08;
         letter-spacing: 0.11em;
         text-transform: uppercase;
       }
@@ -1050,15 +1054,16 @@
         }
 
         .project-rail-item {
-          width: 104px;
-          height: 42px;
-          grid-template-columns: 30px minmax(0, 1fr);
-          gap: 7px;
+          width: 156px;
+          height: 68px;
+          grid-template-rows: 28px minmax(0, 1fr);
+          gap: 5px;
+          padding: 7px 10px 9px;
         }
 
         .project-rail-thumb {
-          width: 30px;
-          height: 24px;
+          width: 48px;
+          height: 28px;
         }
 
         .work-section {
@@ -1458,18 +1463,18 @@
       let renderedOpacity = 0.09;
       let activeProjectId = "";
       const projectRailLabels = [
-        "Agent Ops",
-        "Music Sales",
-        "Tax Texts",
-        "Audio Briefs",
-        "Field Ops",
+        "Agentic OS",
+        "AI Floor Music",
+        "AI Tax Tracking",
+        "Personal Podcasts",
+        "GovCon Agent",
         "Trade Review",
-        "AR Training",
-        "Lead Mining",
-        "Home Ops",
+        "AR Sports",
+        "Idea Engine",
+        "Face for Agents",
         "Site Builds",
-        "Learning",
-        "Product Lab",
+        "Homeschool/Family",
+        "More builds",
       ];
 
       function clamp(value, min, max) {
