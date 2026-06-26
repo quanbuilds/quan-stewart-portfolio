@@ -302,31 +302,71 @@ window.CASE_STUDIES = [
     label: "Site Builds",
     category: "Market tests",
     kicker: "Small-business proof packages",
-    deck: "Fast proof packages for local businesses: prospect boards, small site concepts, call scripts, decks, pricing, and follow-up loops.",
-    lastEdited: "No-website prospect board activity documented 2026-06-23.",
-    status: "Prospect board rebuilt and active as an internal growth/testing lane.",
-    businessModel: "Website/service-build offers for local businesses. Specific public pricing was not documented in inspected files.",
+    deck: "A record of local-business website packages built from real client context, ordered newest to oldest with preview captures for the builds we still have locally.",
+    lastEdited: "Local site package artifacts observed from 2026-06-12 through 2026-06-26.",
+    status: "Active service-build lane with multiple local proof packages and follow-up artifacts.",
+    businessModel: "Website/service-build offers for local businesses, usually packaged as a fast proof site plus review/booking/menu/contact improvements.",
     externalLinks: [],
-    goal: "Turn local no-website or weak-website opportunities into concrete offers and proof quickly.",
-    approach: "The workflow uses prospect boards, enrichment, local proof concepts, and founder-led outreach rather than automated mass sending.",
-    outcome: "Partially achieved. The latest daily note says the board was rebuilt to 107 prospects, but sales outcomes were not certified in inspected files.",
-    unknowns: ["Final offer/pricing needs owner confirmation.", "Closed deals and current pipeline values were not documented."],
+    goal: "Turn local no-website or weak-website opportunities into concrete, client-specific website previews that make the sales conversation easier.",
+    approach: "The workflow starts with local prospect context, reviews, photos, menus or service lists, then packages a focused site around the action the business actually needs: calls, bookings, orders, estimates, or trust.",
+    outcome: "Partially achieved. Multiple proof packages exist locally; closed revenue and final owner approvals still need current owner-confirmed source truth.",
+    unknowns: ["Which packages were sent, accepted, rejected, or closed needs current owner confirmation.", "Final public pricing and fulfillment terms need confirmation before this becomes a fixed offer."],
     sources: [
+      "Downloads/files/juans-taqueria-preview/",
+      "Downloads/files/marthas-designs-and-alterations/",
+      "Downloads/files/mickeys-ice-cream/",
+      "Downloads/files/nobu-nails/",
+      "Downloads/files/valley-nails/",
+      ".openclaw/agents/botler/workspace/work/local-no-website-leads-2026-06-07/clients/go2upholstery/",
       "Daily/2026-06-23.md",
       "Projects/National Website Prospects/call-board-state.json",
       ".openclaw/agents/botler/workspace/work/local-no-website-leads-2026-06-07/perfect-nails-site-prd.md"
     ],
     images: [
+      "/assets/case-studies/local-sites/juans-taqueria-site.png",
+      "/assets/case-studies/local-sites/marthas-designs-site.png",
       "/assets/case-studies/local-sites/go2-desktop-frame.jpg",
-      "/assets/case-studies/local-sites/go2-mobile-frame.jpg",
-      "/assets/case-studies/local-sites/go2-desktop-teaser.jpg",
-      "/assets/case-studies/local-sites/go2-mobile-teaser.jpg"
+      "/assets/case-studies/local-sites/mickeys-ice-cream-site.png",
+      "/assets/case-studies/local-sites/nobu-nails-site.png",
+      "/assets/case-studies/local-sites/valley-nails-site.png"
     ],
     sections: [
-      ["What We Built", "A local-business site-build lane with prospect tracking, offer concepts, calls, and follow-up structure."],
-      ["Why It Exists", "Small businesses often need a simple useful site before they need a large digital strategy."],
-      ["How We Approached It", "The work starts with boards and proof packages, then uses personal outreach and follow-up rather than anonymous blast automation."],
-      ["Where It Stands", "The prospect board is active, but revenue and pricing require current owner-confirmed source truth."]
+      {
+        title: "Juan's Taqueria",
+        meta: "Restaurant ordering preview / built 2026-06-26",
+        image: "/assets/case-studies/local-sites/juans-taqueria-site.png",
+        body: "A taqueria preview built around immediate appetite and ordering intent. The approach used storefront/menu context and food photography to make the first screen answer the customer's real question: what looks good, where is it, and how do I order quickly."
+      },
+      {
+        title: "Martha's Designs",
+        meta: "Alterations and bridal trust site / built 2026-06-25",
+        image: "/assets/case-studies/local-sites/marthas-designs-site.png",
+        body: "A tailoring and alterations package for a client with a real appointment opportunity. The build leaned into trust, craftsmanship, reviews, gallery proof, and a presentation package so the conversation could move from 'do you need a website?' to 'this is how your work could sell online.'"
+      },
+      {
+        title: "Go2 Upholstery",
+        meta: "Service estimate preview / built 2026-06-17",
+        image: "/assets/case-studies/local-sites/go2-desktop-frame.jpg",
+        body: "An upholstery preview for a lead who already had a site in progress but needed a better link to send. The approach was direct: show credibility, examples, service clarity, and an estimate path instead of pitching a vague redesign."
+      },
+      {
+        title: "Mickey's Ice Cream",
+        meta: "Dessert shop package / built 2026-06-15",
+        image: "/assets/case-studies/local-sites/mickeys-ice-cream-site.png",
+        body: "A neighborhood ice-cream concept designed to feel bright, simple, and immediately visitable. The build centered flavor, hours, location, and family-friendly energy so the site could work as a lightweight storefront rather than a brochure."
+      },
+      {
+        title: "Nobu Nails",
+        meta: "Nail salon consultation package / built 2026-06-12",
+        image: "/assets/case-studies/local-sites/nobu-nails-site.png",
+        body: "A nail salon proof package assembled from public salon context and selected service imagery. The approach emphasized polish, bookings, photo proof, and a clear consultation path for a meeting-driven sales conversation."
+      },
+      {
+        title: "Valley Nails",
+        meta: "Nail salon recap and close package / built 2026-06-12",
+        image: "/assets/case-studies/local-sites/valley-nails-site.png",
+        body: "A salon-focused build that used existing visual proof, seasonal nail work, reviews, and service positioning. The site framed the business as already having demand and taste; the website's job was to turn that into calls, bookings, and a stronger first impression."
+      }
     ]
   },
   {
