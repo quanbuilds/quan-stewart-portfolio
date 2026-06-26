@@ -342,36 +342,42 @@ window.CASE_STUDIES = [
         title: "Juan's Taqueria",
         meta: "Restaurant ordering preview / built 2026-06-26",
         image: "/assets/case-studies/local-sites/juans-taqueria-site.png",
+        fullPreview: "/assets/case-studies/local-sites/full/juans-taqueria-full.png",
         body: "A taqueria preview built around immediate appetite and ordering intent. The approach used storefront/menu context and food photography to make the first screen answer the customer's real question: what looks good, where is it, and how do I order quickly."
       },
       {
         title: "Martha's Designs",
         meta: "Alterations and bridal trust site / built 2026-06-25",
         image: "/assets/case-studies/local-sites/marthas-designs-site.png",
+        fullPreview: "/assets/case-studies/local-sites/full/marthas-designs-full.png",
         body: "A tailoring and alterations package for a client with a real appointment opportunity. The build leaned into trust, craftsmanship, reviews, gallery proof, and a presentation package so the conversation could move from 'do you need a website?' to 'this is how your work could sell online.'"
       },
       {
         title: "Go2 Upholstery",
         meta: "Service estimate preview / built 2026-06-17",
         image: "/assets/case-studies/local-sites/go2-desktop-frame.jpg",
+        fullPreview: "/assets/case-studies/local-sites/full/go2-upholstery-full.png",
         body: "An upholstery preview for a lead who already had a site in progress but needed a better link to send. The approach was direct: show credibility, examples, service clarity, and an estimate path instead of pitching a vague redesign."
       },
       {
         title: "Mickey's Ice Cream",
         meta: "Dessert shop package / built 2026-06-15",
         image: "/assets/case-studies/local-sites/mickeys-ice-cream-site.png",
+        fullPreview: "/assets/case-studies/local-sites/full/mickeys-ice-cream-full.png",
         body: "A neighborhood ice-cream concept designed to feel bright, simple, and immediately visitable. The build centered flavor, hours, location, and family-friendly energy so the site could work as a lightweight storefront rather than a brochure."
       },
       {
         title: "Nobu Nails",
         meta: "Nail salon consultation package / built 2026-06-12",
         image: "/assets/case-studies/local-sites/nobu-nails-site.png",
+        fullPreview: "/assets/case-studies/local-sites/full/nobu-nails-full.png",
         body: "A nail salon proof package assembled from public salon context and selected service imagery. The approach emphasized polish, bookings, photo proof, and a clear consultation path for a meeting-driven sales conversation."
       },
       {
         title: "Valley Nails",
         meta: "Nail salon recap and close package / built 2026-06-12",
         image: "/assets/case-studies/local-sites/valley-nails-site.png",
+        fullPreview: "/assets/case-studies/local-sites/full/valley-nails-full.png",
         body: "A salon-focused build that used existing visual proof, seasonal nail work, reviews, and service positioning. The site framed the business as already having demand and taste; the website's job was to turn that into calls, bookings, and a stronger first impression."
       }
     ]

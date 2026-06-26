@@ -270,6 +270,30 @@
         font-size: clamp(18px, 2.2vw, 26px);
         line-height: 1.22;
       }
+      .slide-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .slide-actions a {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 8px 10px;
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
+      }
+      .slide-actions a:hover {
+        color: var(--gold);
+        border-color: var(--gold);
+        transform: translateY(-1px);
+      }
       .slide-visual {
         position: sticky;
         top: 138px;
@@ -679,6 +703,7 @@
       const bodyFor = (section) => Array.isArray(section) ? section[1] : section.body;
       const imageForSection = (section, index) => Array.isArray(section) ? imageFor(index) : (section.image || imageFor(index));
       const metaFor = (section) => Array.isArray(section) ? item.label : (section.meta || item.label);
+      const previewFor = (section) => Array.isArray(section) ? "" : (section.fullPreview || section.href || "");
       const formatter = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" });
       document.title = `${item.title} Case Study | QuanBuilds`;
       document.querySelector("meta[name='description']").setAttribute("content", item.deck);
@@ -733,6 +758,7 @@
         const sectionBody = bodyFor(section);
         const sectionImage = imageForSection(section, index);
         const sectionMeta = metaFor(section);
+        const sectionPreview = previewFor(section);
         const id = `section-${index + 1}`;
         const link = document.createElement("a");
         link.href = `#${id}`;
@@ -756,6 +782,7 @@
             <p class="eyebrow">${String(index + 1).padStart(2, "0")} / ${item.category}</p>
             <h2>${sectionTitle}</h2>
             <p>${sectionBody}</p>
+            ${sectionPreview ? `<div class="slide-actions"><a href="${sectionPreview}" target="_blank" rel="noopener">Open full preview</a></div>` : ""}
           </div>
         `;
         slides.appendChild(slide);
