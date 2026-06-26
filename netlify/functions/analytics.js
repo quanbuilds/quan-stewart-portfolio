@@ -8,7 +8,7 @@ function analyticsStore() {
     token: process.env.NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_AUTH_TOKEN,
   });
 }
-const allowedTypes = new Set(["pageview", "click", "case_open", "client_error", "resource_error", "vital", "feedback"]);
+const allowedTypes = new Set(["pageview", "click", "case_open", "client_error", "resource_error", "vital", "feedback", "inquiry"]);
 const allowedHosts = new Set(["quanbuilds.netlify.app", "quan-stewart-portfolio.netlify.app", "localhost", "127.0.0.1"]);
 const maxBodyBytes = 10 * 1024;
 const feedbackProjects = new Set([
@@ -121,6 +121,9 @@ function cleanEvent(payload, event) {
     label: cleanString(data.label, 180),
     project: cleanString(data.project, 80),
     action: cleanString(data.action, 40),
+    email: cleanString(data.email, 120),
+    budget: cleanString(data.budget, 80),
+    timeline: cleanString(data.timeline, 80),
     comment: cleanString(data.comment, 700),
     name: cleanString(data.name, 80),
     message: cleanString(data.message, 400),
@@ -154,6 +157,26 @@ function cleanFeedback(payload, event) {
     action: allowedAction,
     name: cleanString(data.name || "Anonymous", 80),
     comment: allowedAction === "comment" ? cleanString(data.comment, 700) : "",
+    path: base.path,
+    visitorHash: base.visitorHash,
+    country: base.country,
+  };
+}
+
+function cleanInquiry(payload, event) {
+  const data = payload.data && typeof payload.data === "object" ? payload.data : {};
+  const now = new Date();
+  const base = cleanEvent(payload, event);
+
+  return {
+    id: `${now.toISOString()}-${Math.random().toString(36).slice(2, 10)}`,
+    ts: now.toISOString(),
+    project: cleanString(data.project, 80),
+    name: cleanString(data.name, 80),
+    email: cleanString(data.email, 120),
+    budget: cleanString(data.budget, 80),
+    timeline: cleanString(data.timeline, 80),
+    message: cleanString(data.message, 700),
     path: base.path,
     visitorHash: base.visitorHash,
     country: base.country,
@@ -227,6 +250,7 @@ function summarize(events) {
   const errors = [];
   const clicks = [];
   const feedback = [];
+  const inquiries = [];
   const suspicious = [];
 
   for (const event of events) {
@@ -242,6 +266,7 @@ function summarize(events) {
     if (event.type.includes("error")) errors.push(event);
     if (event.type === "click" || event.type === "case_open") clicks.push(event);
     if (event.type === "feedback") feedback.push(event);
+    if (event.type === "inquiry") inquiries.push(event);
     if (/bot|crawl|spider|scanner|curl|python|httpclient|masscan|zgrab/i.test(event.userAgent || "")) suspicious.push(event);
   }
 
@@ -259,6 +284,7 @@ function summarize(events) {
     recentErrors: errors.slice(0, 25),
     recentClicks: clicks.slice(0, 25),
     recentFeedback: feedback.slice(0, 25),
+    recentInquiries: inquiries.slice(0, 25),
     suspicious: suspicious.slice(0, 25),
   };
 }
@@ -306,6 +332,12 @@ export async function handler(event) {
         await store.setJSON(`feedback/${feedback.project}/${feedback.ts}-${feedback.id}.json`, feedback);
       }
       return json(200, { ok: true, feedback: feedback.project !== "unknown" });
+    }
+
+    if (item.type === "inquiry") {
+      const inquiry = cleanInquiry(payload, event);
+      await store.setJSON(`inquiries/${inquiry.ts}-${inquiry.id}.json`, inquiry);
+      return json(200, { ok: true, inquiry: true });
     }
 
     return json(200, { ok: true });

@@ -926,7 +926,7 @@ ${headFor(item)}
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
-      .fact-card, .comment-card {
+      .fact-card, .comment-card, .inquiry-card {
         display: grid;
         gap: 12px;
         padding: clamp(18px, 3vw, 28px);
@@ -938,6 +938,38 @@ ${headFor(item)}
       .fact-card p, .source-list, .comment-card p {
         margin: 0;
         color: var(--muted);
+      }
+      .inquiry-card {
+        border-color: rgba(200, 154, 58, 0.68);
+      }
+      .inquiry-card h3 {
+        font-size: clamp(34px, 3.8vw, 58px);
+        line-height: 0.96;
+      }
+      .inquiry-form {
+        display: grid;
+        gap: 10px;
+      }
+      .inquiry-form input, .inquiry-form textarea, .inquiry-form select {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 11px 12px;
+        background: rgba(7, 7, 7, 0.24);
+        color: var(--fg);
+      }
+      .inquiry-form textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+      .inquiry-form .split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .inquiry-status {
+        min-height: 18px;
       }
       .source-list {
         display: grid;
@@ -1025,7 +1057,7 @@ ${headFor(item)}
         .content {
           padding-left: var(--pad);
         }
-        .hero, .case-meta, .story-panel, .fact-grid, .comment-form, .artifact-grid, .agent-section, .agent-section-grid {
+        .hero, .case-meta, .story-panel, .fact-grid, .comment-form, .artifact-grid, .agent-section, .agent-section-grid, .inquiry-form .split {
           grid-template-columns: 1fr;
         }
         .meta-row {
@@ -1129,7 +1161,34 @@ ${headFor(item)}
             <article class="fact-card"><p class="meta-label">Goal</p><h3>What we aimed for</h3><p>${esc(item.goal)}</p></article>
             <article class="fact-card"><p class="meta-label">Approach</p><h3>How we tried</h3><p>${esc(item.approach)}</p></article>
             <article class="fact-card"><p class="meta-label">Outcome</p><h3>Did it work?</h3><p>${esc(item.outcome)}</p></article>
-            <article class="fact-card"><p class="meta-label">Still Unknown</p><h3>Needs owner truth</h3><ul class="source-list">${liList(item.unknowns)}</ul></article>
+            <article class="fact-card inquiry-card">
+              <p class="meta-label">Build Inquiry</p>
+              <h3>Want something like this built for you?</h3>
+              <p>Tell me what kind of agent system, workflow, or product control plane you want to create.</p>
+              <form class="inquiry-form" id="inquiryForm">
+                <div class="split">
+                  <input id="inquiryName" name="name" autocomplete="name" placeholder="Name" />
+                  <input id="inquiryEmail" name="email" autocomplete="email" inputmode="email" placeholder="Email" required />
+                </div>
+                <div class="split">
+                  <select id="inquiryBudget" name="budget" aria-label="Budget">
+                    <option value="">Budget range</option>
+                    <option value="under-5k">Under $5k</option>
+                    <option value="5k-15k">$5k-$15k</option>
+                    <option value="15k-plus">$15k+</option>
+                  </select>
+                  <select id="inquiryTimeline" name="timeline" aria-label="Timeline">
+                    <option value="">Timeline</option>
+                    <option value="now">Now</option>
+                    <option value="30-days">Next 30 days</option>
+                    <option value="exploring">Exploring</option>
+                  </select>
+                </div>
+                <textarea id="inquiryMessage" name="message" placeholder="What are you trying to build?" required></textarea>
+                <button class="submit-button" type="submit">Send Inquiry</button>
+                <p class="feedback-status inquiry-status" id="inquiryStatus" aria-live="polite"></p>
+              </form>
+            </article>
             <article class="fact-card"><p class="meta-label">Next</p><h3>Reusable pattern</h3><p>This case study is about the operating pattern: scoped agents, durable memory, approval gates, and evidence trails that other teams can adapt.</p></article>
           </div>
         </section>
@@ -1191,6 +1250,13 @@ ${headFor(item)}
           body: JSON.stringify({ type: "feedback", data: payload(data) }),
         }).then((res) => res.json());
       }
+      function postInquiry(data) {
+        return fetch("/.netlify/functions/analytics", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ type: "inquiry", data: payload(data) }),
+        }).then((res) => res.json());
+      }
       function cleanText(value, fallback = "") {
         return String(value || fallback).replace(/[<>]/g, "").slice(0, 700);
       }
@@ -1236,6 +1302,29 @@ ${headFor(item)}
           await loadFeedback();
         } catch {
           document.getElementById("feedbackStatus").textContent = "Comment did not save";
+        }
+      });
+      document.getElementById("inquiryForm").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const email = document.getElementById("inquiryEmail").value;
+        const message = document.getElementById("inquiryMessage").value;
+        const status = document.getElementById("inquiryStatus");
+        if (!email.trim() || !message.trim()) return;
+        status.textContent = "Sending inquiry";
+        try {
+          await postInquiry({
+            action: "build_inquiry",
+            name: document.getElementById("inquiryName").value,
+            email,
+            budget: document.getElementById("inquiryBudget").value,
+            timeline: document.getElementById("inquiryTimeline").value,
+            message,
+          });
+          track("click", { label: "case_build_inquiry" });
+          event.currentTarget.reset();
+          status.textContent = "Inquiry sent";
+        } catch {
+          status.textContent = "Inquiry did not send";
         }
       });
       document.querySelectorAll("[data-tilt]").forEach((node) => {
