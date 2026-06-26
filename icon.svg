@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="QuanBuilds"><rect width="64" height="64" fill="#f7f5ef"/><rect x="6" y="6" width="52" height="52" fill="none" stroke="#080808" stroke-width="3"/><text x="32" y="39" text-anchor="middle" font-family="Arial, sans-serif" font-weight="800" font-size="21" fill="#080808">QB</text><rect x="14" y="48" width="22" height="3" fill="#a77a24"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="QuanBuilds QS">
+  <rect width="64" height="64" fill="#f7f5ef"/>
+  <text x="32" y="39" text-anchor="middle" font-family="Bodoni 72, Didot, Baskerville, Georgia, serif" font-size="29" font-weight="500" letter-spacing=".04em" fill="#080808">QS</text>
+  <rect x="22" y="46" width="20" height="2.5" rx="1.25" fill="#a77a24"/>
+</svg>
