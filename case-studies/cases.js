@@ -1,31 +1,38 @@
 window.CASE_STUDIES = [
   {
     slug: "stewartos",
-    title: "StewartOS",
+    title: "AgenticOS",
     label: "Agentic OS",
     category: "AI operations",
-    kicker: "Private operating system",
-    deck: "A living command layer for agents, family operations, product work, calendars, reporting, and source-truth memory.",
-    lastEdited: "Portfolio source last edited 2026-06-25; StewartOS operating-mode notes updated 2026-06-23.",
+    kicker: "Multi-agent operating structure",
+    deck: "A private control plane for routing work between specialist agents, durable memory, approval gates, and source-backed outputs.",
+    lastEdited: "Portfolio source last edited 2026-06-26; Agent context matrix generated 2026-06-24 from 2026-06-23 source truth.",
     status: "Active internal system.",
-    businessModel: "Internal operating infrastructure. No public business model was documented in the source files I inspected.",
+    businessModel: "Internal operating infrastructure and client-capability proof. No public AgenticOS pricing model is documented in the inspected files.",
     externalLinks: [],
-    goal: "Make the machine remember what happened, route work to the right lane, preserve approval boundaries, and keep daily decisions grounded in source truth.",
-    approach: "The build grew around daily notes, project status files, agent context maps, reports, approvals, dashboards, and recovery loops instead of a generic chat surface.",
-    outcome: "Partially achieved and still evolving. The system has durable source maps and project truth, but some lanes still depend on manual owner decisions and private runtime checks.",
-    unknowns: ["Public packaging/pricing for StewartOS is not documented.", "Which parts, if any, should become a client-facing product is not documented."],
+    goal: "Move beyond one giant assistant by giving work to distinct agents with dedicated context, source files, tools, and escalation rules.",
+    approach: "The system uses Botler as the control plane, specialist agents for domains, Hermes-style runtime/switchboard patterns, context matrices, run ledgers, nightly dreams, and approval gates so important facts live in files instead of hidden chat state.",
+    outcome: "Partially achieved and actively used. The structure can route, remember, report, and block unsafe action, but public packaging and some runtime identity cleanup still need owner decisions.",
+    unknowns: ["Public packaging/pricing for AgenticOS is not documented.", "Which pieces should become a reusable client-facing system need owner confirmation.", "Hermes is documented as runtime/switchboard in architecture notes, but its current identity files mirror Jim and should be cleaned up before being presented as fully resolved."],
     sources: [
       "Agents/context/latest.md",
       "Daily/2026-06-23.md",
-      "Dashboard/Source Truth Map.md",
-      "PortfolioSite/index.html"
+      ".openclaw/openclaw.json",
+      ".openclaw/workspace/operations/acp-agent-session-architecture.md",
+      ".openclaw/workspace/agents/registry.json",
+      ".openclaw/workspace/operations/model-matrix.md"
     ],
-    images: ["/assets/previews/stewartos.png", "/assets/previews/botler-shell.png", "/assets/previews/contact-sheet.png"],
+    images: [
+      "/assets/case-studies/agenticos/context-matrix.svg",
+      "/assets/case-studies/agenticos/agent-roster.svg",
+      "/assets/case-studies/agenticos/run-ledger.svg",
+      "/assets/case-studies/agenticos/approval-queue.svg"
+    ],
     sections: [
-      ["What We Built", "A private operating layer that ties together agents, daily reports, project memory, calendars, open loops, and decision context."],
-      ["Why It Exists", "The goal was not a polished dashboard first. It was survival-grade usefulness: know what moved, what is blocked, what is safe to automate, and what needs a human decision."],
-      ["How We Approached It", "The project uses real notes and reports as the product substrate. Every useful surface points back to evidence instead of pretending a summary is the source."],
-      ["Where It Stands", "The system works as internal infrastructure, with a clear next question: which pieces should become public, packaged, or client-safe."]
+      ["Control Plane", "Botler acts as the front pane and coordinator: it receives the human request, decides whether the work belongs to a specialist, and keeps the final answer grounded in durable artifacts."],
+      ["Agent Roster", "Configured and documented lanes include Botler, Cash, Dev, Jim, Hermes, Loki, Impulse, Red, Doc, Atlas, and Scout. Each has a narrower job than a general assistant."],
+      ["Proof Trail", "The system writes context matrices, daily memories, nightly dreams, reports, and run-ledger rows so progress, blockers, and decisions can be inspected later."],
+      ["Approval Gates", "Agents can draft, stage, verify, and report. External actions like posts, sends, spends, deploys, trades, and client-visible changes stay approval-gated when source truth is incomplete."]
     ]
   },
   {

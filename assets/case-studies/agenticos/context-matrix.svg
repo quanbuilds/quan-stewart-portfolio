@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">AgenticOS context matrix artifact</title>
+  <desc id="desc">A simplified source-backed visual of the AgenticOS context matrix and daily memory structure.</desc>
+  <rect width="960" height="600" fill="#0b0b0b"/>
+  <rect x="42" y="42" width="876" height="516" fill="#111" stroke="#c89a3a" stroke-width="2"/>
+  <text x="72" y="92" fill="#f7f1df" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="700">Agents/context/latest.md</text>
+  <text x="72" y="130" fill="#c89a3a" font-family="Menlo, Consolas, monospace" font-size="15">Agent Context Matrix - lightweight recall map before heavy transcripts</text>
+  <line x1="72" y1="158" x2="888" y2="158" stroke="#c89a3a" stroke-opacity=".65"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="16" fill="#d8d0be">
+    <text x="72" y="205">Core links</text>
+    <text x="104" y="238">Daily/2026-06-23</text>
+    <text x="104" y="268">Agents/aggregate/dreams/2026-06-23</text>
+    <text x="104" y="298">Dashboard/Open Loops</text>
+    <text x="104" y="328">Dashboard/Source Truth Map</text>
+    <text x="72" y="385">Matrix lanes</text>
+    <text x="104" y="418">content / billing / product / ops / cash / trading</text>
+    <text x="104" y="448">daily memory + dreams + reports + ledger tails</text>
+    <text x="104" y="478">pull only the artifact required for the work in front of you</text>
+  </g>
+  <g stroke="#c89a3a" stroke-opacity=".55" fill="none">
+    <path d="M640 202h185v70H640z"/>
+    <path d="M640 310h185v70H640z"/>
+    <path d="M640 418h185v70H640z"/>
+  </g>
+  <g font-family="Menlo, Consolas, monospace" font-size="14" fill="#f7f1df">
+    <text x="662" y="244">memory</text>
+    <text x="662" y="352">dreams</text>
+    <text x="662" y="460">reports</text>
+  </g>
+</svg>

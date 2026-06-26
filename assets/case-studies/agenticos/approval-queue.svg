@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">AgenticOS approval queue</title>
+  <desc id="desc">A simplified approval queue showing how external actions stay gated.</desc>
+  <rect width="960" height="600" fill="#0b0b0b"/>
+  <rect x="42" y="42" width="876" height="516" fill="#111" stroke="#c89a3a" stroke-width="2"/>
+  <text x="72" y="92" fill="#f7f1df" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="700">Approval queue</text>
+  <text x="72" y="130" fill="#c89a3a" font-family="Menlo, Consolas, monospace" font-size="15">Agents can draft and stage; public action waits for owner truth</text>
+  <line x1="72" y1="158" x2="888" y2="158" stroke="#c89a3a" stroke-opacity=".65"/>
+  <g fill="none" stroke="#c89a3a" stroke-width="2" stroke-opacity=".62">
+    <rect x="88" y="205" width="186" height="94"/>
+    <rect x="382" y="205" width="186" height="94"/>
+    <rect x="676" y="205" width="186" height="94"/>
+    <path d="M274 252h108M568 252h108"/>
+    <rect x="88" y="366" width="186" height="94"/>
+    <rect x="382" y="366" width="186" height="94"/>
+    <rect x="676" y="366" width="186" height="94"/>
+    <path d="M274 413h108M568 413h108"/>
+  </g>
+  <g font-family="Menlo, Consolas, monospace" font-size="15" fill="#f7f1df" text-anchor="middle">
+    <text x="181" y="247">Draft</text><text x="181" y="273">artifact</text>
+    <text x="475" y="247">Stage</text><text x="475" y="273">for review</text>
+    <text x="769" y="247">Human</text><text x="769" y="273">approval</text>
+    <text x="181" y="408">Execute</text><text x="181" y="434">if approved</text>
+    <text x="475" y="408">Verify</text><text x="475" y="434">result</text>
+    <text x="769" y="408">Record</text><text x="769" y="434">memory</text>
+  </g>
+</svg>

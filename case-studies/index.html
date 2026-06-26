@@ -555,6 +555,10 @@
       const item = cases.find((entry) => entry.slug === slug) || cases[0];
       const hasImages = Array.isArray(item.images) && item.images.length > 0;
       const imageFor = (index) => hasImages ? item.images[index % item.images.length] : "";
+      const titleFor = (section) => Array.isArray(section) ? section[0] : section.title;
+      const bodyFor = (section) => Array.isArray(section) ? section[1] : section.body;
+      const imageForSection = (section, index) => Array.isArray(section) ? imageFor(index) : (section.image || imageFor(index));
+      const metaFor = (section) => Array.isArray(section) ? item.label : (section.meta || item.label);
       const formatter = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" });
       document.title = `${item.title} Case Study | QuanBuilds`;
       document.querySelector("meta[name='description']").setAttribute("content", item.deck);
@@ -605,29 +609,33 @@
       jumptrack.replaceChildren();
       slides.replaceChildren();
       item.sections.forEach((section, index) => {
+        const sectionTitle = titleFor(section);
+        const sectionBody = bodyFor(section);
+        const sectionImage = imageForSection(section, index);
+        const sectionMeta = metaFor(section);
         const id = `section-${index + 1}`;
         const link = document.createElement("a");
         link.href = `#${id}`;
-        link.textContent = section[0];
+        link.textContent = sectionTitle;
         jumptrack.appendChild(link);
 
         const slide = document.createElement("article");
-        slide.className = hasImages ? "slide" : "slide has-no-media";
+        slide.className = sectionImage ? "slide" : "slide has-no-media";
         slide.id = id;
-        slide.dataset.section = section[0];
+        slide.dataset.section = sectionTitle;
         slide.innerHTML = `
-          ${hasImages ? `<div class="slide-visual">
+          ${sectionImage ? `<div class="slide-visual">
             <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate ${section[0]} visual">
-                <img src="${imageFor(index)}" alt="${item.title} visual ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" />
+              <div class="image-frame" tabindex="0" role="button" aria-label="Animate ${sectionTitle} visual">
+                <img src="${sectionImage}" alt="${item.title} visual ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" />
               </div>
-              <figcaption class="image-caption">${item.label} / ${section[0]}</figcaption>
+              <figcaption class="image-caption">${sectionMeta} / ${sectionTitle}</figcaption>
             </figure>
           </div>` : ""}
           <div class="slide-copy">
             <p class="eyebrow">${String(index + 1).padStart(2, "0")} / ${item.category}</p>
-            <h2>${section[0]}</h2>
-            <p>${section[1]}</p>
+            <h2>${sectionTitle}</h2>
+            <p>${sectionBody}</p>
           </div>
         `;
         slides.appendChild(slide);

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-labelledby="title desc">
+  <title id="title">AgenticOS agent roster</title>
+  <desc id="desc">A simplified roster of configured and documented AgenticOS agents.</desc>
+  <rect width="960" height="600" fill="#0b0b0b"/>
+  <rect x="42" y="42" width="876" height="516" fill="#111" stroke="#c89a3a" stroke-width="2"/>
+  <text x="72" y="92" fill="#f7f1df" font-family="Menlo, Consolas, monospace" font-size="22" font-weight="700">Agent roster</text>
+  <text x="72" y="130" fill="#c89a3a" font-family="Menlo, Consolas, monospace" font-size="15">Configured lanes + documented specialist agents</text>
+  <line x1="72" y1="158" x2="888" y2="158" stroke="#c89a3a" stroke-opacity=".65"/>
+  <g font-family="Menlo, Consolas, monospace" font-size="15">
+    <text x="78" y="198" fill="#c89a3a">Agent</text><text x="258" y="198" fill="#c89a3a">Role</text><text x="650" y="198" fill="#c89a3a">Boundary</text>
+    <g fill="#f7f1df">
+      <text x="78" y="240">Botler</text><text x="258" y="240">orchestrator / front pane</text><text x="650" y="240">routes + escalates</text>
+      <text x="78" y="278">Cash</text><text x="258" y="278">finance + recovery</text><text x="650" y="278">numbers must be labeled</text>
+      <text x="78" y="316">Dev</text><text x="258" y="316">implementation + deploys</text><text x="650" y="316">tests before truth claims</text>
+      <text x="78" y="354">Jim</text><text x="258" y="354">music ops + commerce</text><text x="650" y="354">no invented analytics</text>
+      <text x="78" y="392">Hermes</text><text x="258" y="392">runtime / switchboard</text><text x="650" y="392">execution, not policy</text>
+      <text x="78" y="430">Loki</text><text x="258" y="430">TideFlow / contracts</text><text x="650" y="430">prospect evidence</text>
+      <text x="78" y="468">Impulse</text><text x="258" y="468">trading review</text><text x="650" y="468">fail closed</text>
+      <text x="78" y="506">Atlas + Scout</text><text x="258" y="506">finance + research support</text><text x="650" y="506">source-backed synthesis</text>
+    </g>
+  </g>
+  <g stroke="#c89a3a" stroke-opacity=".25">
+    <line x1="72" y1="218" x2="888" y2="218"/>
+    <line x1="72" y1="256" x2="888" y2="256"/>
+    <line x1="72" y1="294" x2="888" y2="294"/>
+    <line x1="72" y1="332" x2="888" y2="332"/>
+    <line x1="72" y1="370" x2="888" y2="370"/>
+    <line x1="72" y1="408" x2="888" y2="408"/>
+    <line x1="72" y1="446" x2="888" y2="446"/>
+    <line x1="72" y1="484" x2="888" y2="484"/>
+  </g>
+</svg>

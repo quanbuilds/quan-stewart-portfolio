@@ -3,56 +3,38 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>StewartOS Case Study | QuanBuilds</title>
-    <meta name="description" content="A living command layer for agents, family operations, product work, calendars, reporting, and source-truth memory." />
+    <title>AgenticOS Case Study | QuanBuilds</title>
+    <meta name="description" content="A private control plane for routing work between specialist agents, durable memory, approval gates, and source-backed outputs." />
     <link rel="canonical" href="https://quanbuilds.netlify.app/case-studies/stewartos/" />
     <meta name="robots" content="index,follow" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://quanbuilds.netlify.app/case-studies/stewartos/" />
-    <meta property="og:title" content="StewartOS Case Study | QuanBuilds" />
-    <meta property="og:description" content="A living command layer for agents, family operations, product work, calendars, reporting, and source-truth memory." />
+    <meta property="og:title" content="AgenticOS Case Study | QuanBuilds" />
+    <meta property="og:description" content="A private control plane for routing work between specialist agents, durable memory, approval gates, and source-backed outputs." />
     
-    <meta property="og:image" content="https://quanbuilds.netlify.app/assets/previews/stewartos.png" />
+    <meta property="og:image" content="https://quanbuilds.netlify.app/assets/case-studies/agenticos/context-matrix.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://quanbuilds.netlify.app/assets/previews/stewartos.png" />
-    <meta name="twitter:title" content="StewartOS Case Study | QuanBuilds" />
-    <meta name="twitter:description" content="A living command layer for agents, family operations, product work, calendars, reporting, and source-truth memory." />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <meta name="robots" content="index,follow" />
+    <meta name="twitter:image" content="https://quanbuilds.netlify.app/assets/case-studies/agenticos/context-matrix.svg" />
+    <meta name="twitter:title" content="AgenticOS Case Study | QuanBuilds" />
+    <meta name="twitter:description" content="A private control plane for routing work between specialist agents, durable memory, approval gates, and source-backed outputs." />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <style>
       :root {
-        color-scheme: light;
-        --bg: #f7f5ef;
-        --fg: #080808;
-        --muted: rgba(8, 8, 8, 0.62);
-        --line: rgba(8, 8, 8, 0.24);
-        --panel: rgba(8, 8, 8, 0.04);
-        --gold: #a77a24;
-        --gold-soft: rgba(167, 122, 36, 0.18);
-        --shadow: rgba(8, 8, 8, 0.08);
-        --pad: clamp(18px, 4vw, 54px);
-        --max: 1180px;
-      }
-
-      [data-theme="dark"] {
         color-scheme: dark;
         --bg: #070707;
-        --fg: #f7f5ef;
-        --muted: rgba(247, 245, 239, 0.64);
-        --line: rgba(247, 245, 239, 0.24);
-        --panel: rgba(247, 245, 239, 0.045);
-        --gold: #d2a545;
-        --gold-soft: rgba(210, 165, 69, 0.22);
-        --shadow: rgba(247, 245, 239, 0.05);
+        --fg: #f7f1df;
+        --muted: rgba(247, 241, 223, 0.68);
+        --line: rgba(247, 241, 223, 0.18);
+        --glass: rgba(247, 241, 223, 0.07);
+        --glass-strong: rgba(247, 241, 223, 0.11);
+        --gold: #c89a3a;
+        --gold-soft: rgba(200, 154, 58, 0.18);
+        --pad: clamp(18px, 4vw, 56px);
+        --max: 1180px;
       }
-
       * { box-sizing: border-box; }
       html { background: var(--bg); scroll-behavior: smooth; }
       body {
@@ -62,70 +44,71 @@
         color: var(--fg);
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.45;
-        letter-spacing: 0;
       }
       body::-webkit-scrollbar { width: 0; height: 0; }
       a { color: inherit; text-decoration: none; }
       button, input, textarea { font: inherit; color: inherit; }
-      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 1px solid var(--fg); outline-offset: 5px; }
-
+      button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 1px solid var(--gold); outline-offset: 5px; }
       .topbar {
         position: fixed;
-        z-index: 10;
-        top: 0;
-        left: 0;
-        right: 0;
+        z-index: 20;
+        inset: 0 0 auto;
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         gap: 20px;
         padding: 18px var(--pad);
         pointer-events: none;
       }
-
-      .topbar a, .topbar button { pointer-events: auto; }
-      .mark, .back, .theme-toggle {
+      .topbar a {
+        pointer-events: auto;
+        color: var(--muted);
         font-size: 11px;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.14em;
       }
-      .nav-actions { display: flex; align-items: center; gap: 14px; }
-      .back { color: var(--muted); }
-      .theme-toggle {
-        width: 46px;
-        height: 24px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        background: transparent;
-        cursor: pointer;
-        padding: 3px;
+      .topbar a:hover { color: var(--gold); }
+      .case-shell {
+        position: relative;
+        min-height: 100svh;
       }
-      .theme-toggle span {
-        display: block;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: var(--fg);
-        transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1);
+      .tower-wrap {
+        position: fixed;
+        z-index: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: min(30vw, 360px);
+        overflow: hidden;
+        pointer-events: none;
       }
-      [data-theme="dark"] .theme-toggle span { transform: translateX(20px); }
-
-      .hero {
-        min-height: 92svh;
+      .tower-sticky {
+        height: 100svh;
         display: grid;
-        align-items: end;
-        padding: 120px var(--pad) 42px;
+        place-items: end center;
+        padding: 7svh 0 8svh;
+        transform: translateY(var(--tower-shift, 0px));
+        will-change: transform;
       }
-      .hero-grid {
+      .tower-lines {
+        width: min(76%, 245px);
+        height: 100%;
+        fill: none;
+        stroke: var(--gold);
+        stroke-width: 1.45;
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        opacity: 0.72;
+      }
+      .content {
+        position: relative;
+        z-index: 1;
         width: min(var(--max), 100%);
         margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: clamp(30px, 7vw, 92px);
-        align-items: end;
+        padding: 120px var(--pad) 0 clamp(120px, 28vw, 340px);
       }
-      .eyebrow, .meta-label, .source-list, .feedback-status {
+      .eyebrow, .meta-label, .artifact figcaption, .feedback-status {
         color: var(--muted);
         font-size: 11px;
         font-weight: 800;
@@ -139,191 +122,156 @@
         text-transform: uppercase;
         letter-spacing: 0.04em;
       }
+      .hero {
+        min-height: 84svh;
+        display: grid;
+        align-content: end;
+        gap: clamp(24px, 5vw, 60px);
+        padding-bottom: clamp(38px, 8vw, 92px);
+      }
       h1 {
-        margin-top: 16px;
-        font-size: clamp(54px, 10vw, 150px);
+        margin-top: 14px;
+        font-size: clamp(58px, 11vw, 156px);
         line-height: 0.86;
       }
       .deck {
         max-width: 58ch;
         margin: 24px 0 0;
         color: var(--muted);
-        font-size: clamp(17px, 2.2vw, 25px);
+        font-size: clamp(18px, 2.2vw, 27px);
         line-height: 1.22;
       }
-      .hero-panel {
-        display: grid;
-        gap: 14px;
-        padding: clamp(18px, 3vw, 30px);
+      .meta-glass, .story-panel, .fact-card, .comment-card, .comment-form input, .comment-form textarea {
         border: 1px solid var(--line);
-        background: var(--panel);
+        background: var(--glass);
+        backdrop-filter: blur(20px) saturate(1.25);
+        -webkit-backdrop-filter: blur(20px) saturate(1.25);
       }
-      .external-links {
+      .meta-glass {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1px;
+      }
+      .meta-row {
+        min-height: 118px;
+        display: grid;
+        align-content: start;
+        gap: 8px;
+        padding: 18px;
+        border-right: 1px solid var(--line);
+      }
+      .meta-row:last-child { border-right: 0; }
+      .meta-row strong { font-weight: 600; }
+      .jumpbar {
+        position: sticky;
+        z-index: 12;
+        top: 64px;
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        padding-top: 2px;
-      }
-      .external-links:empty {
-        display: none;
-      }
-      .external-links a {
-        min-height: 34px;
-        display: inline-flex;
-        align-items: center;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 8px 10px;
-        color: var(--muted);
-        font-size: 10px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        transition: color 180ms ease, border-color 180ms ease, transform 180ms ease;
-      }
-      .external-links a:hover {
-        color: var(--gold);
-        border-color: var(--gold);
-        transform: translateY(-1px);
-      }
-      .meta-row {
-        display: grid;
-        gap: 4px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid var(--line);
-      }
-      .meta-row:last-child { border-bottom: 0; padding-bottom: 0; }
-      .meta-row strong { font-weight: 650; }
-      .jumpbar {
-        position: sticky;
-        z-index: 8;
-        top: 64px;
-        width: min(var(--max), calc(100vw - 24px));
-        margin: 0 auto;
         padding: 8px;
+        margin-bottom: clamp(46px, 8vw, 96px);
         border: 1px solid var(--line);
-        border-radius: 28px;
-        background: color-mix(in srgb, var(--bg) 78%, transparent);
-        backdrop-filter: blur(20px) saturate(1.35);
-        -webkit-backdrop-filter: blur(20px) saturate(1.35);
-        box-shadow: 0 16px 46px var(--shadow);
+        background: rgba(7, 7, 7, 0.72);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
       }
-      .jumptrack {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        scrollbar-width: none;
-      }
-      .jumptrack::-webkit-scrollbar { display: none; }
-      .jumptrack a {
-        flex: 0 0 auto;
+      .jumpbar a {
         min-height: 34px;
         display: inline-flex;
         align-items: center;
         padding: 9px 12px;
         border: 1px solid transparent;
-        border-radius: 999px;
         color: var(--muted);
         font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.12em;
-        transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
       }
-      .jumptrack a:hover, .jumptrack a.is-active {
+      .jumpbar a:hover, .jumpbar a.is-active {
         color: var(--gold);
-        border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
+        border-color: var(--gold);
         background: var(--gold-soft);
       }
-
-      .slides {
-        width: min(var(--max), 100%);
-        margin: 0 auto;
-        padding: clamp(54px, 10vw, 120px) var(--pad);
-      }
-      .slide {
-        min-height: 92svh;
+      .artifact-grid {
         display: grid;
-        grid-template-columns: 0.92fr 1.08fr;
-        gap: clamp(28px, 6vw, 86px);
-        align-items: center;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .artifact {
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: var(--glass-strong);
+        transform: translateY(var(--lift, 0px));
+        transition: transform 200ms ease, border-color 200ms ease;
+      }
+      .artifact:hover, .story-visual:hover {
+        --lift: -4px;
+        border-color: var(--gold);
+      }
+      .artifact img, .story-visual img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .artifact figcaption {
+        padding: 11px 12px;
         border-top: 1px solid var(--line);
       }
-      .slide.has-no-media {
-        grid-template-columns: minmax(0, 0.78fr);
-        justify-content: center;
-        min-height: 68svh;
+      .story {
+        display: grid;
+        gap: clamp(42px, 8vw, 108px);
+        padding: clamp(40px, 8vw, 96px) 0;
       }
-      .slide:nth-child(even) .slide-visual { order: 2; }
-      .slide.has-no-media .slide-visual { display: none; }
-      .slide-copy {
+      .story-panel {
+        min-height: 68svh;
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(280px, 0.78fr);
+        gap: clamp(24px, 5vw, 66px);
+        align-items: center;
+        padding: clamp(22px, 4vw, 46px);
+      }
+      .story-copy {
         display: grid;
         gap: 18px;
       }
-      .slide-copy h2 {
+      .story-copy h2 {
         font-size: clamp(42px, 7vw, 96px);
         line-height: 0.9;
       }
-      .slide-copy p {
+      .story-copy p {
         margin: 0;
         color: var(--muted);
-        font-size: clamp(18px, 2.2vw, 26px);
-        line-height: 1.22;
+        font-size: clamp(18px, 2.1vw, 25px);
+        line-height: 1.25;
       }
-      .slide-visual {
-        position: sticky;
-        top: 138px;
-        min-height: min(62svh, 620px);
-        display: grid;
-        place-items: center;
-        perspective: 900px;
-      }
-      .image-frame {
-        width: min(100%, 560px);
-        aspect-ratio: 16 / 10;
-        display: grid;
-        align-items: end;
-        padding: 11px;
-        border: 1px solid var(--line);
-        background:
-          linear-gradient(135deg, transparent 0 18%, var(--gold-soft) 18% 19%, transparent 19% 82%, var(--gold-soft) 82% 83%, transparent 83%),
-          #111;
-        box-shadow: 0 24px 70px var(--shadow);
-        transform: rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateY(var(--lift, 0px));
-        transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), border-color 180ms ease;
-        cursor: pointer;
-        overflow: hidden;
-      }
-      .image-frame:hover {
-        border-color: color-mix(in srgb, var(--gold) 54%, var(--line));
-        --lift: -5px;
-      }
-      .image-frame.is-pulsing img {
-        animation: snapZoom 520ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .image-frame img {
+      .story-visual {
         width: 100%;
-        height: 100%;
-        object-fit: contain;
-        opacity: 1;
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #0b0b0b;
+        transform: translateY(var(--lift, 0px));
+        transition: transform 200ms ease, border-color 200ms ease;
       }
-      .image-caption {
-        margin: 10px 0 0;
+      .roster-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 8px;
+      }
+      .roster-strip span {
+        border: 1px solid var(--line);
+        padding: 9px 11px;
         color: var(--muted);
-        font-size: 11px;
+        font-size: 10px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.12em;
       }
-      @keyframes snapZoom {
-        0%, 100% { transform: scale(1); }
-        45% { transform: scale(1.045); }
-      }
-
       .facts, .feedback {
-        width: min(var(--max), 100%);
-        margin: 0 auto;
-        padding: clamp(66px, 9vw, 120px) var(--pad);
+        padding: clamp(56px, 9vw, 120px) 0;
         border-top: 1px solid var(--line);
       }
       .fact-grid {
@@ -335,11 +283,9 @@
         display: grid;
         gap: 12px;
         padding: clamp(18px, 3vw, 28px);
-        border: 1px solid var(--line);
-        background: var(--panel);
       }
-      .fact-card h3 {
-        font-size: clamp(28px, 4vw, 56px);
+      .fact-card h3, .feedback h2 {
+        font-size: clamp(32px, 5vw, 70px);
         line-height: 0.92;
       }
       .fact-card p, .source-list, .comment-card p {
@@ -360,11 +306,7 @@
         align-items: end;
         margin-bottom: 20px;
       }
-      .feedback h2 {
-        font-size: clamp(42px, 7vw, 92px);
-        line-height: 0.9;
-      }
-      .feedback-actions {
+      .feedback-actions, .comment-form {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
@@ -372,85 +314,83 @@
       .like-button, .submit-button {
         min-height: 42px;
         border: 1px solid var(--line);
-        background: var(--panel);
+        background: var(--glass);
         cursor: pointer;
         padding: 11px 14px;
         font-size: 11px;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.14em;
-        transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
       }
       .like-button:hover, .submit-button:hover {
         color: var(--gold);
         border-color: var(--gold);
-        transform: translateY(-1px);
       }
       .comment-form {
         display: grid;
         grid-template-columns: 0.35fr 1fr auto;
-        gap: 10px;
         margin: 18px 0;
       }
       .comment-form input, .comment-form textarea {
         width: 100%;
         min-height: 42px;
-        border: 1px solid var(--line);
-        background: transparent;
         padding: 11px 12px;
       }
-      .comment-form textarea {
-        resize: vertical;
-        min-height: 42px;
-      }
-      .comments {
-        display: grid;
-        gap: 10px;
-      }
+      .comment-form textarea { resize: vertical; }
+      .comments { display: grid; gap: 10px; }
       .footer {
+        position: relative;
+        z-index: 1;
         min-height: 36svh;
         display: grid;
         place-items: center;
         padding: var(--pad);
+        border-top: 1px solid var(--gold);
         color: var(--bg);
         background: var(--fg);
         text-align: center;
       }
       .footer a {
+        color: var(--bg);
         font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
         font-size: clamp(38px, 8vw, 112px);
         line-height: 0.88;
         text-transform: uppercase;
         letter-spacing: 0.04em;
       }
-
       @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.001ms !important;
-          animation-iteration-count: 1 !important;
-          scroll-behavior: auto !important;
-          transition-duration: 0.001ms !important;
-        }
+        *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+        .tower-sticky { transform: none !important; }
       }
-
-      @media (max-width: 820px) {
-        .hero-grid, .slide, .fact-grid, .comment-form {
+      @media (max-width: 900px) {
+        .tower-wrap {
+          width: 100%;
+          opacity: 0.22;
+        }
+        .tower-sticky {
+          justify-items: start;
+          padding-left: 12px;
+        }
+        .tower-lines {
+          width: 140px;
+        }
+        .content {
+          padding-left: var(--pad);
+        }
+        .meta-glass, .story-panel, .fact-grid, .comment-form {
           grid-template-columns: 1fr;
         }
-        .hero { min-height: 88svh; }
-        .jumpbar { top: 58px; }
-        .slide {
+        .meta-row {
           min-height: auto;
-          padding: 58px 0;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
         }
-        .slide:nth-child(even) .slide-visual { order: 0; }
-        .slide-visual {
-          position: relative;
-          top: auto;
+        .meta-row:last-child { border-bottom: 0; }
+        .artifact-grid {
+          grid-template-columns: 1fr;
+        }
+        .story-panel {
           min-height: auto;
-        }
-        .image-frame {
-          aspect-ratio: 16 / 10;
         }
         .feedback-head {
           display: grid;
@@ -460,262 +400,149 @@
   </head>
   <body>
     <header class="topbar" aria-label="Site header">
-      <a class="mark" href="/">QS</a>
-      <div class="nav-actions">
-        <a class="back" href="/#work">All Work</a>
-        <button class="theme-toggle" type="button" aria-label="Toggle theme"><span aria-hidden="true"></span></button>
-      </div>
+      <a href="/">QS</a>
+      <a href="/#work">All Work</a>
     </header>
-
-    <main>
-      <section class="hero" id="top">
-        <div class="hero-grid">
+    <div class="case-shell">
+      <aside class="tower-wrap" aria-hidden="true">
+        <div class="tower-sticky"><svg class="tower-lines" viewBox="0 0 240 980" aria-hidden="true">
+      <path d="M120 18L178 138V940H62V138L120 18Z" />
+      <path d="M120 18V940" />
+      <path d="M92 138h56M78 232h84M78 326h84M78 420h84M78 514h84M78 608h84M78 702h84M78 796h84" />
+      <path d="M62 940h116M44 940h152M88 138L62 232M152 138l26 94M62 326l116 94M178 326L62 420M62 514l116 94M178 514L62 608M62 702l116 94M178 702L62 796" />
+      <path d="M96 78h48M84 102h72M72 126h96" />
+    </svg></div>
+      </aside>
+      <main class="content">
+        <section class="hero" id="top">
           <div>
-            <p class="eyebrow" id="caseKicker">Private operating system</p>
-            <h1 id="caseTitle">StewartOS</h1>
-            <p class="deck" id="caseDeck">A living command layer for agents, family operations, product work, calendars, reporting, and source-truth memory.</p>
+            <p class="eyebrow">Multi-agent operating structure</p>
+            <h1>AgenticOS</h1>
+            <p class="deck">A private control plane for routing work between specialist agents, durable memory, approval gates, and source-backed outputs.</p>
           </div>
-          <aside class="hero-panel" aria-label="Project facts">
-            <div class="meta-row"><span class="meta-label">Category</span><strong id="caseCategory">AI operations</strong></div>
-            <div class="meta-row"><span class="meta-label">Status</span><strong id="caseStatus">Active internal system.</strong></div>
-            <div class="meta-row"><span class="meta-label">Last Edited</span><strong id="caseEdited">Portfolio source last edited 2026-06-25; StewartOS operating-mode notes updated 2026-06-23.</strong></div>
-            <div class="meta-row"><span class="meta-label">Business Model</span><strong id="caseBusiness">Internal operating infrastructure. No public business model was documented in the source files I inspected.</strong></div>
-            <div class="meta-row" id="externalRow" hidden><span class="meta-label">External Links</span><div class="external-links" id="caseExternalLinks"></div></div>
-          </aside>
-        </div>
-      </section>
-
-      <nav class="jumpbar" aria-label="Case study sections">
-        <div class="jumptrack" id="jumptrack"><a href="#section-1">What We Built</a>
-<a href="#section-2">Why It Exists</a>
-<a href="#section-3">How We Approached It</a>
-<a href="#section-4">Where It Stands</a></div>
-      </nav>
-
-      <section class="slides" id="slides" aria-label="Scrollytelling case study">
-        <article class="slide" id="section-1" data-section="What We Built">
-          <div class="slide-visual">
-            <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate What We Built visual">
-                <img src="/assets/previews/stewartos.png" alt="StewartOS visual 1" loading="eager" />
-              </div>
-              <figcaption class="image-caption">Agentic OS / What We Built</figcaption>
-            </figure>
+          <div class="meta-glass" aria-label="Project facts">
+            <div class="meta-row"><span class="meta-label">Category</span><strong>AI operations</strong></div>
+            <div class="meta-row"><span class="meta-label">Status</span><strong>Active internal system.</strong></div>
+            <div class="meta-row"><span class="meta-label">Last Edited</span><strong>Portfolio source last edited 2026-06-26; Agent context matrix generated 2026-06-24 from 2026-06-23 source truth.</strong></div>
+            <div class="meta-row"><span class="meta-label">Business Model</span><strong>Internal operating infrastructure and client-capability proof. No public AgenticOS pricing model is documented in the inspected files.</strong></div>
           </div>
-          <div class="slide-copy">
+        </section>
+        <nav class="jumpbar" aria-label="Case study sections">
+          <a href="#section-1">Control Plane</a>
+<a href="#section-2">Agent Roster</a>
+<a href="#section-3">Proof Trail</a>
+<a href="#section-4">Approval Gates</a>
+        </nav>
+        <section class="artifact-grid" aria-label="AgenticOS source artifacts">
+          <figure class="artifact" data-tilt>
+          <img src="/assets/case-studies/agenticos/context-matrix.svg" alt="AgenticOS Control Plane artifact" loading="eager" />
+          <figcaption>Control Plane</figcaption>
+        </figure>
+<figure class="artifact" data-tilt>
+          <img src="/assets/case-studies/agenticos/agent-roster.svg" alt="AgenticOS Agent Roster artifact" loading="lazy" />
+          <figcaption>Agent Roster</figcaption>
+        </figure>
+<figure class="artifact" data-tilt>
+          <img src="/assets/case-studies/agenticos/run-ledger.svg" alt="AgenticOS Proof Trail artifact" loading="lazy" />
+          <figcaption>Proof Trail</figcaption>
+        </figure>
+<figure class="artifact" data-tilt>
+          <img src="/assets/case-studies/agenticos/approval-queue.svg" alt="AgenticOS Approval Gates artifact" loading="lazy" />
+          <figcaption>Approval Gates</figcaption>
+        </figure>
+        </section>
+        <section class="story" aria-label="AgenticOS story">
+          <article class="story-panel" id="section-1" data-section="Control Plane">
+          <div class="story-copy">
             <p class="eyebrow">01 / AI operations</p>
-            <h2>What We Built</h2>
-            <p>A private operating layer that ties together agents, daily reports, project memory, calendars, open loops, and decision context.</p>
+            <h2>Control Plane</h2>
+            <p>Botler acts as the front pane and coordinator: it receives the human request, decides whether the work belongs to a specialist, and keeps the final answer grounded in durable artifacts.</p>
           </div>
+          <figure class="story-visual" data-tilt>
+            <img src="/assets/case-studies/agenticos/context-matrix.svg" alt="AgenticOS Control Plane source artifact" loading="eager" />
+          </figure>
         </article>
-<article class="slide" id="section-2" data-section="Why It Exists">
-          <div class="slide-visual">
-            <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate Why It Exists visual">
-                <img src="/assets/previews/botler-shell.png" alt="StewartOS visual 2" loading="lazy" />
-              </div>
-              <figcaption class="image-caption">Agentic OS / Why It Exists</figcaption>
-            </figure>
-          </div>
-          <div class="slide-copy">
+<article class="story-panel" id="section-2" data-section="Agent Roster">
+          <div class="story-copy">
             <p class="eyebrow">02 / AI operations</p>
-            <h2>Why It Exists</h2>
-            <p>The goal was not a polished dashboard first. It was survival-grade usefulness: know what moved, what is blocked, what is safe to automate, and what needs a human decision.</p>
+            <h2>Agent Roster</h2>
+            <p>Configured and documented lanes include Botler, Cash, Dev, Jim, Hermes, Loki, Impulse, Red, Doc, Atlas, and Scout. Each has a narrower job than a general assistant.</p>
           </div>
+          <figure class="story-visual" data-tilt>
+            <img src="/assets/case-studies/agenticos/agent-roster.svg" alt="AgenticOS Agent Roster source artifact" loading="lazy" />
+          </figure>
         </article>
-<article class="slide" id="section-3" data-section="How We Approached It">
-          <div class="slide-visual">
-            <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate How We Approached It visual">
-                <img src="/assets/previews/contact-sheet.png" alt="StewartOS visual 3" loading="lazy" />
-              </div>
-              <figcaption class="image-caption">Agentic OS / How We Approached It</figcaption>
-            </figure>
-          </div>
-          <div class="slide-copy">
+<article class="story-panel" id="section-3" data-section="Proof Trail">
+          <div class="story-copy">
             <p class="eyebrow">03 / AI operations</p>
-            <h2>How We Approached It</h2>
-            <p>The project uses real notes and reports as the product substrate. Every useful surface points back to evidence instead of pretending a summary is the source.</p>
+            <h2>Proof Trail</h2>
+            <p>The system writes context matrices, daily memories, nightly dreams, reports, and run-ledger rows so progress, blockers, and decisions can be inspected later.</p>
           </div>
+          <figure class="story-visual" data-tilt>
+            <img src="/assets/case-studies/agenticos/run-ledger.svg" alt="AgenticOS Proof Trail source artifact" loading="lazy" />
+          </figure>
         </article>
-<article class="slide" id="section-4" data-section="Where It Stands">
-          <div class="slide-visual">
-            <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate Where It Stands visual">
-                <img src="/assets/previews/stewartos.png" alt="StewartOS visual 4" loading="lazy" />
-              </div>
-              <figcaption class="image-caption">Agentic OS / Where It Stands</figcaption>
-            </figure>
-          </div>
-          <div class="slide-copy">
+<article class="story-panel" id="section-4" data-section="Approval Gates">
+          <div class="story-copy">
             <p class="eyebrow">04 / AI operations</p>
-            <h2>Where It Stands</h2>
-            <p>The system works as internal infrastructure, with a clear next question: which pieces should become public, packaged, or client-safe.</p>
+            <h2>Approval Gates</h2>
+            <p>Agents can draft, stage, verify, and report. External actions like posts, sends, spends, deploys, trades, and client-visible changes stay approval-gated when source truth is incomplete.</p>
           </div>
+          <figure class="story-visual" data-tilt>
+            <img src="/assets/case-studies/agenticos/approval-queue.svg" alt="AgenticOS Approval Gates source artifact" loading="lazy" />
+          </figure>
         </article>
-      </section>
-
-      <section class="facts" aria-label="Evidence and unknowns">
-        <div class="fact-grid">
-          <article class="fact-card">
-            <p class="meta-label">Goal</p>
-            <h3>What we aimed for</h3>
-            <p id="caseGoal">Make the machine remember what happened, route work to the right lane, preserve approval boundaries, and keep daily decisions grounded in source truth.</p>
-          </article>
-          <article class="fact-card">
-            <p class="meta-label">Approach</p>
-            <h3>How we tried</h3>
-            <p id="caseApproach">The build grew around daily notes, project status files, agent context maps, reports, approvals, dashboards, and recovery loops instead of a generic chat surface.</p>
-          </article>
-          <article class="fact-card">
-            <p class="meta-label">Outcome</p>
-            <h3>Did it work?</h3>
-            <p id="caseOutcome">Partially achieved and still evolving. The system has durable source maps and project truth, but some lanes still depend on manual owner decisions and private runtime checks.</p>
-          </article>
-          <article class="fact-card">
-            <p class="meta-label">Still Unknown</p>
-            <h3>Needs owner truth</h3>
-            <ul class="source-list" id="caseUnknowns"><li>Public packaging/pricing for StewartOS is not documented.</li>\n<li>Which parts, if any, should become a client-facing product is not documented.</li></ul>
-          </article>
-          <article class="fact-card">
-            <p class="meta-label">Sources</p>
-            <h3>What this page used</h3>
-            <ul class="source-list" id="caseSources"><li>Agents/context/latest.md</li>\n<li>Daily/2026-06-23.md</li>\n<li>Dashboard/Source Truth Map.md</li>\n<li>PortfolioSite/index.html</li></ul>
-          </article>
-          <article class="fact-card">
-            <p class="meta-label">Next</p>
-            <h3>Similar work</h3>
-            <p>Use the comments below to leave a reaction, or email Quan if you want a private walkthrough of the build artifacts behind this case study.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="feedback" aria-label="Project feedback">
-        <div class="feedback-head">
-          <div>
-            <p class="eyebrow">Feedback</p>
-            <h2>Leave a signal.</h2>
+          <aside class="roster-strip" aria-label="Agent roster">
+            <span>Botler</span><span>Cash</span><span>Dev</span><span>Jim</span><span>Hermes</span><span>Loki</span><span>Impulse</span><span>Red</span><span>Doc</span><span>Atlas</span><span>Scout</span>
+          </aside>
+        </section>
+        <section class="facts" aria-label="Evidence and unknowns">
+          <div class="fact-grid">
+            <article class="fact-card"><p class="meta-label">Goal</p><h3>What we aimed for</h3><p>Move beyond one giant assistant by giving work to distinct agents with dedicated context, source files, tools, and escalation rules.</p></article>
+            <article class="fact-card"><p class="meta-label">Approach</p><h3>How we tried</h3><p>The system uses Botler as the control plane, specialist agents for domains, Hermes-style runtime/switchboard patterns, context matrices, run ledgers, nightly dreams, and approval gates so important facts live in files instead of hidden chat state.</p></article>
+            <article class="fact-card"><p class="meta-label">Outcome</p><h3>Did it work?</h3><p>Partially achieved and actively used. The structure can route, remember, report, and block unsafe action, but public packaging and some runtime identity cleanup still need owner decisions.</p></article>
+            <article class="fact-card"><p class="meta-label">Still Unknown</p><h3>Needs owner truth</h3><ul class="source-list"><li>Public packaging/pricing for AgenticOS is not documented.</li>
+<li>Which pieces should become a reusable client-facing system need owner confirmation.</li>
+<li>Hermes is documented as runtime/switchboard in architecture notes, but its current identity files mirror Jim and should be cleaned up before being presented as fully resolved.</li></ul></article>
+            <article class="fact-card"><p class="meta-label">Sources</p><h3>What this page used</h3><ul class="source-list"><li>Agents/context/latest.md</li>
+<li>Daily/2026-06-23.md</li>
+<li>.openclaw/openclaw.json</li>
+<li>.openclaw/workspace/operations/acp-agent-session-architecture.md</li>
+<li>.openclaw/workspace/agents/registry.json</li>
+<li>.openclaw/workspace/operations/model-matrix.md</li></ul></article>
+            <article class="fact-card"><p class="meta-label">Next</p><h3>Reusable pattern</h3><p>This case study is about the operating pattern: scoped agents, durable memory, approval gates, and evidence trails that other teams can adapt.</p></article>
           </div>
-          <div class="feedback-actions">
-            <button class="like-button" id="likeButton" type="button">Like <span id="likeCount">0</span></button>
-            <span class="feedback-status" id="feedbackStatus">Loading feedback</span>
+        </section>
+        <section class="feedback" aria-label="Project feedback">
+          <div class="feedback-head">
+            <div><p class="eyebrow">Feedback</p><h2>Leave a signal.</h2></div>
+            <div class="feedback-actions">
+              <button class="like-button" id="likeButton" type="button">Like <span id="likeCount">0</span></button>
+              <span class="feedback-status" id="feedbackStatus">Loading feedback</span>
+            </div>
           </div>
-        </div>
-        <form class="comment-form" id="commentForm">
-          <input id="commentName" name="name" autocomplete="name" maxlength="80" placeholder="Name" />
-          <textarea id="commentText" name="comment" maxlength="700" required placeholder="What did this make you want to know, buy, test, or challenge?"></textarea>
-          <button class="submit-button" type="submit">Send</button>
-        </form>
-        <div class="comments" id="comments"></div>
-      </section>
-    </main>
-
+          <form class="comment-form" id="commentForm">
+            <input id="commentName" name="name" autocomplete="name" maxlength="80" placeholder="Name" />
+            <textarea id="commentText" name="comment" maxlength="700" required placeholder="What did this make you want to know, build, test, or challenge?"></textarea>
+            <button class="submit-button" type="submit">Send</button>
+          </form>
+          <div class="comments" id="comments"></div>
+        </section>
+      </main>
+    </div>
     <footer class="footer">
       <a href="/#work">Back to the work</a>
     </footer>
-
-    <script src="/case-studies/cases.js"></script>
     <script>
-      const root = document.documentElement;
-      const savedTheme = localStorage.getItem("portfolio-theme");
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      root.dataset.theme = savedTheme || (prefersDark ? "dark" : "light");
-
-      document.querySelector(".theme-toggle").addEventListener("click", () => {
-        const next = root.dataset.theme === "dark" ? "light" : "dark";
-        root.dataset.theme = next;
-        localStorage.setItem("portfolio-theme", next);
-      });
-
-      const slugFromPath = location.pathname.split("/").filter(Boolean).pop();
-      const params = new URLSearchParams(location.search);
-      const slug = params.get("project") || (slugFromPath === "case-studies" ? "stewartos" : slugFromPath);
-      const cases = window.CASE_STUDIES || [];
-      const item = cases.find((entry) => entry.slug === slug) || cases[0];
-      const hasImages = Array.isArray(item.images) && item.images.length > 0;
-      const imageFor = (index) => hasImages ? item.images[index % item.images.length] : "";
+      const caseData = {"slug":"stewartos","title":"AgenticOS"};
       const formatter = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric" });
-      document.title = `${item.title} Case Study | QuanBuilds`;
-      document.querySelector("meta[name='description']").setAttribute("content", item.deck);
-      document.querySelector("link[rel='canonical']").setAttribute("href", `https://quanbuilds.netlify.app/case-studies/${item.slug}/`);
-
-      function setText(id, value) {
-        document.getElementById(id).textContent = value;
-      }
-
-      setText("caseKicker", item.kicker);
-      setText("caseTitle", item.title);
-      setText("caseDeck", item.deck);
-      setText("caseCategory", item.category);
-      setText("caseStatus", item.status);
-      setText("caseEdited", item.lastEdited);
-      setText("caseBusiness", item.businessModel);
-      setText("caseGoal", item.goal);
-      setText("caseApproach", item.approach);
-      setText("caseOutcome", item.outcome);
-
-      function listItems(targetId, values) {
-        const target = document.getElementById(targetId);
-        target.replaceChildren(...values.map((value) => {
-          const li = document.createElement("li");
-          li.textContent = value;
-          return li;
-        }));
-      }
-
-      listItems("caseUnknowns", item.unknowns);
-      listItems("caseSources", item.sources);
-
-      const externalLinks = Array.isArray(item.externalLinks) ? item.externalLinks : [];
-      const externalRow = document.getElementById("externalRow");
-      const externalTarget = document.getElementById("caseExternalLinks");
-      externalTarget.replaceChildren(...externalLinks.map((link) => {
-        const anchor = document.createElement("a");
-        anchor.href = link.url;
-        anchor.textContent = link.label;
-        anchor.rel = "noopener";
-        anchor.addEventListener("click", () => track("click", { label: `external_link: ${link.label}`, target: link.url }));
-        return anchor;
-      }));
-      externalRow.hidden = externalLinks.length === 0;
-
-      const jumptrack = document.getElementById("jumptrack");
-      const slides = document.getElementById("slides");
-      jumptrack.replaceChildren();
-      slides.replaceChildren();
-      item.sections.forEach((section, index) => {
-        const id = `section-${index + 1}`;
-        const link = document.createElement("a");
-        link.href = `#${id}`;
-        link.textContent = section[0];
-        jumptrack.appendChild(link);
-
-        const slide = document.createElement("article");
-        slide.className = hasImages ? "slide" : "slide has-no-media";
-        slide.id = id;
-        slide.dataset.section = section[0];
-        slide.innerHTML = `
-          ${hasImages ? `<div class="slide-visual">
-            <figure>
-              <div class="image-frame" tabindex="0" role="button" aria-label="Animate ${section[0]} visual">
-                <img src="${imageFor(index)}" alt="${item.title} visual ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" />
-              </div>
-              <figcaption class="image-caption">${item.label} / ${section[0]}</figcaption>
-            </figure>
-          </div>` : ""}
-          <div class="slide-copy">
-            <p class="eyebrow">${String(index + 1).padStart(2, "0")} / ${item.category}</p>
-            <h2>${section[0]}</h2>
-            <p>${section[1]}</p>
-          </div>
-        `;
-        slides.appendChild(slide);
-      });
+      const root = document.documentElement;
+      const tower = document.querySelector(".tower-sticky");
 
       function payload(extra = {}) {
         return {
-          project: item.slug,
-          path: `${location.pathname}${location.search}${location.hash}`,
+          project: caseData.slug,
+          path: location.pathname + location.search + location.hash,
           title: document.title,
           referrer: document.referrer,
           viewport: { width: window.innerWidth, height: window.innerHeight },
@@ -723,21 +550,14 @@
           ...extra,
         };
       }
-
       function track(type, data = {}) {
         const body = JSON.stringify({ type, data: payload(data) });
         if (navigator.sendBeacon) {
           navigator.sendBeacon("/.netlify/functions/analytics", new Blob([body], { type: "application/json" }));
           return;
         }
-        fetch("/.netlify/functions/analytics", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body,
-          keepalive: true,
-        }).catch(() => {});
+        fetch("/.netlify/functions/analytics", { method: "POST", headers: { "content-type": "application/json" }, body, keepalive: true }).catch(() => {});
       }
-
       function postFeedback(data) {
         return fetch("/.netlify/functions/analytics", {
           method: "POST",
@@ -745,33 +565,29 @@
           body: JSON.stringify({ type: "feedback", data: payload(data) }),
         }).then((res) => res.json());
       }
-
       function cleanText(value, fallback = "") {
         return String(value || fallback).replace(/[<>]/g, "").slice(0, 700);
       }
-
       async function loadFeedback() {
         const status = document.getElementById("feedbackStatus");
         try {
-          const res = await fetch(`/.netlify/functions/analytics?feedback=${encodeURIComponent(item.slug)}`);
+          const res = await fetch("/.netlify/functions/analytics?feedback=" + encodeURIComponent(caseData.slug));
           const data = await res.json();
           const summary = data.summary || { likes: 0, comments: [] };
           document.getElementById("likeCount").textContent = summary.likes || 0;
-          status.textContent = `${summary.commentCount || 0} comments`;
-          const comments = document.getElementById("comments");
+          status.textContent = (summary.commentCount || 0) + " comments";
           const nodes = (summary.comments || []).map((comment) => {
             const card = document.createElement("article");
             card.className = "comment-card";
             const date = comment.ts ? formatter.format(new Date(comment.ts)) : "";
-            card.innerHTML = `<p class="meta-label">${cleanText(comment.name, "Anonymous")} ${date ? "/ " + date : ""}</p><p>${cleanText(comment.comment)}</p>`;
+            card.innerHTML = '<p class="meta-label">' + cleanText(comment.name, "Anonymous") + (date ? " / " + date : "") + '</p><p>' + cleanText(comment.comment) + '</p>';
             return card;
           });
-          comments.replaceChildren(...nodes);
+          document.getElementById("comments").replaceChildren(...nodes);
         } catch {
           status.textContent = "Feedback unavailable";
         }
       }
-
       document.getElementById("likeButton").addEventListener("click", async () => {
         document.getElementById("feedbackStatus").textContent = "Saving like";
         try {
@@ -782,15 +598,13 @@
           document.getElementById("feedbackStatus").textContent = "Like did not save";
         }
       });
-
       document.getElementById("commentForm").addEventListener("submit", async (event) => {
         event.preventDefault();
-        const name = document.getElementById("commentName").value;
         const comment = document.getElementById("commentText").value;
         if (!comment.trim()) return;
         document.getElementById("feedbackStatus").textContent = "Saving comment";
         try {
-          await postFeedback({ action: "comment", name, comment });
+          await postFeedback({ action: "comment", name: document.getElementById("commentName").value, comment });
           track("click", { label: "case_comment" });
           document.getElementById("commentText").value = "";
           await loadFeedback();
@@ -798,60 +612,44 @@
           document.getElementById("feedbackStatus").textContent = "Comment did not save";
         }
       });
-
-      document.querySelectorAll(".image-frame").forEach((frame) => {
-        frame.addEventListener("pointermove", (event) => {
-          const rect = frame.getBoundingClientRect();
-          const x = ((event.clientX - rect.left) / rect.width - 0.5) * 8;
-          const y = ((event.clientY - rect.top) / rect.height - 0.5) * -8;
-          frame.style.setProperty("--tilt-x", `${x.toFixed(2)}deg`);
-          frame.style.setProperty("--tilt-y", `${y.toFixed(2)}deg`);
-        });
-        frame.addEventListener("pointerleave", () => {
-          frame.style.setProperty("--tilt-x", "0deg");
-          frame.style.setProperty("--tilt-y", "0deg");
-        });
-        frame.addEventListener("click", () => {
-          frame.classList.remove("is-pulsing");
-          void frame.offsetWidth;
-          frame.classList.add("is-pulsing");
-          track("click", { label: "case_image_animation", target: frame.closest(".slide")?.id || "" });
+      document.querySelectorAll("[data-tilt]").forEach((node) => {
+        node.addEventListener("click", () => {
+          node.animate([{ transform: "translateY(0)" }, { transform: "translateY(-6px)" }, { transform: "translateY(0)" }], { duration: 520, easing: "cubic-bezier(.16,1,.3,1)" });
+          track("click", { label: "agenticos_artifact", target: node.querySelector("figcaption")?.textContent || "" });
         });
       });
-
+      const links = Array.from(document.querySelectorAll(".jumpbar a"));
       const seenSections = new Set();
-      const links = Array.from(jumptrack.querySelectorAll("a"));
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          links.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === `#${entry.target.id}`));
+          links.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === "#" + entry.target.id));
           if (!seenSections.has(entry.target.id)) {
             seenSections.add(entry.target.id);
             track("vital", { label: "case_section_view", target: entry.target.dataset.section });
           }
         });
       }, { rootMargin: "-35% 0px -45% 0px", threshold: 0.01 });
-      document.querySelectorAll(".slide").forEach((slide) => observer.observe(slide));
-
+      document.querySelectorAll(".story-panel").forEach((panel) => observer.observe(panel));
       const depthMarks = [25, 50, 75, 95];
       const sentDepth = new Set();
-      window.addEventListener("scroll", () => {
+      function onScroll() {
         const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        const depth = Math.round((window.scrollY / max) * 100);
+        const ratio = window.scrollY / max;
+        root.style.setProperty("--tower-shift", (ratio * 52).toFixed(2) + "px");
+        const depth = Math.round(ratio * 100);
         depthMarks.forEach((mark) => {
           if (depth >= mark && !sentDepth.has(mark)) {
             sentDepth.add(mark);
-            track("vital", { label: "case_scroll_depth", target: `${mark}%` });
+            track("vital", { label: "case_scroll_depth", target: mark + "%" });
           }
         });
-      }, { passive: true });
-
-      [15, 45, 90].forEach((seconds) => {
-        window.setTimeout(() => track("vital", { label: "case_time", target: `${seconds}s` }), seconds * 1000);
-      });
-
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+      [15, 45, 90].forEach((seconds) => window.setTimeout(() => track("vital", { label: "case_time", target: seconds + "s" }), seconds * 1000));
       track("pageview", { label: "case_study" });
       loadFeedback();
+      onScroll();
     </script>
   </body>
 </html>
