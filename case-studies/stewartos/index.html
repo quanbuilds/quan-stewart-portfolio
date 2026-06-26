@@ -34,8 +34,6 @@
         --gold-soft: rgba(200, 154, 58, 0.18);
         --pad: clamp(18px, 4vw, 56px);
         --max: 1480px;
-        --bg-art-opacity: 0.74;
-        --bg-art-filter: none;
       }
       [data-theme="light"] {
         color-scheme: light;
@@ -47,8 +45,6 @@
         --glass-strong: rgba(255, 252, 242, 0.82);
         --gold: #986815;
         --gold-soft: rgba(152, 104, 21, 0.14);
-        --bg-art-opacity: 0.22;
-        --bg-art-filter: invert(1) hue-rotate(180deg) saturate(0.72) contrast(1.05);
       }
       * { box-sizing: border-box; }
       html { background: var(--bg); scroll-behavior: smooth; }
@@ -60,20 +56,6 @@
         font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         line-height: 1.45;
       }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0 auto 0 0;
-        width: min(31vw, 360px);
-        z-index: 0;
-        pointer-events: none;
-        background-image: url("/assets/case-studies/agenticos/control-tower-bg.png");
-        background-size: auto 100svh;
-        background-position: left -48px;
-        background-repeat: no-repeat;
-        opacity: var(--bg-art-opacity);
-        filter: var(--bg-art-filter);
-      }
       body::after {
         content: "";
         position: fixed;
@@ -81,7 +63,7 @@
         z-index: 0;
         pointer-events: none;
         background: var(--bg);
-        opacity: 0.08;
+        opacity: 0;
       }
       body::-webkit-scrollbar { width: 0; height: 0; }
       a { color: inherit; text-decoration: none; }
@@ -147,32 +129,40 @@
         min-height: 100svh;
       }
       .tower-wrap {
-        display: none;
+        position: fixed;
+        z-index: 1;
+        top: 62px;
+        bottom: 32px;
+        left: 34px;
+        width: min(22vw, 315px);
+        display: grid;
+        align-items: end;
+        pointer-events: none;
       }
       .tower-sticky {
-        height: 100svh;
+        height: calc(100svh - 94px);
         display: grid;
         place-items: end center;
-        padding: 7svh 0 8svh;
+        padding: 0;
         transform: translateY(var(--tower-shift, 0px));
         will-change: transform;
       }
       .tower-lines {
-        width: min(76%, 245px);
+        width: 100%;
         height: 100%;
         fill: none;
         stroke: var(--gold);
-        stroke-width: 1.45;
+        stroke-width: 1.2;
         stroke-linecap: square;
         stroke-linejoin: miter;
-        opacity: 0.72;
+        opacity: 0.95;
       }
       .content {
         position: relative;
         z-index: 2;
         width: min(var(--max), 100%);
         margin: 0 auto;
-        padding: 92px clamp(28px, 4vw, 60px) 0 clamp(320px, 25vw, 390px);
+        padding: 92px clamp(38px, 4vw, 58px) 0 clamp(330px, 25vw, 390px);
       }
       .eyebrow, .meta-label, .artifact figcaption, .feedback-status {
         color: var(--muted);
@@ -189,12 +179,12 @@
         letter-spacing: 0.04em;
       }
       .hero {
-        min-height: 58svh;
+        min-height: 0;
         display: grid;
         grid-template-columns: minmax(0, 0.78fr) minmax(420px, 1.08fr);
         align-items: center;
         gap: clamp(34px, 5vw, 86px);
-        padding: 34px 0 clamp(28px, 5vw, 58px);
+        padding: 30px 0 18px;
       }
       h1 {
         margin-top: 12px;
@@ -225,7 +215,7 @@
       }
       .deck {
         max-width: 43ch;
-        margin: 34px 0 0;
+        margin: 28px 0 0;
         color: var(--muted);
         font-size: clamp(16px, 1.45vw, 20px);
         line-height: 1.55;
@@ -263,14 +253,11 @@
       .meta-row:last-child { border-right: 0; }
       .meta-row strong { font-weight: 600; }
       .jumpbar {
-        position: sticky;
-        z-index: 12;
-        top: 78px;
-        display: flex;
+        display: none;
         flex-wrap: wrap;
         gap: 8px;
         padding: 8px;
-        margin: 22px 0;
+        margin: 14px 0 20px;
         border: 1px solid var(--line);
         background: color-mix(in srgb, var(--bg) 78%, transparent);
         backdrop-filter: blur(18px);
@@ -298,7 +285,7 @@
         grid-template-columns: 1.15fr 1fr 0.86fr;
         gap: 22px;
         align-items: end;
-        padding: clamp(22px, 4vw, 46px);
+        padding: clamp(18px, 2.4vw, 28px);
         border: 1px solid var(--line);
         border-radius: 12px;
         background: var(--glass);
@@ -341,7 +328,7 @@
       .story {
         display: grid;
         gap: 22px;
-        padding: 22px 0 clamp(44px, 8vw, 92px);
+        padding: 0 0 22px;
       }
       .story-panel {
         min-height: 0;
@@ -425,7 +412,7 @@
         flex-wrap: wrap;
         align-items: center;
         gap: clamp(12px, 2.3vw, 28px);
-        padding: clamp(20px, 3vw, 34px);
+        padding: clamp(18px, 2.4vw, 28px);
         border: 1px solid var(--line);
         border-radius: 12px;
         background: var(--glass);
@@ -453,16 +440,88 @@
         text-transform: uppercase;
         letter-spacing: 0.12em;
       }
-      .roster-strip span::before {
-        content: "◇";
-        display: inline-grid;
-        place-items: center;
+      .agent-icon {
         width: 30px;
         height: 30px;
+        padding: 6px;
         border: 1px solid var(--gold);
         border-radius: 999px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
         color: var(--gold);
-        font-size: 13px;
+      }
+      .proof-card h3 {
+        margin: 0 0 8px;
+        color: var(--fg);
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: clamp(20px, 2vw, 25px);
+        font-weight: 500;
+      }
+      .editor-mock, .proof-ledger table, .approval-card {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: rgba(6, 7, 7, 0.66);
+        color: #d8d0be;
+        font-family: Menlo, Consolas, monospace;
+        font-size: 11px;
+      }
+      .editor-tab {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+      .editor-mock pre {
+        margin: 0;
+        min-height: 160px;
+        padding: 14px;
+        overflow: auto;
+        white-space: pre-wrap;
+        line-height: 1.55;
+      }
+      .proof-ledger table {
+        border-collapse: collapse;
+        overflow: hidden;
+      }
+      .proof-ledger th, .proof-ledger td {
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(247,241,223,0.09);
+        text-align: left;
+      }
+      .proof-ledger th {
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 9px;
+      }
+      .approval-card {
+        min-height: 160px;
+        padding: 16px;
+      }
+      .approval-card p {
+        margin: 0 0 8px;
+      }
+      .approval-card span {
+        color: var(--muted);
+        font-size: 10px;
+      }
+      .approval-card ul {
+        margin: 8px 0 14px;
+        padding-left: 18px;
+      }
+      .approval-card button {
+        min-height: 30px;
+        margin-right: 8px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 6px 14px;
+        background: transparent;
+        color: var(--fg);
+      }
+      .approval-card button:first-child {
+        background: rgba(67, 132, 77, 0.64);
       }
       .facts, .feedback {
         padding: clamp(56px, 9vw, 120px) 0;
@@ -557,11 +616,17 @@
         .tower-sticky { transform: none !important; }
       }
       @media (max-width: 900px) {
-        body::before {
-          background-size: auto 100svh;
-          background-position: 42% -34px;
-          width: 100%;
-          opacity: calc(var(--bg-art-opacity) * 0.6);
+        .tower-wrap {
+          top: 42px;
+          left: 50%;
+          bottom: auto;
+          width: min(68vw, 285px);
+          height: 100svh;
+          opacity: 0.42;
+          transform: translateX(-50%);
+        }
+        .tower-sticky {
+          height: 100svh;
         }
         .content {
           padding-left: var(--pad);
@@ -615,12 +680,25 @@
     </header>
     <div class="case-shell">
       <aside class="tower-wrap" aria-hidden="true">
-        <div class="tower-sticky"><svg class="tower-lines" viewBox="0 0 240 980" aria-hidden="true">
-      <path d="M120 18L178 138V940H62V138L120 18Z" />
-      <path d="M120 18V940" />
-      <path d="M92 138h56M78 232h84M78 326h84M78 420h84M78 514h84M78 608h84M78 702h84M78 796h84" />
-      <path d="M62 940h116M44 940h152M88 138L62 232M152 138l26 94M62 326l116 94M178 326L62 420M62 514l116 94M178 514L62 608M62 702l116 94M178 702L62 796" />
-      <path d="M96 78h48M84 102h72M72 126h96" />
+        <div class="tower-sticky"><svg class="tower-lines" viewBox="0 0 320 920" aria-hidden="true">
+      <path d="M160 8l8 38v118l28 34v122l34 38v214l45 44v244H45V616l45-44V358l34-38V198l28-34V46l8-38Z"/>
+      <path d="M160 8v852M136 98v762M184 98v762M112 206v654M208 206v654"/>
+      <path d="M148 126v734M172 126v734M100 360v500M220 360v500M76 622v238M244 622v238"/>
+      <path d="M136 46h48M128 82h64M118 146h84M104 198h112"/>
+      <path d="M144 46l16-38 16 38M136 98l24-52 24 52M124 198l36-34 36 34"/>
+      <path d="M124 320l36-42 36 42M90 358l70-80 70 80"/>
+      <path d="M90 572l70-70 70 70M90 714l70-70 70 70"/>
+      <path d="M45 616l115-114 115 114M45 760l115-116 115 116"/>
+      <path d="M45 860h230M20 876h280M0 892h320"/>
+      <path d="M124 198v122M196 198v122M124 358v214M196 358v214M124 616v244M196 616v244"/>
+      <path d="M108 430h104M124 502h72M108 572h104M124 644h72M108 714h104M124 786h72"/>
+      <path d="M160 164l36 34M160 164l-36 34M160 278l70 80M160 278l-70 80M160 502l70 70M160 502l-70 70M160 644l70 70M160 644l-70 70"/>
+      <path d="M146 762l14-18 14 18v98h-28v-98Z"/>
+      <path d="M130 802l30-36 30 36v58h-60v-58Z"/>
+      <path d="M132 810l28-34 28 34M146 830l14-18 14 18"/>
+      <path class="tower-spire" d="M160 8v-40M150 46l10-38 10 38"/>
+      <path d="M36 860V736l54-52M284 860V736l-54-52"/>
+      <circle cx="160" cy="608" r="4"/>
     </svg></div>
       </aside>
       <main class="content">
@@ -670,26 +748,44 @@
         </nav>
         <section class="story" aria-label="AgenticOS roster">
           <aside class="roster-strip" id="section-2" data-section="Agent Roster" aria-label="Agent roster">
-            <span>Botler</span><span>Cash</span><span>Dev</span><span>Jim</span><span>Hermes</span><span>Loki</span><span>Impulse</span><span>Red</span><span>Doc</span><span>Atlas</span><span>Scout</span>
+            <span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16M16 7.5c-1-1-2.4-1.5-4-1.5-2.2 0-4 1.1-4 3 0 4.3 8 1.7 8 6 0 1.9-1.8 3-4 3-1.7 0-3.2-.6-4.2-1.7"/></svg>Cash</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 8-4 4 4 4M15 8l4 4-4 4M13 6l-2 12"/></svg>Dev</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M5 20c1.4-3.2 3.8-5 7-5s5.6 1.8 7 5"/></svg>Jim</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15c7-1 11-4.5 16-11-1.2 6.8-4.8 12-13 15"/><path d="M8 16c2.5-3.4 5.9-5.8 10-7"/></svg>Hermes</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8c-2-3-1-5 1-6 0 3 2 5 4 6 2-1 4-3 4-6 2 1 3 3 1 6"/><path d="M6 9c0 5 2.5 9 6 9s6-4 6-9"/><path d="M9 20h6"/></svg>Loki</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 5 14h6l-1 8 8-12h-6l1-8Z"/></svg>Impulse</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.6 2.9 8.3 7 10 4.1-1.7 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>Red</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7V3Z"/><path d="M14 3v5h4M9 13h6M9 17h6"/></svg>Doc</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9M12 3c-2.5 2.6-3.8 5.6-3.8 9s1.3 6.4 3.8 9"/></svg>Atlas</span><span><svg class="agent-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 8-4 10-4-4-4 2 4-10 4 4 4-2Z"/><path d="m12 10-2 4"/></svg>Scout</span>
           </aside>
         </section>
         <section class="artifact-grid" id="section-3" data-section="Proof Trail" aria-label="AgenticOS source artifacts">
-          <figure class="artifact" data-tilt>
-          <img src="/assets/case-studies/agenticos/context-matrix.svg" alt="AgenticOS Control Plane artifact" loading="eager" />
-          <figcaption>Control Plane</figcaption>
-        </figure>
-<figure class="artifact" data-tilt>
-          <img src="/assets/case-studies/agenticos/agent-roster.svg" alt="AgenticOS Agent Roster artifact" loading="lazy" />
-          <figcaption>Agent Roster</figcaption>
-        </figure>
-<figure class="artifact" data-tilt>
-          <img src="/assets/case-studies/agenticos/run-ledger.svg" alt="AgenticOS Proof Trail artifact" loading="lazy" />
-          <figcaption>Proof Trail</figcaption>
-        </figure>
-<figure class="artifact" data-tilt>
-          <img src="/assets/case-studies/agenticos/approval-queue.svg" alt="AgenticOS Approval Gates artifact" loading="lazy" />
-          <figcaption>Approval Gates</figcaption>
-        </figure>
+          <article class="proof-card proof-memory">
+          <h3>Memory</h3>
+          <div class="editor-mock">
+            <div class="editor-tab">001_overview.md</div>
+            <pre># Project Overview
+This project focuses on building a multi-agent operating system that coordinates specialized agents through a unified control plane.
+
+## Principles
+- Clarity over cleverness
+- Durable over ephemeral
+- Verifiable over assumed</pre>
+          </div>
+        </article>
+        <article class="proof-card proof-ledger">
+          <h3>Ledger</h3>
+          <table>
+            <thead><tr><th>Run</th><th>Status</th><th>Agents</th><th>Started</th></tr></thead>
+            <tbody>
+              <tr><td>R1024</td><td>✓</td><td>Dev, Hermes</td><td>10:14 AM</td></tr>
+              <tr><td>R1023</td><td>✓</td><td>Cash, Jim</td><td>10:02 AM</td></tr>
+              <tr><td>R1022</td><td>✓</td><td>Hermes, Loki</td><td>9:48 AM</td></tr>
+              <tr><td>R1021</td><td>✓</td><td>Dev, Impulse</td><td>9:31 AM</td></tr>
+            </tbody>
+          </table>
+        </article>
+        <article class="proof-card proof-approval">
+          <h3>Approval</h3>
+          <div class="approval-card">
+            <p><strong>Botler</strong> <span>10:14 AM</span></p>
+            <p>Run R1024 is ready for review.</p>
+            <ul><li>4 files changed</li><li>2 agents executed</li><li>12 verifications passed</li></ul>
+            <div><button type="button">Approve</button><button type="button">Reject</button></div>
+          </div>
+        </article>
         </section>
         <section class="facts" id="section-4" data-section="Notes" aria-label="Evidence and unknowns">
           <div class="fact-grid">
