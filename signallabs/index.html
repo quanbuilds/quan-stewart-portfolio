@@ -3,352 +3,1003 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SignalLabs | AI Concierge for Small Business</title>
-    <meta
-      name="description"
-      content="SignalLabs helps small and midsize businesses set up practical AI assistants, workflow automation, lead-flow systems, and ongoing AI operations support."
-    />
+    <title>SignalLabs by QuanBuilds | Practical AI Systems for Service Businesses</title>
+    <meta name="description" content="Stop losing hours to inefficient systems. SignalLabs diagnoses the friction, bulletproofs the foundation, and hands daily execution over to custom AI so owners can focus on growth." />
+    <meta name="theme-color" content="#0b0b0a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SignalLabs by QuanBuilds" />
+    <meta property="og:description" content="Stop losing hours to inefficient systems. We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom AI so you can focus on growth." />
+    <meta property="og:image" content="https://quanbuilds.netlify.app/signallabs/assets/illustrations/hero-bust.webp" />
+    <meta property="og:image:alt" content="SignalLabs hero illustration" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://quanbuilds.netlify.app/signallabs/assets/illustrations/hero-bust.webp" />
     <style>
       :root {
-        color-scheme: light;
-        --bg: #f7f5ef;
-        --fg: #080808;
-        --muted: rgba(8, 8, 8, 0.62);
-        --line: rgba(8, 8, 8, 0.24);
-        --panel: rgba(8, 8, 8, 0.045);
-        --max: 1120px;
-        --pad: clamp(18px, 4vw, 54px);
+        color-scheme: dark;
+        --black: #0b0b0a;
+        --black-2: #11110f;
+        --black-3: #181714;
+        --stone: #d8d1c4;
+        --paper: #f0ece3;
+        --muted: #aaa397;
+        --dim: #746f66;
+        --gold: #c79b49;
+        --gold-light: #e1c278;
+        --line: rgba(216, 209, 196, 0.15);
+        --line-strong: rgba(199, 155, 73, 0.45);
+        --max: 1180px;
+        --pad: clamp(20px, 5vw, 72px);
+        --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, serif;
+        --sans: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        background: var(--bg);
-        scroll-behavior: smooth;
-      }
-
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; background: var(--black); }
       body {
         margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.45;
+        min-width: 0;
+        overflow-x: hidden;
+        color: var(--stone);
+        background:
+          linear-gradient(rgba(11, 11, 10, 0.9), rgba(11, 11, 10, 0.94)),
+          url("assets/textures/concrete-download.webp") center top / 820px auto fixed,
+          var(--black);
+        font-family: var(--sans);
+        line-height: 1.55;
         letter-spacing: 0;
       }
 
-      a {
-        color: inherit;
-        text-decoration: none;
+      body::-webkit-scrollbar { width: 0; height: 0; }
+      a { color: inherit; text-decoration: none; }
+      button, input, textarea { font: inherit; }
+      img, video { display: block; max-width: 100%; }
+      button { color: inherit; }
+      ::selection { color: var(--black); background: var(--gold-light); }
+
+      a:focus-visible,
+      button:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible,
+      summary:focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 4px;
       }
 
-      a:focus-visible {
-        outline: 1px solid var(--fg);
-        outline-offset: 5px;
-      }
-
-      .topbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 18px;
-        padding: 20px var(--pad);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .mark,
-      .topbar a,
-      .eyebrow,
-      .meta,
-      .button,
-      .label {
+      .shell { overflow: clip; }
+      section[id] { scroll-margin-top: 82px; }
+      .wrap { width: min(calc(100% - (var(--pad) * 2)), var(--max)); margin: 0 auto; }
+      .rule { height: 1px; background: var(--line); }
+      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+      .gold { color: var(--gold-light); }
+      .eyebrow {
+        margin: 0 0 20px;
+        color: var(--gold);
         font-size: 11px;
         font-weight: 800;
         text-transform: uppercase;
-        letter-spacing: 0.14em;
+        letter-spacing: 0.16em;
       }
 
-      .topbar a {
+      .topbar {
+        position: fixed;
+        z-index: 50;
+        inset: 0 0 auto;
+        padding: 16px var(--pad);
+        background: linear-gradient(to bottom, rgba(11,11,10,.96), rgba(11,11,10,.78) 72%, transparent);
+      }
+
+      .topbar-inner {
+        width: min(100%, var(--max));
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 50px;
+      }
+
+      .brand { display: inline-flex; align-items: center; gap: 12px; }
+      .brand img { width: 34px; height: 34px; object-fit: contain; }
+      .brand-copy { display: grid; line-height: 1.05; }
+      .brand-copy strong { color: var(--paper); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+      .brand-copy span { margin-top: 6px; color: var(--dim); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
+
+      .nav { display: flex; align-items: center; gap: 26px; }
+      .nav a {
         color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .1em;
+        transition: color 180ms ease;
+      }
+      .nav a:hover { color: var(--paper); }
+      .nav .nav-cta { color: var(--black); background: var(--gold); padding: 11px 15px; }
+
+      .menu-toggle {
+        display: none;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 1px solid var(--line);
+        background: var(--black-2);
+        cursor: pointer;
+      }
+      .menu-toggle span,
+      .menu-toggle::before,
+      .menu-toggle::after {
+        content: "";
+        display: block;
+        width: 18px;
+        height: 1px;
+        margin: 5px auto;
+        background: var(--paper);
+        transition: transform 180ms ease, opacity 180ms ease;
       }
 
       .hero {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: clamp(72px, 11vw, 138px) var(--pad) clamp(48px, 7vw, 86px);
+        position: relative;
+        min-height: 94svh;
         display: grid;
-        grid-template-columns: minmax(0, 1.16fr) minmax(290px, 0.84fr);
-        gap: clamp(32px, 7vw, 86px);
         align-items: end;
+        padding: 150px 0 76px;
+        border-bottom: 1px solid var(--line);
+        isolation: isolate;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        z-index: -2;
+        inset: 0;
+        background: url("assets/illustrations/hero-bust.webp") 72% center / cover no-repeat;
+        filter: saturate(.7) contrast(1.08) brightness(.58);
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        background:
+          linear-gradient(90deg, rgba(11,11,10,.98) 0%, rgba(11,11,10,.9) 38%, rgba(11,11,10,.28) 74%, rgba(11,11,10,.68) 100%),
+          linear-gradient(0deg, rgba(11,11,10,.95), transparent 50%);
       }
 
-      .eyebrow,
-      .meta,
-      .label {
-        color: var(--muted);
-      }
-
-      h1,
-      h2,
-      h3 {
-        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+      .hero-copy { max-width: var(--max); }
+      .hero h1 {
+        margin: 0;
+        color: var(--paper);
+        font-family: var(--serif);
+        font-size: clamp(80px, 15.2vw, 218px);
         font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
+        line-height: .78;
+        letter-spacing: 0;
+        white-space: nowrap;
       }
-
-      h1 {
-        margin: 18px 0 0;
-        font-size: clamp(56px, 10vw, 138px);
-        line-height: 0.88;
+      .hero-lead {
+        max-width: 720px;
+        margin: 36px 0 0;
+        color: var(--paper);
+        font-size: clamp(21px, 2.3vw, 34px);
+        line-height: 1.24;
+        font-weight: 520;
       }
-
-      .lede {
-        margin: 28px 0 0;
-        max-width: 680px;
-        font-size: clamp(19px, 2.6vw, 31px);
-        line-height: 1.14;
-      }
-
-      .hero-panel {
-        border: 1px solid var(--line);
-        background: var(--panel);
-        padding: clamp(22px, 4vw, 36px);
-        display: grid;
-        gap: 32px;
-      }
-
-      .hero-panel p {
-        margin: 8px 0 0;
+      .hero-lead strong,
+      .hero-lead span { display: block; }
+      .hero-lead strong { font-weight: 750; }
+      .hero-lead span { max-width: 650px; margin-top: 13px; color: var(--stone); font-size: .75em; font-weight: 500; line-height: 1.45; }
+      .hero-sub {
+        max-width: 610px;
+        margin: 20px 0 0;
         color: var(--muted);
+        font-size: 16px;
       }
-
-      .button-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
+      .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+      .hero-note { max-width: 520px; margin: 18px 0 0; color: var(--gold-light); font-size: 13px; }
 
       .button {
         display: inline-flex;
         align-items: center;
-        min-height: 42px;
-        padding: 0 14px;
-        border: 1px solid var(--fg);
+        justify-content: center;
+        min-height: 50px;
+        padding: 0 20px;
+        border: 1px solid var(--line);
+        background: transparent;
+        color: var(--paper);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .11em;
+        cursor: pointer;
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
       }
+      .button:hover { transform: translateY(-2px); border-color: var(--line-strong); }
+      .button.primary { color: var(--black); border-color: var(--gold); background: var(--gold); }
+      .button.primary:hover { background: var(--gold-light); }
 
-      .button.secondary {
-        border-color: var(--line);
-        color: var(--muted);
+      .outcome-band { border-bottom: 1px solid var(--line); background: rgba(17,17,15,.8); }
+      .outcome-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+      .outcome { padding: 24px 0; border-right: 1px solid var(--line); }
+      .outcome + .outcome { padding-left: 30px; }
+      .outcome:last-child { border-right: 0; }
+      .outcome strong { display: block; color: var(--paper); font-family: var(--serif); font-size: 28px; font-weight: 500; }
+      .outcome span { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+
+      .compact-section { padding: clamp(64px, 8vw, 108px) 0; border-bottom: 1px solid var(--line); }
+      .compact-head {
+        display: grid;
+        grid-template-columns: minmax(0, .82fr) minmax(280px, .72fr);
+        gap: clamp(28px, 6vw, 76px);
+        align-items: end;
+        margin-bottom: 38px;
       }
-
-      .section {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: clamp(54px, 8vw, 92px) var(--pad);
+      .compact-head h2 {
+        margin: 0;
+        color: var(--paper);
+        font-family: var(--serif);
+        font-size: clamp(42px, 6vw, 82px);
+        font-weight: 500;
+        line-height: .94;
+      }
+      .compact-head p { margin: 0; color: var(--muted); font-size: 17px; }
+      .compact-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); }
+      .compact-card {
+        min-height: 315px;
+        padding: clamp(24px, 3vw, 34px);
+        border-right: 1px solid var(--line);
+        background: rgba(17,17,15,.58);
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+      }
+      .compact-card:last-child { border-right: 0; }
+      .compact-card:hover { transform: translateY(-3px); background: rgba(199,155,73,.055); border-color: var(--line-strong); }
+      .compact-card b { color: var(--gold); font-family: var(--serif); font-size: 22px; }
+      .compact-card h3 { margin: 44px 0 12px; color: var(--paper); font-size: clamp(24px, 2.7vw, 34px); line-height: 1.05; }
+      .compact-card p { margin: 0; color: var(--muted); font-size: 15px; }
+      .proof-pricing {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr);
+        gap: 1px;
+        border: 1px solid var(--line);
+        background: var(--line);
+      }
+      .proof-panel,
+      .pricing-panel { min-width: 0; background: var(--black); }
+      .proof-panel { padding: clamp(22px, 4vw, 42px); }
+      .proof-panel h2,
+      .pricing-panel h2,
+      .trust-copy h2,
+      .contact-copy h2 {
+        margin: 0;
+        color: var(--paper);
+        font-family: var(--serif);
+        font-weight: 500;
+        line-height: .96;
+      }
+      .proof-panel h2 { margin-top: 24px; font-size: clamp(34px, 4vw, 56px); }
+      .proof-panel p { color: var(--muted); }
+      .proof-video { margin-top: 26px; width: 100%; }
+      .proof-video .video-frame { width: 100%; }
+      .mini-quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 22px; background: var(--line); }
+      .mini-quote { padding: 18px; background: var(--black-2); }
+      .mini-quote blockquote { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 22px; }
+      .mini-quote p { margin: 12px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+      .pricing-panel { padding: clamp(22px, 4vw, 42px); }
+      .pricing-panel h2 { font-size: clamp(36px, 4.6vw, 64px); }
+      .pricing-stack { display: grid; gap: 12px; margin-top: 28px; }
+      .pricing-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 18px 0;
         border-top: 1px solid var(--line);
       }
-
-      .section-grid {
+      .pricing-row:last-child { border-bottom: 1px solid var(--line); }
+      .pricing-row h3 { margin: 0 0 4px; color: var(--paper); font-size: 16px; }
+      .pricing-row p { margin: 0; color: var(--muted); font-size: 13px; }
+      .pricing-row strong { color: var(--paper); font-family: var(--serif); font-size: 30px; font-weight: 500; white-space: nowrap; }
+      .pricing-panel .button { width: 100%; margin-top: 14px; }
+      .quick-note { margin: 14px 0 0; color: var(--dim); font-size: 12px; }
+      .trust-strip {
         display: grid;
-        grid-template-columns: 0.72fr 1.28fr;
-        gap: clamp(28px, 6vw, 82px);
+        grid-template-columns: 180px minmax(0, 1fr) minmax(250px, .48fr);
+        gap: clamp(24px, 5vw, 58px);
+        align-items: center;
       }
+      .trust-photo img {
+        width: 180px;
+        height: 220px;
+        object-fit: cover;
+        object-position: center top;
+        filter: grayscale(.35) contrast(1.05);
+      }
+      .trust-photo p { margin: 10px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+      .trust-copy h2 { font-size: clamp(34px, 4.6vw, 62px); }
+      .trust-copy p { color: var(--muted); }
+      .trust-list { display: grid; gap: 10px; color: var(--stone); font-size: 13px; }
+      .trust-list span { padding-top: 10px; border-top: 1px solid var(--line); }
+      .trust-list span::before { content: "+"; color: var(--gold); margin-right: 9px; }
+      .faq-compact { max-width: 900px; }
+      .faq-compact .compact-head { margin-bottom: 26px; }
+      .faq-compact .compact-head h2 { font-size: clamp(38px, 5vw, 68px); }
+      .faq-compact .compact-head p { font-size: 15px; }
+      .faq-compact .faq-item summary { padding: 15px 0; }
+      .faq-compact .faq-item summary h3 { font-size: 15px; }
+      .faq-compact .faq-item summary::after { font-size: 21px; }
+      .faq-compact .faq-item p { max-width: 720px; margin: -3px 0 18px; font-size: 13px; line-height: 1.5; }
 
-      h2 {
+      .section { padding: clamp(88px, 12vw, 160px) 0; border-bottom: 1px solid var(--line); }
+      .section-head { max-width: 760px; margin-bottom: 64px; }
+      .section-head h2,
+      .section-title {
         margin: 0;
-        font-size: clamp(38px, 6vw, 82px);
-        line-height: 0.92;
+        color: var(--paper);
+        font-family: var(--serif);
+        font-size: clamp(46px, 6.5vw, 88px);
+        font-weight: 500;
+        line-height: .98;
       }
+      .section-head p { max-width: 650px; margin: 24px 0 0; color: var(--muted); font-size: 18px; }
 
-      .copy {
+      .demo-list { display: grid; gap: 1px; background: var(--line); }
+      .demo-row {
         display: grid;
-        gap: 18px;
+        grid-template-columns: minmax(270px, .75fr) minmax(0, 1.25fr);
+        min-height: 600px;
+        background: var(--black);
       }
+      .demo-row:nth-child(even) { grid-template-columns: minmax(0, 1.25fr) minmax(270px, .75fr); }
+      .demo-row:nth-child(even) .demo-copy { order: 2; }
+      .demo-row:nth-child(even) .demo-visual { order: 1; }
+      .demo-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(34px, 6vw, 72px); }
+      .demo-number { color: var(--gold); font-family: var(--serif); font-size: 20px; }
+      .demo-copy h3 { margin: 44px 0 20px; color: var(--paper); font-size: clamp(29px, 3.4vw, 46px); line-height: 1.06; }
+      .demo-copy p { max-width: 470px; margin: 0; color: var(--muted); font-size: 16px; }
+      .demo-result { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--stone); font-size: 13px; }
+      .demo-result strong { color: var(--gold-light); }
 
-      .copy p {
-        margin: 0;
-        color: var(--muted);
-        font-size: clamp(16px, 2vw, 20px);
-      }
-
-      .service-grid {
+      .included-site {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-      }
-
-      .service {
-        min-height: 210px;
-        border: 1px solid var(--line);
-        padding: clamp(20px, 3vw, 30px);
-        display: grid;
-        align-content: space-between;
+        grid-template-columns: 130px 1fr auto;
         gap: 28px;
+        align-items: center;
+        margin-top: 1px;
+        padding: 30px clamp(24px, 5vw, 58px);
+        border: 1px solid var(--line-strong);
+        background: rgba(199,155,73,.065);
       }
+      .included-site .included-label { color: var(--gold); font-family: var(--serif); font-size: 22px; }
+      .included-site h3 { margin: 0 0 5px; color: var(--paper); font-size: 18px; }
+      .included-site p { margin: 0; color: var(--muted); font-size: 13px; }
+      .included-site .included-price { color: var(--paper); font-family: var(--serif); font-size: 32px; white-space: nowrap; }
 
-      h3 {
-        margin: 12px 0 0;
-        font-size: clamp(28px, 3.6vw, 48px);
-        line-height: 0.94;
-      }
-
-      .service p {
-        margin: 0;
-        color: var(--muted);
-      }
-
-      .contact-band {
-        max-width: none;
-        border-top: 1px solid var(--fg);
-        background: var(--fg);
-        color: var(--bg);
-      }
-
-      .contact-inner {
-        max-width: var(--max);
-        margin: 0 auto;
-        padding: clamp(54px, 8vw, 92px) var(--pad);
+      .demo-visual {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: clamp(26px, 6vw, 80px);
+        place-items: center;
+        padding: clamp(24px, 5vw, 64px);
+        background:
+          linear-gradient(rgba(24,23,20,.82), rgba(11,11,10,.96)),
+          url("assets/textures/concrete-download.webp") center / 620px auto;
+      }
+      .demo-visual::before {
+        content: "";
+        position: absolute;
+        inset: 22px;
+        border: 1px solid rgba(199,155,73,.2);
+        pointer-events: none;
       }
 
-      .contact-inner p {
-        margin: 0;
-        color: rgba(247, 245, 239, 0.72);
-        font-size: clamp(17px, 2vw, 22px);
+      .window {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 620px);
+        border: 1px solid rgba(216,209,196,.2);
+        background: #10100f;
+        box-shadow: 0 32px 90px rgba(0,0,0,.52);
+      }
+      .window-bar { height: 42px; display: flex; align-items: center; gap: 7px; padding: 0 14px; border-bottom: 1px solid var(--line); }
+      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
+      .window-title { margin-left: auto; color: var(--dim); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+
+      .call-flow { padding: 28px; }
+      .call-status { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+      .call-status strong { color: var(--paper); font-size: 15px; }
+      .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(199,155,73,.6); animation: pulse 2s infinite; }
+      .messages { display: grid; gap: 12px; padding-top: 26px; }
+      .message { width: 82%; padding: 14px 16px; background: #1a1916; border-left: 2px solid var(--dim); color: var(--muted); font-size: 13px; opacity: 0; transform: translateY(8px); animation: messageIn 9s infinite; }
+      .message:nth-child(2) { margin-left: auto; border-color: var(--gold); animation-delay: 1.7s; }
+      .message:nth-child(3) { animation-delay: 3.4s; }
+      .message:nth-child(4) { margin-left: auto; border-color: #688767; animation-delay: 5.1s; }
+      .message b { display: block; margin-bottom: 5px; color: var(--paper); }
+
+      .video-frame { width: min(100%, 520px); overflow: hidden; border: 1px solid rgba(216,209,196,.2); background: #080808; box-shadow: 0 32px 90px rgba(0,0,0,.52); }
+      .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #080808; }
+      .video-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+      .video-caption span:last-child { color: var(--gold); }
+
+      .kb-body { padding: 28px; }
+      .kb-source { display: grid; gap: 8px; margin-bottom: 24px; }
+      .source-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+      .source-check { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--gold); color: var(--gold); font-size: 9px; }
+      .source-row em { color: #718c70; font-style: normal; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+      .customer-question { margin-top: 18px; padding: 14px; border: 1px solid var(--line); color: var(--paper); font-size: 13px; }
+      .answer { margin-top: 10px; padding: 16px; background: rgba(199,155,73,.1); border-left: 2px solid var(--gold); color: var(--stone); font-size: 13px; }
+      .answer small { display: block; margin-top: 10px; color: var(--gold); }
+
+      .queue-body { padding: 20px; }
+      .queue-row { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); }
+      .queue-icon { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--gold); font-family: var(--serif); }
+      .queue-row strong { display: block; color: var(--paper); font-size: 12px; }
+      .queue-row span { color: var(--dim); font-size: 10px; }
+      .approval { padding: 8px 10px; border: 1px solid var(--line-strong); color: var(--gold); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+
+      .more-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+      .more-item { position: relative; min-height: 245px; overflow: hidden; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--black); cursor: pointer; outline: 0; }
+      .more-front,
+      .more-solution { position: absolute; inset: 0; padding: 26px; transition: opacity 220ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
+      .more-front { opacity: 1; transform: none; }
+      .more-front > span { color: var(--gold); font-family: var(--serif); font-size: 18px; }
+      .more-front h3 { margin: 30px 0 8px; color: var(--paper); font-size: 16px; }
+      .more-front p { margin: 0; color: var(--dim); font-size: 13px; }
+      .more-solution { display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(12px); background: #15140f; pointer-events: none; }
+      .more-solution small { color: var(--gold); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      .more-solution strong { display: block; margin-top: 14px; color: var(--paper); font-size: 14px; }
+      .more-solution p { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .more-item:hover .more-front,
+      .more-item:focus-visible .more-front,
+      .more-item.is-open .more-front { opacity: .08; transform: scale(.97); }
+      .more-item:hover .more-solution,
+      .more-item:focus-visible .more-solution,
+      .more-item.is-open .more-solution { opacity: 1; transform: none; }
+      .more-item:focus-visible { box-shadow: inset 0 0 0 2px var(--gold); }
+
+      .workflow-prompt { grid-column: 1 / -1; padding: clamp(26px, 5vw, 48px); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(199,155,73,.05); }
+      .workflow-prompt h3 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(28px, 3vw, 42px); font-weight: 500; }
+      .workflow-prompt > p { max-width: 720px; margin: 10px 0 24px; color: var(--muted); }
+      .workflow-prompt-form { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+      .workflow-prompt-form input { min-width: 0; border: 1px solid var(--line); border-radius: 0; background: var(--black); color: var(--paper); padding: 15px 16px; outline: 0; }
+      .workflow-prompt-form input:focus { border-color: var(--gold); }
+      .workflow-prompt-status { min-height: 18px; margin: 10px 0 0; color: var(--gold); font-size: 11px; }
+
+      .intake-dialog { width: min(720px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 0; border: 1px solid var(--line-strong); border-radius: 0; background: var(--black-2); color: var(--stone); box-shadow: 0 38px 110px rgba(0,0,0,.75); scrollbar-width: none; }
+      .intake-dialog::-webkit-scrollbar { display: none; }
+      .intake-dialog::backdrop { background: rgba(0,0,0,.78); backdrop-filter: blur(8px); }
+      .dialog-card { position: relative; padding: clamp(26px, 5vw, 48px); }
+      .dialog-close { position: absolute; top: 16px; right: 16px; width: 38px; height: 38px; border: 1px solid var(--line); background: transparent; color: var(--paper); cursor: pointer; font-size: 20px; }
+      .dialog-card h2 { max-width: 560px; margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(34px, 5vw, 56px); font-weight: 500; line-height: 1; }
+      .dialog-card > p { margin: 16px 0 24px; color: var(--muted); }
+      .workflow-preview { padding: 14px; border-left: 2px solid var(--gold); background: rgba(199,155,73,.08); color: var(--stone); font-size: 13px; }
+      .dialog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 22px; }
+      .dialog-status { min-height: 18px; margin: 12px 0 0; color: var(--gold); font-size: 11px; }
+
+      .proof-layout { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 7vw, 90px); align-items: center; }
+      .proof-media { position: relative; padding: 24px; border: 1px solid var(--line); background: var(--black-2); }
+      .proof-media img { width: 100%; }
+      .proof-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(42px, 5.3vw, 74px); font-weight: 500; line-height: .98; }
+      .proof-copy > p { margin: 25px 0 0; color: var(--muted); font-size: 17px; }
+      .case-steps { display: grid; gap: 0; margin-top: 34px; border-top: 1px solid var(--line); }
+      .case-step { display: grid; grid-template-columns: 36px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+      .case-step b { color: var(--gold); font-family: var(--serif); font-size: 18px; }
+      .case-step span { color: var(--stone); font-size: 14px; }
+      .case-status { margin-top: 22px; color: var(--dim); font-size: 12px; }
+
+      .quotes { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 80px; border: 1px solid var(--line); }
+      .quote { min-height: 190px; padding: 28px; border-right: 1px solid var(--line); }
+      .quote:last-child { border-right: 0; }
+      .quote blockquote { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 26px; }
+      .quote p { margin: 28px 0 0; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+
+      .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
+      .process-step { padding: 30px 28px; border-right: 1px solid var(--line); }
+      .process-step:last-child { border-right: 0; }
+      .process-step b { color: var(--gold); font-family: var(--serif); font-size: 22px; }
+      .process-step h3 { margin: 46px 0 10px; color: var(--paper); font-size: 18px; }
+      .process-step p { margin: 0; color: var(--dim); font-size: 13px; }
+
+      .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); }
+      .price-card { position: relative; display: flex; flex-direction: column; min-height: 500px; padding: 32px; border-right: 1px solid var(--line); }
+      .price-card:last-child { border-right: 0; }
+      .price-card.featured { background: rgba(199,155,73,.06); }
+      .price-card h3 { margin: 0; color: var(--paper); font-size: 18px; }
+      .price { margin: 42px 0 16px; color: var(--paper); font-family: var(--serif); font-size: 54px; line-height: 1; }
+      .price.custom { font-size: clamp(36px, 4vw, 50px); }
+      .price small { color: var(--dim); font-family: var(--sans); font-size: 12px; }
+      .price-card > p { margin: 0; color: var(--muted); font-size: 14px; }
+      .price-list { display: grid; gap: 10px; margin: 28px 0; color: var(--stone); font-size: 13px; }
+      .price-list span::before { content: "+"; color: var(--gold); margin-right: 9px; }
+      .price-card .button { width: 100%; margin-top: auto; }
+      .fine { margin-top: 12px !important; color: var(--dim) !important; font-size: 10px !important; }
+      .checkout-status { min-height: 16px; margin: 10px 0 0; color: var(--gold); font-size: 11px; }
+
+      .team-layout { display: grid; grid-template-columns: 320px 1fr; gap: clamp(40px, 8vw, 110px); align-items: start; }
+      .founder-photo { position: sticky; top: 100px; }
+      .founder-photo img { width: 100%; height: auto; object-fit: contain; filter: grayscale(.35) contrast(1.05); }
+      .founder-photo p { margin: 14px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .12em; }
+      .team-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(44px, 5vw, 72px); font-weight: 500; line-height: 1; }
+      .team-copy { min-width: 0; }
+      .team-copy .lead { margin: 28px 0; color: var(--paper); font-size: 21px; line-height: 1.4; }
+      .team-copy p { color: var(--muted); }
+
+      .faq-list { border-top: 1px solid var(--line); }
+      .faq-item { border-bottom: 1px solid var(--line); }
+      .faq-item summary { display: grid; grid-template-columns: 1fr 30px; gap: 18px; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; }
+      .faq-item summary::-webkit-details-marker { display: none; }
+      .faq-item summary h3 { margin: 0; color: var(--paper); font-size: 17px; }
+      .faq-item summary::after { content: "+"; color: var(--gold); font-family: var(--serif); font-size: 26px; text-align: center; }
+      .faq-item[open] summary::after { content: "-"; }
+      .faq-item p { max-width: 760px; margin: -2px 0 26px; color: var(--muted); }
+
+      .contact-section { padding-bottom: 70px; }
+      .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(38px, 8vw, 110px); align-items: start; }
+      .contact-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(50px, 7vw, 94px); font-weight: 500; line-height: .92; }
+      .contact-copy p { max-width: 480px; margin: 28px 0 0; color: var(--muted); font-size: 17px; }
+      .lead-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+      .field { display: grid; gap: 7px; }
+      .field.full { grid-column: 1 / -1; }
+      .field label { color: var(--dim); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+      .field input,
+      .field textarea { width: 100%; border: 1px solid var(--line); border-radius: 0; background: rgba(17,17,15,.8); color: var(--paper); padding: 14px; outline: 0; }
+      .field input:focus,
+      .field textarea:focus { border-color: var(--gold); }
+      .field textarea { min-height: 120px; resize: vertical; }
+      .form-note { grid-column: 1 / -1; margin: 0; color: var(--dim); font-size: 11px; }
+      .form-status { grid-column: 1 / -1; min-height: 20px; margin: 0; color: var(--gold); font-size: 12px; }
+
+      footer { padding: 28px 0 38px; border-top: 1px solid var(--line); }
+      .footer-inner { display: flex; justify-content: space-between; gap: 24px; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
+      .footer-inner a:hover { color: var(--gold); }
+
+      .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.8,.2,1); }
+      .reveal.visible { opacity: 1; transform: none; }
+
+      @keyframes pulse {
+        70% { box-shadow: 0 0 0 10px rgba(199,155,73,0); }
+        100% { box-shadow: 0 0 0 0 rgba(199,155,73,0); }
+      }
+      @keyframes messageIn {
+        0%, 8% { opacity: 0; transform: translateY(8px); }
+        14%, 78% { opacity: 1; transform: none; }
+        90%, 100% { opacity: 0; transform: translateY(-5px); }
       }
 
-      .contact-links {
-        display: grid;
-        gap: 12px;
-        align-content: start;
-      }
-
-      .contact-links a {
-        padding: 14px 0;
-        border-bottom: 1px solid rgba(247, 245, 239, 0.25);
-        font-size: clamp(18px, 2.2vw, 26px);
-      }
-
-      footer {
-        padding: 24px var(--pad);
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      @media (max-width: 800px) {
-        .hero,
-        .section-grid,
-        .contact-inner {
-          grid-template-columns: 1fr;
+      @media (max-width: 980px) {
+        .menu-toggle { display: block; }
+        .nav {
+          position: absolute;
+          top: 66px;
+          right: var(--pad);
+          width: min(330px, calc(100vw - (var(--pad) * 2)));
+          display: grid;
+          gap: 0;
+          padding: 10px;
+          border: 1px solid var(--line);
+          background: rgba(11,11,10,.98);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-8px);
+          transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
         }
+        .nav a { padding: 13px; border-bottom: 1px solid var(--line); }
+        .nav .nav-cta { margin-top: 8px; text-align: center; }
+        body.menu-open .nav { opacity: 1; visibility: visible; transform: none; }
+        body.menu-open .menu-toggle span { opacity: 0; }
+        body.menu-open .menu-toggle::before { transform: translateY(6px) rotate(45deg); }
+        body.menu-open .menu-toggle::after { transform: translateY(-6px) rotate(-45deg); }
+        .compact-head,
+        .proof-pricing,
+        .trust-strip { grid-template-columns: 1fr; }
+        .compact-grid { grid-template-columns: 1fr; }
+        .compact-card { min-height: 230px; border-right: 0; border-bottom: 1px solid var(--line); }
+        .compact-card:last-child { border-bottom: 0; }
+        .trust-strip { align-items: start; }
+        .trust-photo { display: flex; gap: 14px; align-items: end; }
+        .more-grid { grid-template-columns: repeat(2, 1fr); }
+        .proof-layout, .contact-grid { grid-template-columns: 1fr; }
+        .proof-copy { max-width: 760px; }
+        .process-grid { grid-template-columns: repeat(2, 1fr); }
+        .process-step { border-bottom: 1px solid var(--line); }
+        .pricing-grid { grid-template-columns: 1fr; }
+        .price-card { min-height: 420px; border-right: 0; border-bottom: 1px solid var(--line); }
+        .price-card:last-child { border-bottom: 0; }
+      }
 
-        .service-grid {
-          grid-template-columns: 1fr;
-        }
+      @media (max-width: 760px) {
+        :root { --pad: 20px; }
+        .topbar { padding-top: 12px; }
+        .brand-copy span { display: none; }
+        .hero { min-height: 88svh; padding: 128px 0 48px; }
+        .hero::before { background-position: 62% center; }
+        .hero::after { background: linear-gradient(0deg, rgba(11,11,10,.98) 0%, rgba(11,11,10,.75) 68%, rgba(11,11,10,.5)); }
+        .hero h1 { font-size: clamp(54px, 17vw, 76px); white-space: normal; }
+        .hero-lead { font-size: 23px; }
+        .hero-sub { font-size: 14px; }
+        .hero-actions .button { width: 100%; }
+        .hero-note { font-size: 12px; }
+        .outcome-grid { grid-template-columns: 1fr; }
+        .outcome, .outcome + .outcome { padding: 18px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+        .outcome:last-child { border-bottom: 0; }
+        .section { padding: 88px 0; }
+        .section-head { margin-bottom: 42px; }
+        .demo-row, .demo-row:nth-child(even) { grid-template-columns: 1fr; min-height: 0; }
+        .demo-row:nth-child(even) .demo-copy, .demo-copy { order: 1; padding: 38px 24px; }
+        .demo-row:nth-child(even) .demo-visual, .demo-visual { order: 2; min-height: 480px; padding: 38px 24px; }
+        .demo-copy h3 { margin-top: 28px; }
+        .included-site { grid-template-columns: 1fr; gap: 12px; }
+        .included-site .included-price { font-size: 27px; }
+        .video-frame { width: 90%; }
+        .proof-video .video-frame { width: 100%; }
+        .mini-quotes { grid-template-columns: 1fr; }
+        .pricing-row { grid-template-columns: 1fr; }
+        .pricing-row strong { font-size: 26px; }
+        .trust-photo img { width: 96px; height: 120px; }
+        .trust-photo p { display: none; }
+        .more-grid { grid-template-columns: repeat(2, 1fr); }
+        .more-grid { grid-template-columns: 1fr; }
+        .more-item { min-height: 220px; }
+        .more-front, .more-solution { padding: 22px; }
+        .more-front h3 { margin-top: 20px; }
+        .workflow-prompt-form { grid-template-columns: 1fr; }
+        .workflow-prompt-form .button { width: 100%; }
+        .dialog-grid { grid-template-columns: 1fr; }
+        .quotes { grid-template-columns: 1fr; margin-top: 48px; }
+        .quote { min-height: 150px; border-right: 0; border-bottom: 1px solid var(--line); }
+        .quote:last-child { border-bottom: 0; }
+        .process-grid { grid-template-columns: 1fr; }
+        .process-step { border-right: 0; }
+        .team-layout { grid-template-columns: 100px minmax(0, 1fr); gap: 18px; }
+        .founder-photo { top: 90px; }
+        .founder-photo p { display: none; }
+        .team-copy .lead { font-size: 18px; }
+        .team-copy h2 { font-size: clamp(36px, 10vw, 48px); overflow-wrap: anywhere; }
+        .lead-form { grid-template-columns: 1fr; }
+        .field.full, .form-note, .form-status { grid-column: auto; }
+        .footer-inner { flex-direction: column; }
+      }
 
-        .topbar {
-          align-items: flex-start;
-        }
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        .reveal { opacity: 1; transform: none; }
       }
     </style>
   </head>
   <body>
-    <header class="topbar">
-      <a class="mark" href="/">QuanBuilds</a>
-      <a href="mailto:quan.stewart@icloud.com">quan.stewart@icloud.com</a>
-    </header>
-
-    <main>
-      <section class="hero">
-        <div>
-          <p class="eyebrow">SignalLabs / AI concierge for SMBs</p>
-          <h1>AI systems that do real work.</h1>
-          <p class="lede">
-            SignalLabs helps small and midsize businesses turn messy day-to-day operations into practical AI-assisted workflows, automations, assistants, and customer-facing systems.
-          </p>
+    <div class="shell">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href="#top" aria-label="SignalLabs top">
+            <img src="assets/brand/signallabs-logo-a.png" alt="" />
+            <span class="brand-copy"><strong>SignalLabs</strong><span>A QuanBuilds company</span></span>
+          </a>
+          <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
+          <nav class="nav" aria-label="Primary navigation">
+            <a href="#work">What we do</a>
+            <a href="#proof">Proof</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact" class="nav-cta">Free assessment</a>
+          </nav>
         </div>
-        <aside class="hero-panel" aria-label="SignalLabs summary">
-          <div>
-            <p class="label">Services</p>
-            <p>AI workflow automation, assistant setup, lead-flow support, website intake systems, tool integrations, and ongoing AI operations support.</p>
-          </div>
-          <div>
-            <p class="label">Customers</p>
-            <p>Local service businesses, solo operators, agencies, creative shops, and growing teams that need better systems without hiring a full technical department.</p>
-          </div>
-          <div class="button-row">
-            <a class="button" href="mailto:quan.stewart@icloud.com">Start a project</a>
-            <a class="button secondary" href="tel:+16304702312">Call</a>
-          </div>
-        </aside>
-      </section>
+      </header>
 
-      <section class="section">
-        <div class="section-grid">
-          <h2>What SignalLabs builds</h2>
-          <div class="copy">
-            <p>
-              We start with the work your business already does: inquiries, client intake, scheduling, follow-ups, reporting, content, internal notes, documents, and routine decisions.
-            </p>
-            <p>
-              Then we install simple AI-assisted systems around those workflows so your business can respond faster, stay organized, reduce repetitive admin, and give customers a smoother experience.
-            </p>
+      <main>
+        <section class="hero" id="top">
+          <div class="wrap">
+            <div class="hero-copy reveal">
+              <p class="eyebrow">SignalLabs / AI systems for owner-led service businesses</p>
+              <h1>SignalLabs</h1>
+              <p class="hero-lead"><strong>Stop losing hours to inefficient systems.</strong><span>We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom AI so you can focus on growth.</span></p>
+              <div class="hero-actions">
+                <a class="button primary" href="#contact">Book the free 15-minute assessment</a>
+                <button class="button" type="button" data-checkout>Buy the $999 audit</button>
+              </div>
+              <p class="hero-note">Five staff hours per week found, or the audit is free.</p>
+              <p class="checkout-status" data-checkout-status aria-live="polite"></p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="section">
-        <div class="service-grid">
-          <article class="service">
-            <div>
-              <p class="meta">01 / AI assistants</p>
-              <h3>Front desk and back office support</h3>
-            </div>
-            <p>Custom AI assistants for inquiries, service explanations, intake prep, internal research, customer follow-ups, and repeatable admin tasks.</p>
-          </article>
-          <article class="service">
-            <div>
-              <p class="meta">02 / Automation</p>
-              <h3>Workflows that move without babysitting</h3>
-            </div>
-            <p>Automated handoffs between forms, email, docs, spreadsheets, dashboards, CRM tools, and project systems.</p>
-          </article>
-          <article class="service">
-            <div>
-              <p class="meta">03 / Web systems</p>
-              <h3>Sites, intake, and lead-flow setup</h3>
-            </div>
-            <p>Client-facing pages, quote request flows, structured intake, payment handoff, and lightweight dashboards for service businesses.</p>
-          </article>
-          <article class="service">
-            <div>
-              <p class="meta">04 / Operations</p>
-              <h3>Ongoing AI concierge support</h3>
-            </div>
-            <p>Practical support for keeping automations, assistants, content systems, and business workflows updated as the company changes.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="contact-band">
-        <div class="contact-inner">
-          <div>
-            <p class="label">Contact</p>
-            <h2>Build the next system.</h2>
-          </div>
-          <div class="contact-links">
-            <p>SignalLabs is operated by QuanBuilds as an unregistered sole-proprietor business while the service is being launched.</p>
-            <a href="mailto:quan.stewart@icloud.com">quan.stewart@icloud.com</a>
-            <a href="tel:+16304702312">(630) 470-2312</a>
+        <div class="outcome-band">
+          <div class="wrap outcome-grid">
+            <div class="outcome"><strong>Leads recovered</strong><span>Calls, forms, messages, follow-up</span></div>
+            <div class="outcome"><strong>Steps removed</strong><span>Data entry, handoffs, repeat admin</span></div>
+            <div class="outcome"><strong>Time returned</strong><span>Five hours a week or the audit is free</span></div>
           </div>
         </div>
-      </section>
-    </main>
 
-    <footer>SignalLabs / AI services and automation for small business</footer>
+        <section class="compact-section" id="work">
+          <div class="wrap">
+            <header class="compact-head reveal">
+              <div>
+                <p class="eyebrow">What we do</p>
+                <h2>Find the friction. Fix the system. Then automate.</h2>
+              </div>
+              <p>We do not start by throwing AI at messy work. We watch how the business actually runs, remove the steps that should not be there, tighten the source of truth, and then build the AI layer that can safely carry the repeatable work.</p>
+            </header>
+            <div class="compact-grid reveal">
+              <article class="compact-card">
+                <b>01</b>
+                <h3>Diagnose the drag</h3>
+                <p>We trace intake, scheduling, follow-up, reporting, inbox work, and handoffs to see where time, leads, and attention are leaking out.</p>
+              </article>
+              <article class="compact-card">
+                <b>02</b>
+                <h3>Bulletproof the foundation</h3>
+                <p>We clean up the tools, policies, docs, forms, and ownership rules so staff and AI are working from the same dependable information.</p>
+              </article>
+              <article class="compact-card">
+                <b>03</b>
+                <h3>Hand off daily execution</h3>
+                <p>Custom AI can draft replies, monitor queues, update records, summarize reports, and operate browser workflows while important decisions stay with a person.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="compact-section" id="proof">
+          <div class="wrap proof-pricing">
+            <div class="proof-panel reveal">
+              <p class="eyebrow">Proof</p>
+              <h2>Real admin work, moving through the browser.</h2>
+              <p>This Gymstant workflow shows an AI-operated admin process reviewing class information, preparing the next action, and keeping the operator in control.</p>
+              <figure class="proof-video">
+                <div class="video-frame">
+                  <video autoplay muted loop playsinline preload="metadata" poster="assets/case-studies/jackrabbit-appointment-roadmap.png">
+                    <source src="assets/demos/gymstant-final-output.mp4" type="video/mp4" />
+                  </video>
+                  <figcaption class="video-caption"><span>Ava missed-class workflow</span><span>Real build footage</span></figcaption>
+                </div>
+              </figure>
+              <div class="mini-quotes">
+                <article class="mini-quote"><blockquote>"Awesome."</blockquote><p>Gym owner</p></article>
+                <article class="mini-quote"><blockquote>"It did it right!"</blockquote><p>Gym manager</p></article>
+                <article class="mini-quote"><blockquote>Founder-operated.</blockquote><p>Built directly with Quan</p></article>
+              </div>
+            </div>
+
+            <div class="pricing-panel reveal" id="pricing">
+              <p class="eyebrow">Pricing</p>
+              <h2>Start small. Buy the blueprint when you are ready.</h2>
+              <div class="pricing-stack">
+                <div class="pricing-row">
+                  <div><h3>Mini Assessment</h3><p>A focused 15-minute call to identify the first practical opportunity.</p></div>
+                  <strong>Free</strong>
+                </div>
+                <div class="pricing-row">
+                  <div><h3>Full Systems Audit</h3><p>Workflow review, 3-7 recommended tools or automations, and a 5-hours/week guarantee.</p></div>
+                  <strong>$999</strong>
+                </div>
+                <div class="pricing-row">
+                  <div><h3>Concierge Build</h3><p>Implementation, maintenance, training, and websites when the system needs one.</p></div>
+                  <strong>Custom</strong>
+                </div>
+              </div>
+              <button class="button primary" type="button" data-checkout>Buy the $999 audit</button>
+              <a class="button" href="#contact">Book the free call first</a>
+              <p class="quick-note">After payment, we reach out within 24 hours to schedule the first meeting. If we cannot find five hours per week worth recovering, the audit is free.</p>
+              <p class="checkout-status" data-checkout-status aria-live="polite"></p>
+            </div>
+          </div>
+        </section>
+
+        <section class="compact-section" id="team">
+          <div class="wrap team-layout">
+            <div class="founder-photo reveal"><img src="assets/team/quan-stewart-founder.jpeg" alt="Quan Stewart, founder of SignalLabs" width="2316" height="3088" loading="lazy" decoding="async" /><p>Quan Stewart / Founder and systems builder</p></div>
+            <div class="team-copy reveal">
+              <p class="eyebrow">Meet the founder</p>
+              <h2>A technical builder who understands service work.</h2>
+              <p class="lead">I built computers as a kid, started designing webpages around 11, and spent years teaching myself complex creative and technical systems. Coaching gymnastics taught me the part that matters most here: find the source of the problem, explain it clearly, and apply the right correction.</p>
+              <p>My path has not been polished or traditional. I did not finish college and I do not have a computer science degree. I have worked manual labor, coached preschoolers through regional champions, served as senior gym staff, and spent the last several years obsessively studying AI, automation, entrepreneurship, and how modern tools can change the economics of a small business.</p>
+              <p>I built systems across operations, customer intake, reporting, communications, and agent workflows. SignalLabs is where those lessons become one focused commercial service for owner-led businesses. I am starting where I have the deepest operating context - gymnastics, cheer, dance, wellness, and appointment-heavy service teams - while building methods that apply anywhere repeated computer work is consuming payroll.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="compact-section" id="faq">
+          <div class="wrap faq-compact">
+            <header class="compact-head reveal">
+              <div>
+                <p class="eyebrow">FAQ</p>
+                <h2>Quick answers.</h2>
+              </div>
+              <p>The short version: we work around the tools you already use, keep risky decisions in human hands, and make the first paid step measurable.</p>
+            </header>
+            <div class="faq-list reveal">
+              <details class="faq-item"><summary><h3>Do we have to replace the software we already use?</h3></summary><p>Usually not. We start with the systems already carrying the work and look for practical ways to connect, operate, or simplify them.</p></details>
+              <details class="faq-item"><summary><h3>What happens during the $999 audit?</h3></summary><p>We map the repeated workflow, estimate the time being lost, and deliver a prioritized plan with three to seven specific tools or automations where appropriate.</p></details>
+              <details class="faq-item"><summary><h3>Will AI be allowed to send things or change records on its own?</h3></summary><p>Only where you approve it and the risk is low. Sensitive actions can remain drafts, review items, or owner-approved steps.</p></details>
+              <details class="faq-item"><summary><h3>Are you only working with gyms and studios?</h3></summary><p>No. That is the strongest starting lane because of firsthand experience, but the same approach applies to service businesses with recurring admin work.</p></details>
+              <details class="faq-item"><summary><h3>Is the website really included?</h3></summary><p>Yes. When a straightforward website is needed to support the system we are implementing, the build can be included with paid concierge implementation at no extra build fee. You still own and pay for your domain, hosting, payment processing, or other outside services.</p></details>
+              <details class="faq-item"><summary><h3>Who owns the automations and what happens if we stop working together?</h3></summary><p>The ownership and handoff are defined before implementation begins. Whenever the platform allows it, the business owns its accounts, data, documentation, and production workflows.</p></details>
+              <details class="faq-item"><summary><h3>How quickly can we start?</h3></summary><p>The free assessment can happen as soon as a time is available. Paid audit clients receive scheduling outreach within 24 hours of payment. Implementation begins after you approve the plan.</p></details>
+            </div>
+          </div>
+        </section>
+
+        <section class="compact-section contact-section" id="contact">
+          <div class="wrap contact-grid">
+            <div class="contact-copy reveal">
+              <p class="eyebrow">Free 15-minute mini assessment</p>
+              <h2>Show us the work that keeps coming back.</h2>
+              <p>Tell us where your staff gets stuck, what keeps pulling you back into the process, or where customers tend to disappear. We will identify one useful place to begin.</p>
+            </div>
+            <form class="lead-form reveal" id="leadForm">
+              <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" required /></div>
+              <div class="field"><label for="business">Business</label><input id="business" name="business" autocomplete="organization" required /></div>
+              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" /></div>
+              <div class="field full"><label for="notes">What work would you like to make easier?</label><textarea id="notes" name="notes" placeholder="A few sentences is enough."></textarea></div>
+              <p class="form-note">We use this information to prepare the first conversation and follow up about your assessment. We do not sell your contact information.</p>
+              <button class="button primary field full" type="submit">Request the free assessment</button>
+              <p class="form-status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div class="wrap footer-inner"><span>SignalLabs / A QuanBuilds company</span><span><a href="https://quanbuilds.netlify.app/">QuanBuilds</a> / AI systems for owner-led service businesses</span></div>
+      </footer>
+    </div>
+
+    <script>
+      const menuButton = document.querySelector(".menu-toggle");
+      const nav = document.querySelector(".nav");
+      menuButton.addEventListener("click", () => {
+        const open = document.body.classList.toggle("menu-open");
+        menuButton.setAttribute("aria-expanded", String(open));
+      });
+      nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+        document.body.classList.remove("menu-open");
+        menuButton.setAttribute("aria-expanded", "false");
+      }));
+
+      window.addEventListener("load", () => {
+        if (!window.location.hash) return;
+        const target = document.querySelector(window.location.hash);
+        if (target) target.scrollIntoView({ block: "start" });
+      });
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
+
+      document.querySelectorAll(".faq-item").forEach((item) => {
+        item.addEventListener("toggle", () => {
+          if (!item.open) return;
+          document.querySelectorAll(".faq-item[open]").forEach((other) => {
+            if (other !== item) other.removeAttribute("open");
+          });
+        });
+      });
+
+      document.querySelectorAll(".more-item").forEach((item) => {
+        const toggle = () => {
+          const open = !item.classList.contains("is-open");
+          document.querySelectorAll(".more-item.is-open").forEach((other) => {
+            if (other !== item) {
+              other.classList.remove("is-open");
+              other.setAttribute("aria-expanded", "false");
+            }
+          });
+          item.classList.toggle("is-open", open);
+          item.setAttribute("aria-expanded", String(open));
+        };
+        item.addEventListener("click", toggle);
+        item.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          toggle();
+        });
+      });
+
+      async function postJSON(path, body) {
+        const response = await fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || "Request failed");
+        return data;
+      }
+
+      const workflowPromptForm = document.querySelector("#workflowPromptForm");
+      const workflowPrompt = document.querySelector("#workflowPrompt");
+      const workflowPromptStatus = document.querySelector(".workflow-prompt-status");
+      const workflowDialog = document.querySelector("#workflowDialog");
+      const workflowIntakeForm = document.querySelector("#workflowIntakeForm");
+      if (workflowPromptForm && workflowPrompt && workflowDialog && workflowIntakeForm) {
+        const workflowPreview = workflowDialog.querySelector("[data-workflow-preview]");
+        const workflowHidden = workflowIntakeForm.querySelector("input[name='workflow']");
+        const dialogStatus = workflowIntakeForm.querySelector(".dialog-status");
+
+        workflowPromptForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const workflow = workflowPrompt.value.trim();
+          if (!workflow) {
+            workflowPromptStatus.textContent = "Tell us which task or workflow you want to improve.";
+            return;
+          }
+          workflowPromptStatus.textContent = "";
+          workflowHidden.value = workflow;
+          workflowPreview.textContent = workflow;
+          workflowDialog.showModal();
+        });
+
+        workflowDialog.querySelector(".dialog-close").addEventListener("click", () => workflowDialog.close());
+        workflowDialog.addEventListener("click", (event) => {
+          if (event.target === workflowDialog) workflowDialog.close();
+        });
+
+        workflowIntakeForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const submit = workflowIntakeForm.querySelector("button[type='submit']");
+          const data = Object.fromEntries(new FormData(workflowIntakeForm));
+          submit.disabled = true;
+          dialogStatus.textContent = "Saving your request...";
+          try {
+            await postJSON("/.netlify/functions/signallabs-crm-intake", {
+              ...data,
+              notes: data.workflow,
+              need: "Specific workflow recommendation",
+              source: "signallabs-workflow-value-grid"
+            });
+            workflowIntakeForm.reset();
+            workflowPromptForm.reset();
+            workflowDialog.close();
+            workflowPromptStatus.textContent = "Received. We will review the workflow and follow up with a practical first recommendation.";
+          } catch (error) {
+            dialogStatus.textContent = "The request did not go through. Please check your details and try again.";
+          } finally {
+            submit.disabled = false;
+          }
+        });
+      }
+
+      const checkoutButtons = document.querySelectorAll("[data-checkout]");
+      const checkoutStatuses = document.querySelectorAll("[data-checkout-status]");
+      checkoutButtons.forEach((checkoutButton) => {
+        checkoutButton.addEventListener("click", async () => {
+          checkoutButtons.forEach((button) => { button.disabled = true; });
+          checkoutStatuses.forEach((status) => { status.textContent = "Opening secure checkout..."; });
+          try {
+            const data = await postJSON("/.netlify/functions/signallabs-checkout", { clientReference: "signallabs-full-systems-audit" });
+            if (!data.url) throw new Error("Checkout link unavailable");
+            window.location.href = data.url;
+          } catch (error) {
+            checkoutStatuses.forEach((status) => { status.textContent = "Checkout could not open. Please request the audit below and we will send the secure link."; });
+            checkoutButtons.forEach((button) => { button.disabled = false; });
+          }
+        });
+      });
+
+      const leadForm = document.querySelector("#leadForm");
+      const formStatus = leadForm.querySelector(".form-status");
+      leadForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const submit = leadForm.querySelector("button[type='submit']");
+        const data = Object.fromEntries(new FormData(leadForm));
+        submit.disabled = true;
+        formStatus.textContent = "Sending...";
+        try {
+          await postJSON("/.netlify/functions/signallabs-crm-intake", { ...data, source: "signallabs-redesign-free-assessment" });
+          leadForm.reset();
+          formStatus.textContent = "Received. SignalLabs will follow up to schedule the assessment.";
+        } catch (error) {
+          formStatus.textContent = "The form did not go through. Email quan.stewart@icloud.com and we will get you scheduled.";
+        } finally {
+          submit.disabled = false;
+        }
+      });
+    </script>
+    <script src="/assets/site-analytics.js" defer></script>
   </body>
 </html>

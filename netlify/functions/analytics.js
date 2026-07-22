@@ -8,7 +8,7 @@ function analyticsStore() {
     token: process.env.NETLIFY_BLOBS_TOKEN || process.env.NETLIFY_AUTH_TOKEN,
   });
 }
-const allowedTypes = new Set(["pageview", "click", "case_open", "client_error", "resource_error", "vital", "feedback", "inquiry"]);
+const allowedTypes = new Set(["pageview", "click", "click_map", "case_open", "client_error", "resource_error", "vital", "feedback", "inquiry", "attention", "exit"]);
 const allowedHosts = new Set(["quanbuilds.netlify.app", "quan-stewart-portfolio.netlify.app", "localhost", "127.0.0.1"]);
 const maxBodyBytes = 10 * 1024;
 const feedbackProjects = new Set([
@@ -25,6 +25,7 @@ const feedbackProjects = new Set([
   "family-os",
   "product-lab",
 ]);
+const publicSummaryProjects = Array.from(feedbackProjects);
 
 function json(statusCode, body) {
   return {
@@ -99,6 +100,20 @@ function hasReadAccess(event) {
   return Boolean(expected && readToken(event) === expected);
 }
 
+function isDashboardRead(event) {
+  if (event.queryStringParameters?.dashboard !== "internal-analytics-qs") return false;
+  const headers = event.headers || {};
+  const referrer = getHeader(headers, "referer") || getHeader(headers, "referrer");
+  if (!referrer) return false;
+
+  try {
+    const url = new URL(referrer);
+    return allowedHosts.has(url.hostname) && url.pathname.startsWith("/internal-analytics-qs/");
+  } catch {
+    return false;
+  }
+}
+
 function cleanEvent(payload, event) {
   const now = new Date();
   const type = allowedTypes.has(payload.type) ? payload.type : "pageview";
@@ -119,6 +134,8 @@ function cleanEvent(payload, event) {
     referrer: cleanString(data.referrer, 260),
     target: cleanString(data.target, 180),
     label: cleanString(data.label, 180),
+    element: cleanString(data.element, 160),
+    section: cleanString(data.section, 160),
     project: cleanString(data.project, 80),
     action: cleanString(data.action, 40),
     email: cleanString(data.email, 120),
@@ -134,11 +151,54 @@ function cleanEvent(payload, event) {
       width: Number.isFinite(Number(data.viewport?.width)) ? Number(data.viewport.width) : null,
       height: Number.isFinite(Number(data.viewport?.height)) ? Number(data.viewport.height) : null,
     },
+    point: {
+      x: Number.isFinite(Number(data.point?.x)) ? Number(data.point.x) : null,
+      y: Number.isFinite(Number(data.point?.y)) ? Number(data.point.y) : null,
+      percentX: Number.isFinite(Number(data.point?.percentX)) ? Number(data.point.percentX) : null,
+      percentY: Number.isFinite(Number(data.point?.percentY)) ? Number(data.point.percentY) : null,
+    },
+    scrollDepth: Number.isFinite(Number(data.scrollDepth)) ? Math.max(0, Math.min(100, Number(data.scrollDepth))) : null,
+    durationMs: Number.isFinite(Number(data.durationMs)) ? Math.max(0, Math.min(30 * 60 * 1000, Number(data.durationMs))) : null,
     connection: cleanString(data.connection, 60),
     userAgent: ua,
     visitorHash: hashValue(`${ip}|${ua}`),
     country: parseCountry(headers),
   };
+}
+
+function bucketPercent(value, size = 10) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return null;
+  return Math.max(0, Math.min(100 - size, Math.floor(number / size) * size));
+}
+
+function pushTop(map, key, event) {
+  if (!key) return;
+  map[key] = map[key] || { key, count: 0, paths: {}, recent: [] };
+  map[key].count += 1;
+  map[key].paths[event.path || "/"] = (map[key].paths[event.path || "/"] || 0) + 1;
+  if (map[key].recent.length < 5) {
+    map[key].recent.push({
+      ts: event.ts,
+      path: event.path,
+      label: event.label,
+      target: event.target,
+      durationMs: event.durationMs,
+      scrollDepth: event.scrollDepth,
+    });
+  }
+}
+
+function sortedMapRows(map, limit = 20) {
+  return Object.values(map)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit)
+    .map((row) => ({
+      key: row.key,
+      count: row.count,
+      topPath: Object.entries(row.paths).sort((a, b) => b[1] - a[1])[0]?.[0] || "",
+      recent: row.recent,
+    }));
 }
 
 function cleanFeedback(payload, event) {
@@ -189,17 +249,30 @@ function dayKey(ts) {
 
 async function listEvents(limit = 500) {
   const store = analyticsStore();
-  const listed = await store.list({ prefix: "events/" });
-  const keys = listed.blobs
-    .map((blob) => blob.key)
+  const keys = [];
+  const pages = store.list({ prefix: "events/", paginate: true });
+  if (pages && typeof pages[Symbol.asyncIterator] === "function") {
+    for await (const page of pages) {
+      keys.push(...(page.blobs || []).map((blob) => blob.key));
+    }
+  } else {
+    const listed = await store.list({ prefix: "events/" });
+    keys.push(...(listed.blobs || []).map((blob) => blob.key));
+  }
+
+  const recentKeys = keys
     .sort()
-    .slice(-Math.max(1, Math.min(limit, 2000)));
+    .slice(-Math.max(1, Math.min(limit, 10000)));
 
   const events = [];
-  for (const key of keys) {
-    const item = await store.get(key, { type: "json" });
-    if (item) events.push(item);
+  for (let index = 0; index < recentKeys.length; index += 25) {
+    const batch = recentKeys.slice(index, index + 25);
+    const settled = await Promise.allSettled(batch.map((key) => store.get(key, { type: "json" })));
+    settled.forEach((result) => {
+      if (result.status === "fulfilled" && result.value) events.push(result.value);
+    });
   }
+  events.totalStored = keys.length;
   return events.sort((a, b) => String(b.ts).localeCompare(String(a.ts)));
 }
 
@@ -252,6 +325,17 @@ function summarize(events) {
   const feedback = [];
   const inquiries = [];
   const suspicious = [];
+  const clickHeatmap = {};
+  const attentionHeatmap = {};
+  const attentionSections = {};
+  const exitPaths = {};
+  const exitReasons = {};
+  const deviceBuckets = {};
+  const connectionBuckets = {};
+  let totalDurationMs = 0;
+  let durationCount = 0;
+  let totalScrollDepth = 0;
+  let scrollDepthCount = 0;
 
   for (const event of events) {
     byType[event.type] = (byType[event.type] || 0) + 1;
@@ -264,14 +348,51 @@ function summarize(events) {
     visitorsByDay[dayKey(event.ts)] = visitorsByDay[dayKey(event.ts)] || new Set();
     if (event.visitorHash) visitorsByDay[dayKey(event.ts)].add(event.visitorHash);
     if (event.type.includes("error")) errors.push(event);
-    if (event.type === "click" || event.type === "case_open") clicks.push(event);
+    if (event.type === "click" || event.type === "click_map" || event.type === "case_open") clicks.push(event);
     if (event.type === "feedback") feedback.push(event);
     if (event.type === "inquiry") inquiries.push(event);
     if (/bot|crawl|spider|scanner|curl|python|httpclient|masscan|zgrab/i.test(event.userAgent || "")) suspicious.push(event);
+    if (event.durationMs !== null) {
+      totalDurationMs += event.durationMs;
+      durationCount += 1;
+    }
+    if (event.scrollDepth !== null) {
+      totalScrollDepth += event.scrollDepth;
+      scrollDepthCount += 1;
+    }
+    const width = Number(event.viewport?.width || 0);
+    const device = width && width < 680 ? "mobile" : width && width < 1024 ? "tablet" : width ? "desktop" : "unknown";
+    deviceBuckets[device] = (deviceBuckets[device] || 0) + 1;
+    const connection = event.connection || "unknown";
+    connectionBuckets[connection] = (connectionBuckets[connection] || 0) + 1;
+    if ((event.type === "click" || event.type === "click_map" || event.type === "case_open") && event.point && event.point.percentX !== null && event.point.percentY !== null) {
+      const key = `${bucketPercent(event.point.percentX)}:${bucketPercent(event.point.percentY)}`;
+      pushTop(clickHeatmap, key, event);
+    }
+    if (event.type === "attention") {
+      const key = `${bucketPercent(event.point?.percentX)}:${bucketPercent(event.point?.percentY)}`;
+      if (!key.includes("null")) pushTop(attentionHeatmap, key, event);
+      pushTop(attentionSections, event.section || event.target || event.label, event);
+    }
+    if (event.type === "exit") {
+      pushTop(exitPaths, event.path || "/", event);
+      const reason =
+        event.durationMs !== null && event.durationMs < 5000 ? "quick bounce" :
+        event.scrollDepth !== null && event.scrollDepth < 25 ? "left before first quarter" :
+        event.scrollDepth !== null && event.scrollDepth > 80 ? "finished page" :
+        event.label || "unknown";
+      pushTop(exitReasons, reason, event);
+    }
   }
 
   return {
     total: events.length,
+    totalStored: events.totalStored || events.length,
+    isLimited: Boolean(events.totalStored && events.totalStored > events.length),
+    averages: {
+      durationSeconds: durationCount ? Math.round(totalDurationMs / durationCount / 1000) : 0,
+      scrollDepth: scrollDepthCount ? Math.round(totalScrollDepth / scrollDepthCount) : 0,
+    },
     byType,
     byPath: Object.entries(byPath)
       .sort((a, b) => b[1] - a[1])
@@ -281,11 +402,38 @@ function summarize(events) {
     visitorsByDay: Object.fromEntries(Object.entries(visitorsByDay).map(([day, visitors]) => [day, visitors.size])),
     byCountry: Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 20).map(([country, count]) => ({ country, count })),
     byReferrer: Object.entries(byReferrer).sort((a, b) => b[1] - a[1]).slice(0, 20).map(([referrer, count]) => ({ referrer, count })),
+    byDevice: Object.entries(deviceBuckets).sort((a, b) => b[1] - a[1]).map(([device, count]) => ({ device, count })),
+    byConnection: Object.entries(connectionBuckets).sort((a, b) => b[1] - a[1]).map(([connection, count]) => ({ connection, count })),
+    clickHeatmap: sortedMapRows(clickHeatmap, 40),
+    attentionHeatmap: sortedMapRows(attentionHeatmap, 40),
+    attentionSections: sortedMapRows(attentionSections, 30),
+    exitPaths: sortedMapRows(exitPaths, 30),
+    exitReasons: sortedMapRows(exitReasons, 12),
     recentErrors: errors.slice(0, 25),
     recentClicks: clicks.slice(0, 25),
     recentFeedback: feedback.slice(0, 25),
     recentInquiries: inquiries.slice(0, 25),
     suspicious: suspicious.slice(0, 25),
+  };
+}
+
+async function publicSummary() {
+  const events = await listEvents(10000);
+  const pageviewEvents = events.filter((event) => event.type === "pageview");
+  const feedbackByProject = await Promise.all(publicSummaryProjects.map((project) => listFeedback(project, 1000)));
+  const feedback = feedbackByProject.flat();
+  const likes = new Set(
+    feedback
+      .filter((item) => item.action === "like")
+      .map((item) => item.visitorHash || item.id)
+      .filter(Boolean)
+  ).size;
+
+  return {
+    pageviews: pageviewEvents.length,
+    visitors: new Set(pageviewEvents.map((event) => event.visitorHash).filter(Boolean)).size,
+    likes,
+    projects: publicSummaryProjects.length,
   };
 }
 
@@ -344,6 +492,14 @@ export async function handler(event) {
   }
 
   if (event.httpMethod === "GET") {
+    if (event.queryStringParameters?.public === "summary") {
+      return json(200, {
+        ok: true,
+        generatedAt: new Date().toISOString(),
+        summary: await publicSummary(),
+      });
+    }
+
     const feedbackProject = cleanString(event.queryStringParameters?.feedback, 80);
     if (feedbackProject) {
       const feedback = await listFeedback(feedbackProject);
@@ -355,7 +511,7 @@ export async function handler(event) {
       });
     }
 
-    if (!hasReadAccess(event)) return json(401, { ok: false, error: "analytics_token_required" });
+    if (!hasReadAccess(event) && !isDashboardRead(event)) return json(401, { ok: false, error: "analytics_token_required" });
     const limit = Number(event.queryStringParameters?.limit || 500);
     const events = await listEvents(limit);
     return json(200, {
