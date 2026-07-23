@@ -3,32 +3,52 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>QuanBuilds</title>
+    <title>QuanBuilds | Practical AI Operator Systems and Public Product Surfaces</title>
     <meta
       name="description"
-      content="A minimalist portfolio for QuanBuilds: systems, products, operating agents, and public experiments."
+      content="QuanBuilds is Quan Stewart's public portfolio for practical AI operator systems, public product surfaces, and conversion-ready websites."
     />
     <link rel="canonical" href="https://quanbuilds.netlify.app/" />
     <meta name="robots" content="index,follow" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="QuanBuilds agent brief" />
+    <link rel="alternate" type="application/json" href="/agent-manifest.json" title="QuanBuilds agent manifest" />
+    <link rel="alternate" type="application/json" href="/assets/data/case-studies.json" title="QuanBuilds public case-study data" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://quanbuilds.netlify.app/" />
-    <meta property="og:title" content="QuanBuilds" />
+    <meta property="og:title" content="QuanBuilds | Practical AI Systems and Product Builds" />
     <meta
       property="og:description"
-      content="Systems, products, operating agents, and public experiments from QuanBuilds."
+      content="Practical AI operator systems, public product surfaces, and conversion-ready websites from QuanBuilds."
     />
     <meta property="og:image" content="https://quanbuilds.netlify.app/assets/previews/quanbuilds-hero-og.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="QuanBuilds" />
+    <meta name="twitter:title" content="QuanBuilds | Practical AI Systems and Product Builds" />
     <meta
       name="twitter:description"
-      content="Systems, products, operating agents, and public experiments from QuanBuilds."
+      content="Practical AI operator systems, public product surfaces, and conversion-ready websites from QuanBuilds."
     />
     <meta name="twitter:image" content="https://quanbuilds.netlify.app/assets/previews/quanbuilds-hero-og.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Quan Stewart",
+        "alternateName": "QuanBuilds",
+        "url": "https://quanbuilds.netlify.app/",
+        "sameAs": [
+          "https://github.com/quanbuilds",
+          "https://www.instagram.com/quan_stewart/",
+          "https://www.instagram.com/floordstudios/"
+        ],
+        "knowsAbout": ["AI operations", "agent systems", "product development", "music commerce", "tax tracking", "workflow automation"],
+        "mainEntityOfPage": "https://quanbuilds.netlify.app/"
+      }
+    </script>
     <style>
       :root {
         color-scheme: light;
@@ -132,10 +152,38 @@
       }
 
       .mark {
+        display: inline-flex;
+        align-items: center;
+        min-width: 2.8em;
         font-size: 12px;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.16em;
+        white-space: nowrap;
+      }
+
+      .mark-edge,
+      .mark-fill {
+        display: inline-block;
+      }
+
+      .mark-fill {
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateX(-0.35em);
+        transition:
+          max-width 520ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms,
+          opacity 260ms ease 1500ms,
+          transform 520ms cubic-bezier(0.16, 1, 0.3, 1) 1500ms;
+      }
+
+      .mark:hover .mark-fill,
+      .mark:focus-visible .mark-fill {
+        max-width: 8.8em;
+        opacity: 1;
+        transform: translateX(0);
+        transition-delay: 0ms;
       }
 
       .nav {
@@ -196,10 +244,10 @@
 
       .hero {
         position: relative;
-        min-height: 92svh;
+        min-height: 78svh;
         display: grid;
         place-items: center;
-        padding: 90px var(--pad) 48px;
+        padding: 122px var(--pad) 36px;
       }
 
       .hero-inner {
@@ -216,6 +264,122 @@
         line-height: 0.92;
         text-transform: uppercase;
         letter-spacing: 0.04em;
+      }
+
+      .hero-term {
+        position: relative;
+        display: inline-block;
+        outline: none;
+      }
+
+      .hero-term::after {
+        content: "";
+        position: absolute;
+        left: 0.08em;
+        right: 0.12em;
+        bottom: -0.07em;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0;
+        transform: scaleX(0.68);
+        transform-origin: center;
+        transition: opacity 220ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .hero-term:hover::after,
+      .hero-term:focus-visible::after,
+      .hero-term:focus-within::after {
+        opacity: 0.7;
+        transform: scaleX(1);
+      }
+
+      .dict-card {
+        position: absolute;
+        z-index: 8;
+        left: 50%;
+        bottom: calc(100% + clamp(10px, 1.5vw, 18px));
+        width: min(86vw, 390px);
+        padding: 13px 15px 12px;
+        color: var(--fg);
+        background: color-mix(in srgb, var(--bg) 90%, transparent);
+        border: 1px solid color-mix(in srgb, var(--gold) 48%, var(--line));
+        box-shadow: 0 26px 70px var(--shadow);
+        transform: translate(-50%, 10px) scale(0.985);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+        text-align: left;
+        text-transform: none;
+        letter-spacing: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 10.5px;
+        line-height: 1.28;
+      }
+
+      .dict-card::before,
+      .dict-card::after {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        pointer-events: none;
+        border-top: 1px solid color-mix(in srgb, var(--gold) 56%, transparent);
+        border-bottom: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+        transform: scaleX(0.94);
+      }
+
+      .dict-card::after {
+        inset: 11px 9px;
+        border: 0;
+        border-left: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+        border-right: 1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+        transform: none;
+      }
+
+      .hero-term:hover .dict-card,
+      .hero-term:focus-visible .dict-card,
+      .hero-term:focus-within .dict-card {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+      }
+
+      .dict-pronunciation {
+        margin: 0 0 7px;
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: 19px;
+        line-height: 1;
+        letter-spacing: 0.02em;
+      }
+
+      .dict-entry {
+        margin: 0 0 6px;
+        color: var(--muted);
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .dict-card ol {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        padding-left: 18px;
+        display: grid;
+        gap: 3px;
+      }
+
+      .dict-card li::marker {
+        color: var(--gold);
+      }
+
+      .dict-origin {
+        position: relative;
+        z-index: 1;
+        margin: 8px 0 0;
+        padding-top: 7px;
+        border-top: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+        color: var(--muted);
+        font-size: 9.5px;
       }
 
       .hero-subline {
@@ -237,6 +401,368 @@
         width: clamp(34px, 7vw, 88px);
         height: 1px;
         background: var(--line);
+      }
+
+      .hero-client-copy {
+        max-width: 690px;
+        margin: 22px auto 0;
+        color: var(--fg);
+        font-size: clamp(18px, 2.25vw, 28px);
+        line-height: 1.18;
+        text-wrap: balance;
+      }
+
+      .hero-client-note {
+        max-width: 560px;
+        margin: 14px auto 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 26px;
+      }
+
+      .hero-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 11px 15px;
+        border: 1px solid var(--line);
+        background: var(--fg);
+        color: var(--bg);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .hero-action.secondary {
+        background: var(--panel);
+        color: var(--fg);
+      }
+
+      .hero-action.signal {
+        border-color: color-mix(in srgb, var(--gold) 64%, var(--line));
+        background: var(--gold);
+        color: #080808;
+        box-shadow: 0 20px 54px color-mix(in srgb, var(--gold) 28%, transparent);
+      }
+
+      .market-tape {
+        position: relative;
+        z-index: 2;
+        margin-top: -1px;
+        border-block: 1px solid color-mix(in srgb, var(--gold) 42%, var(--line));
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        color: var(--fg);
+        overflow: hidden;
+        backdrop-filter: blur(18px) saturate(150%);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+        box-shadow: 0 14px 44px var(--shadow);
+      }
+
+      .market-tape::before,
+      .market-tape::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 2;
+        width: min(15vw, 150px);
+        pointer-events: none;
+      }
+
+      .market-tape::before {
+        left: 0;
+        background: linear-gradient(90deg, var(--bg), transparent);
+      }
+
+      .market-tape::after {
+        right: 0;
+        background: linear-gradient(270deg, var(--bg), transparent);
+      }
+
+      .market-tape-track {
+        display: flex;
+        width: max-content;
+        padding-left: max(14px, var(--pad));
+        animation: tape-scroll 58s linear infinite;
+      }
+
+      .market-tape:hover .market-tape-track {
+        animation-play-state: paused;
+      }
+
+      .market-tape-group {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        padding: 9px 14px;
+      }
+
+      .ticker-item {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 9px;
+        white-space: nowrap;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .ticker-item::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 18px var(--gold);
+      }
+
+      .ticker-label {
+        color: var(--muted);
+      }
+
+      .ticker-value {
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        color: var(--gold);
+      }
+
+      .ticker-copy {
+        color: var(--fg);
+      }
+
+      .ticker-link {
+        color: var(--fg);
+      }
+
+      @keyframes tape-scroll {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      .tiktok-section {
+        display: grid;
+        gap: 28px;
+        padding: 18svh var(--pad) 10svh;
+        border-top: 1px solid var(--faint);
+      }
+
+      .tiktok-head {
+        max-width: var(--max);
+        width: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .tiktok-head h2 {
+        margin: 0;
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: clamp(38px, 7vw, 94px);
+        font-weight: 500;
+        line-height: 0.9;
+        text-transform: uppercase;
+      }
+
+      .tiktok-period {
+        display: inline-flex;
+        margin: 0 0 12px;
+        color: var(--gold);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .tiktok-head p {
+        max-width: 340px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .tiktok-row {
+        width: min(var(--max), calc(100vw - (var(--pad) * 2)));
+        margin: 0 auto;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: calc((100% - 24px) / 3.35);
+        gap: 12px;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: inline proximity;
+        padding: 2px 0 14px;
+        scrollbar-width: none;
+      }
+
+      .tiktok-row::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tiktok-card {
+        position: relative;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        gap: 10px;
+        border: 1px solid color-mix(in srgb, var(--gold) 28%, var(--line));
+        background: color-mix(in srgb, var(--bg) 92%, var(--panel));
+        color: var(--fg);
+        scroll-snap-align: start;
+        overflow: hidden;
+        padding: 12px;
+      }
+
+      .tiktok-card-head,
+      .tiktok-card-foot {
+        display: grid;
+        gap: 8px;
+      }
+
+      .tiktok-card-head {
+        grid-template-columns: auto 1fr;
+        align-items: end;
+        min-height: 86px;
+      }
+
+      .tiktok-media {
+        position: relative;
+        aspect-ratio: 9 / 16;
+        min-height: 0;
+        background: #050505;
+        overflow: hidden;
+      }
+
+      .tiktok-media video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #050505;
+        object-fit: cover;
+      }
+
+      .tiktok-controls {
+        position: absolute;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        display: grid;
+        grid-template-columns: 34px 1fr;
+        gap: 8px;
+        align-items: center;
+        padding: 8px;
+        border: 1px solid rgba(247, 245, 239, 0.18);
+        background: rgba(0, 0, 0, 0.58);
+        color: #f7f5ef;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 180ms ease, transform 180ms ease;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .tiktok-card:hover .tiktok-controls,
+      .tiktok-card:focus-within .tiktok-controls {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .tiktok-play {
+        width: 34px;
+        height: 30px;
+        border: 1px solid rgba(247, 245, 239, 0.28);
+        background: rgba(247, 245, 239, 0.08);
+        color: #f7f5ef;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      .tiktok-scrubber {
+        width: 100%;
+        accent-color: var(--gold);
+      }
+
+      .tiktok-scrubber::-webkit-slider-runnable-track {
+        height: 3px;
+      }
+
+      .tiktok-scrubber::-webkit-slider-thumb {
+        margin-top: -6px;
+      }
+
+      .tiktok-fallback {
+        min-height: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px;
+        background:
+          linear-gradient(135deg, color-mix(in srgb, var(--gold) 24%, transparent), transparent 42%),
+          #050505;
+      }
+
+      .tiktok-rank {
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: clamp(50px, 5.6vw, 76px);
+        line-height: 0.82;
+        color: var(--gold);
+      }
+
+      .tiktok-title {
+        margin: 0;
+        font-size: clamp(18px, 1.65vw, 26px);
+        font-weight: 750;
+        line-height: 1.02;
+      }
+
+      .tiktok-caption {
+        margin: 10px 0 0;
+        color: color-mix(in srgb, var(--bg) 72%, transparent);
+        font-size: 13px;
+        line-height: 1.32;
+      }
+
+      .tiktok-metrics {
+        display: grid;
+        gap: 5px;
+      }
+
+      .tiktok-views {
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: clamp(34px, 4vw, 52px);
+        line-height: 0.9;
+        color: var(--gold);
+      }
+
+      .tiktok-meta {
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.35;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--bg) 72%, transparent);
       }
 
       .project-rail {
@@ -462,6 +988,12 @@
         background: color-mix(in srgb, var(--bg) 86%, transparent);
         box-shadow: 0 18px 50px var(--shadow);
         overflow: hidden;
+        cursor: pointer;
+      }
+
+      .work-card:focus-visible {
+        outline: 1px solid var(--fg);
+        outline-offset: 5px;
       }
 
       .work-shot {
@@ -1049,7 +1581,24 @@
         }
 
         .hero {
-          min-height: 91svh;
+          min-height: 80svh;
+          padding-top: 116px;
+        }
+
+        .dict-card {
+          position: fixed;
+          top: 66px;
+          bottom: auto;
+          left: 50%;
+          width: calc(100vw - 30px);
+          max-width: 390px;
+          transform: translate(-50%, -6px) scale(0.985);
+        }
+
+        .hero-term:hover .dict-card,
+        .hero-term:focus-visible .dict-card,
+        .hero-term:focus-within .dict-card {
+          transform: translate(-50%, 0) scale(1);
         }
 
         .project-rail {
@@ -1083,6 +1632,16 @@
           grid-template-columns: 1fr;
         }
 
+        .market-tape-group {
+          gap: 20px;
+          padding-block: 8px;
+        }
+
+        .ticker-item {
+          font-size: 10px;
+          letter-spacing: 0.1em;
+        }
+
         .work-intro {
           flex-direction: column;
           align-items: flex-end;
@@ -1097,6 +1656,21 @@
 
         .work-grid {
           grid-template-columns: 1fr;
+        }
+
+        .tiktok-section {
+          padding-top: 12svh;
+        }
+
+        .tiktok-head {
+          display: grid;
+          align-items: start;
+        }
+
+        .tiktok-row {
+          width: calc(100vw - (var(--pad) * 2));
+          margin: 0 auto;
+          grid-auto-columns: minmax(220px, 78vw);
         }
 
         .work-card {
@@ -1121,9 +1695,12 @@
   <body>
     <div class="site-frame">
       <header class="topbar" aria-label="Site header">
-        <a class="mark" href="#top" aria-label="QuanBuilds home">QS</a>
+        <a class="mark" href="#top" aria-label="QuanBuilds home">
+          <span class="mark-edge">Q</span><span class="mark-fill">UANBUILD</span><span class="mark-edge">S</span>
+        </a>
         <nav class="nav" aria-label="Main navigation">
           <a href="#work">Work</a>
+          <a href="/signallabs/">SignalLabs</a>
           <a href="#music-art">Music / Art</a>
           <a href="#story">Story</a>
           <a href="#contact">Contact</a>
@@ -1136,10 +1713,61 @@
       <main id="top">
         <section class="hero" aria-labelledby="hero-title">
           <div class="hero-inner">
-            <h1 id="hero-title">QuanBuilds</h1>
-            <p class="hero-subline">Systems / Products / Signals</p>
+            <h1 id="hero-title">
+              <span class="hero-term" tabindex="0">Quan<span class="dict-card" role="tooltip">
+                <span class="dict-pronunciation">quan \ ˈkwän \</span>
+                <span class="dict-entry">quan noun</span>
+                <ol>
+                  <li>slang: whole-life success: money, love, respect, usefulness, and community.</li>
+                  <li>martial arts: fist or boxing technique, as in taijiquan.</li>
+                  <li>historical: a Vietnamese coin string and unit of currency.</li>
+                  <li>written abbreviation for quantity.</li>
+                </ol>
+                <p class="dict-origin">Name: power, authority, mountain pass, official, or mandarin, depending on language and character.</p>
+              </span></span><span class="hero-term" tabindex="0">Builds<span class="dict-card" role="tooltip">
+                <span class="dict-pronunciation">builds \ ˈbildz \</span>
+                <span class="dict-entry">builds verb / noun</span>
+                <ol>
+                  <li>makes by arranging parts, systems, people, and pressure into something that can stand.</li>
+                  <li>develops through repeated work, proof, feedback, and repair.</li>
+                  <li>plural noun: products, sites, tools, agents, and operating systems.</li>
+                </ol>
+                <p class="dict-origin">From build: to form by ordering materials or effort into structure.</p>
+              </span></span>
+            </h1>
+            <p class="hero-client-copy">owner-controlled AI systems that recover missed leads, reduce repeated admin, and turn proof into working websites</p>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a class="hero-action signal" href="/signallabs/">Visit SignalLabs</a>
+              <a class="hero-action" href="mailto:quan.stewart@icloud.com?subject=Book%20a%2015-minute%20SignalLabs%20assessment">Book a 15-minute assessment</a>
+              <a class="hero-action secondary" href="#work">View proof</a>
+            </div>
           </div>
         </section>
+
+        <aside class="market-tape" aria-label="QuanBuilds operating tape">
+          <div class="market-tape-track">
+            <div class="market-tape-group">
+              <span class="ticker-item"><span class="ticker-label">Traffic</span><span class="ticker-value" data-live-stat="traffic">465</span></span>
+              <span class="ticker-item"><span class="ticker-label">Visitors</span><span class="ticker-value" data-live-stat="visitors">137</span></span>
+              <span class="ticker-item"><span class="ticker-label">Likes</span><span class="ticker-value" data-live-stat="likes">3</span></span>
+              <span class="ticker-item"><span class="ticker-label">Load</span><span class="ticker-value" data-live-stat="speed">measuring</span></span>
+              <span class="ticker-item"><span class="ticker-label">Case studies</span><span class="ticker-value">12</span></span>
+              <span class="ticker-item"><span class="ticker-label">Latest proof</span><span class="ticker-copy">SignalLabs eight-stage handoff, F10.0R'D revenue-safety gates, TideFlow private-review collateral</span></span>
+              <a class="ticker-item ticker-link" href="/signallabs/"><span class="ticker-label">Premium offer</span><span class="ticker-copy">SignalLabs</span></a>
+              <span class="ticker-item"><span class="ticker-label">Machine proof</span><span class="ticker-copy">llms.txt / agent manifest / public case data</span></span>
+            </div>
+            <div class="market-tape-group" aria-hidden="true">
+              <span class="ticker-item"><span class="ticker-label">Traffic</span><span class="ticker-value" data-live-stat="traffic">465</span></span>
+              <span class="ticker-item"><span class="ticker-label">Visitors</span><span class="ticker-value" data-live-stat="visitors">137</span></span>
+              <span class="ticker-item"><span class="ticker-label">Likes</span><span class="ticker-value" data-live-stat="likes">3</span></span>
+              <span class="ticker-item"><span class="ticker-label">Load</span><span class="ticker-value" data-live-stat="speed">measuring</span></span>
+              <span class="ticker-item"><span class="ticker-label">Case studies</span><span class="ticker-value">12</span></span>
+              <span class="ticker-item"><span class="ticker-label">Latest proof</span><span class="ticker-copy">SignalLabs eight-stage handoff, F10.0R'D revenue-safety gates, TideFlow private-review collateral</span></span>
+              <a class="ticker-item ticker-link" href="/signallabs/"><span class="ticker-label">Premium offer</span><span class="ticker-copy">SignalLabs</span></a>
+              <span class="ticker-item"><span class="ticker-label">Machine proof</span><span class="ticker-copy">llms.txt / agent manifest / public case data</span></span>
+            </div>
+          </div>
+        </aside>
 
         <nav class="project-rail" id="projectRail" aria-label="Project shortcuts">
           <div class="project-rail-track" id="projectRailTrack"></div>
@@ -1161,27 +1789,27 @@
             <div class="work-grid" aria-label="Selected work">
               <article class="work-card">
                 <div class="work-meta"><span>01</span><span>AI Operations</span></div>
-                <div class="work-shot"><img src="assets/previews/stewartos.png" alt="AgenticOS knowledge base preview" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/agenticos-hero.png" alt="AgenticOS case study hero preview" width="1400" height="900" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>AgenticOS</h3>
                   <p>A private control plane for specialist agents, durable memory, approval gates, source truth, and founder decision flow.</p>
                 </div>
-                <a class="work-link" href="case-studies/stewartos/">View case study</a>
+                <a class="work-link" href="case-studies/agenticos/">View case study</a>
               </article>
 
               <article class="work-card">
                 <div class="work-meta"><span>02</span><span>Music / Commerce</span></div>
-                <a class="work-shot" href="https://www.f100rd.com/" aria-label="Open F10.0R'D public site"><img src="assets/previews/f10rd.png" alt="F10.0R'D public site screenshot" loading="lazy" /></a>
+                <div class="work-shot"><img src="assets/previews/f10rd.png" alt="F10.0R'D public site screenshot" width="1345" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>F10.0R'D / JIM</h3>
-                  <p>Gymnastics floor-music studio, catalog, licensing workflow, content engine, outreach machine, and operational dashboard.</p>
+                  <p>Gymnastics floor-music studio with catalog/order surfaces, Customer Jim intake, lead capture, delivery-safety gates, and approval-ready checkout/delivery guard fixes.</p>
                 </div>
                 <a class="work-link" href="case-studies/f10rd/">View case study</a>
               </article>
 
               <article class="work-card">
                 <div class="work-meta"><span>03</span><span>Tax / SMS</span></div>
-                <a class="work-shot" href="https://taxtrack.f100rd.com/" aria-label="Open TaxTrakr public site"><img src="assets/previews/taxtrakr.png" alt="TaxTrakr landing page screenshot" loading="lazy" /></a>
+                <div class="work-shot"><img src="assets/previews/taxtrakr.png" alt="TaxTrakr landing page screenshot" width="1345" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>TaxTrakr</h3>
                   <p>Text-first deduction capture for self-employed people: receipts, messy notes, category logic, export paths, and CPA-ready records.</p>
@@ -1191,7 +1819,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>04</span><span>Daily Audio</span></div>
-                <a class="work-shot" href="https://youcast-app.netlify.app/" aria-label="Open YouCast public site"><img src="assets/previews/youcast.png" alt="YouCast OpenGraph product preview" loading="lazy" /></a>
+                <div class="work-shot"><img src="assets/previews/youcast.png" alt="YouCast OpenGraph product preview" width="960" height="640" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>YouCast</h3>
                   <p>A private morning briefing service that turns calendars, priorities, and trusted sources into a short audio brief and transcript.</p>
@@ -1201,17 +1829,17 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>05</span><span>B2B Field Ops</span></div>
-                <a class="work-shot" href="https://tideflow.netlify.app/" aria-label="Open TideFlow public site"><img src="assets/previews/tideflow.png" alt="TideFlow product screenshot" loading="lazy" /></a>
+                <div class="work-shot"><img src="assets/previews/tideflow.png" alt="TideFlow product screenshot" width="1345" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>TideFlow</h3>
-                  <p>An operating layer for service businesses juggling crews, sites, proof-of-service, schedules, exceptions, and sales-to-field handoffs.</p>
+                  <p>A GovCon intelligence app for opportunity discovery, fit review, and pursuit workflow, with July 13 private proof-room material ready and public/demo production proof still approval-gated.</p>
                 </div>
                 <a class="work-link" href="case-studies/tideflow/">View case study</a>
               </article>
 
               <article class="work-card">
                 <div class="work-meta"><span>06</span><span>Trading Discipline</span></div>
-                <div class="work-shot"><img src="assets/previews/impulse.png" alt="Impulse trading dashboard screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/impulse.png" alt="Impulse trading dashboard screenshot" width="1360" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>Impulse</h3>
                   <p>A trading research and review system built around fail-closed evidence, broker receipts, session checks, and risk boundaries.</p>
@@ -1221,7 +1849,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>07</span><span>AR / Sports</span></div>
-                <div class="work-shot"><img src="assets/previews/deadstroke.png" alt="DeadStroke project preview" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/deadstroke.png" alt="DeadStroke project preview" width="1360" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>DeadStroke</h3>
                   <p>A pool-training product path with native AR table detection, shot feedback, device testing, and focused regression coverage.</p>
@@ -1231,7 +1859,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>08</span><span>Demand Engine</span></div>
-                <div class="work-shot"><img src="assets/previews/reddit-finder.png" alt="Reddit Finder dashboard screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/reddit-finder.png" alt="Reddit Finder dashboard screenshot" width="1345" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>Reddit Finder</h3>
                   <p>A browser-first opportunity scout that turns public pain signals into scored ideas, PRDs, build queues, and review dashboards.</p>
@@ -1241,7 +1869,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>09</span><span>Family Systems</span></div>
-                <div class="work-shot"><img src="assets/previews/botler-shell.png" alt="Botler Shell screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/botler-shell.png" alt="Botler Shell screenshot" width="1360" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>Botler Shell</h3>
                   <p>A home-office control surface for agent status, workflow boards, family rhythm, finance views, and voice-connected operations.</p>
@@ -1251,7 +1879,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>10</span><span>Market Tests</span></div>
-                <div class="work-shot"><img src="assets/previews/local-sites.png" alt="Local business site package screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/local-sites.png" alt="Local business site package screenshot" width="1345" height="860" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>Local Sites</h3>
                   <p>Fast proof packages for small businesses: nail salons, ice cream shops, upholstery shops, calls, decks, pricing, and follow-up loops.</p>
@@ -1261,7 +1889,7 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>11</span><span>Education</span></div>
-                <div class="work-shot"><img src="assets/previews/family-os.png" alt="Family OS homeschool tool screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/family-os-current.jpg" alt="Family OS calendar and planning interface preview" width="900" height="688" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>Family OS</h3>
                   <p>Homeschool plans, lesson boards, summer schedules, activity planning, daily notes, and calm household operating rhythms.</p>
@@ -1271,10 +1899,10 @@
 
               <article class="work-card">
                 <div class="work-meta"><span>12</span><span>Product Lab</span></div>
-                <div class="work-shot"><img src="assets/previews/more-builds.png" alt="Content and product dashboard screenshot" loading="lazy" /></div>
+                <div class="work-shot"><img src="assets/previews/product-lab-current.jpg" alt="Product Lab concept montage with product-build scenes" width="900" height="465" loading="lazy" decoding="async" /></div>
                 <div>
                   <h3>More Builds</h3>
-                  <p>MenuLens, Brick PDF Store, Growth Desk, Secret Flipper, content dashboards, video tools, plugins, and agent memory infrastructure.</p>
+                  <p>Product experiments, agent-readable data, and a July 21 conversion-handoff control plane with 395 passing checks, 31 smoke probes, an eight-stage assessment-to-delivery evidence chain, and no-send/no-deploy gates still requiring founder approval before execution.</p>
                 </div>
                 <a class="work-link" href="case-studies/product-lab/">View case study</a>
               </article>
@@ -1291,6 +1919,19 @@
             <h2>Art</h2>
             <p>Reserved for visual studies, generative work, identity systems, sketches, photography, and future artifacts worth showing plainly.</p>
           </article>
+        </section>
+
+        <section class="tiktok-section" id="tiktok" aria-labelledby="tiktok-title">
+          <div class="tiktok-head">
+            <div>
+              <p class="section-kicker">Public signal</p>
+              <span class="tiktok-period">Last 28 days</span>
+              <h2 id="tiktok-title">TikTok</h2>
+            </div>
+            <p>Short clips for build logs, product demos, operator notes, and the more human side of making the systems. Scroll the row, then visit the profile.</p>
+            <a class="hero-action secondary" href="https://www.tiktok.com/@quanbuilds">Open TikTok</a>
+          </div>
+          <div class="tiktok-row" id="tiktokRow" aria-label="Top TikTok performers from the last 28 days"></div>
         </section>
 
         <section class="story" id="story" aria-labelledby="story-title">
@@ -1322,7 +1963,7 @@
               <a class="social-pill" href="tel:+16304702312" aria-label="Call Quan">
                 <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h4l2 5-3 2c1 2 3 4 5 5l2-3 5 2v4c0 1-1 2-2 2C10 21 3 14 3 6c0-1 1-2 2-2h2z"/></svg></span>Phone
               </a>
-              <a class="social-pill" href="https://github.com/quanmakestrades" aria-label="GitHub profile">
+              <a class="social-pill" href="https://github.com/quanbuilds" aria-label="GitHub profile">
                 <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 19c-5 2-5-2-7-2"/><path d="M15 22v-4c0-1 0-2-1-3 4 0 7-2 7-7 0-1 0-3-1-4 0-1 0-2 0-3 0 0-1 0-4 2-2-1-5-1-7 0-3-2-4-2-4-2 0 1 0 2 0 3-1 1-1 3-1 4 0 5 3 7 7 7-1 1-1 2-1 3v4"/></svg></span>GitHub
               </a>
               <a class="social-pill" href="https://www.instagram.com/quan_stewart/" aria-label="QuanBuilds Instagram">
@@ -1346,7 +1987,7 @@
               <div class="business-links">
                 <a href="mailto:quan.stewart@icloud.com">quan.stewart@icloud.com</a>
                 <a href="tel:+16304702312">(630) 470-2312</a>
-                <a href="https://github.com/quanmakestrades">github.com/quanmakestrades</a>
+                <a href="https://github.com/quanbuilds">github.com/quanbuilds</a>
               </div>
             </article>
 
@@ -1392,9 +2033,10 @@
                 <span class="business-type">AI / Automation</span>
               </div>
               <div class="business-links">
+                <a href="/signallabs/">Visit the SignalLabs page</a>
                 <a href="mailto:quan.stewart@icloud.com">quan.stewart@icloud.com</a>
                 <span>Growth Desk: @growthdesk</span>
-                <span>Builds, agents, and operator systems</span>
+                <span>Operator stack: workbench, agents, source-backed memory, control plane, approval gates</span>
               </div>
             </article>
           </div>
@@ -1404,7 +2046,7 @@
       <div class="case-modal" id="caseModal" hidden>
         <div class="case-dialog" role="dialog" aria-modal="true" aria-labelledby="caseTitle">
           <div class="case-media">
-            <img id="caseImage" src="assets/previews/stewartos.png" alt="" />
+            <img id="caseImage" src="assets/previews/stewartos.png" alt="Selected project sanitized preview" width="1360" height="860" loading="lazy" decoding="async" />
             <p class="case-note">Client-safe preview. Screenshots are reduced, monochrome, and selected to avoid private account data, credentials, inboxes, and personal records.</p>
           </div>
           <div class="case-body">
@@ -1437,6 +2079,7 @@
       const toggle = document.querySelector(".theme-toggle");
       const workSection = document.querySelector(".work-section");
       const workWord = document.querySelector("#workWord");
+      const hero = document.querySelector(".hero");
       const heroInner = document.querySelector(".hero-inner");
       const modal = document.querySelector("#caseModal");
       const caseImage = document.querySelector("#caseImage");
@@ -1450,8 +2093,21 @@
       const footerTitle = document.querySelector("#footerTitle");
       const projectRail = document.querySelector("#projectRail");
       const projectRailTrack = document.querySelector("#projectRailTrack");
+      const tiktokRow = document.querySelector("#tiktokRow");
       const workCards = Array.from(document.querySelectorAll(".work-card"));
       const defaultEmail = "quan.stewart@icloud.com";
+      const fallbackTikToks = [
+        { rank: 1, title: "150 calls, 4 meetings set, 1 sale", caption: "150 calls, 4 meetings set, 1 sale 🏆 #coldcalling #entrepreneur...", views: 657, video: "assets/tiktok/top-28/web/01-150-calls.mp4", poster: "assets/tiktok/top-28/posters/01-150-calls.jpg", posted: "Posted on Jun 24", theme: "Cold calling / sales proof" },
+        { rank: 2, title: "It’s called Instant", caption: "It’s called Instant. #instant #ai #claude #chatgpt #business", views: 604, video: "assets/tiktok/top-28/web/02-instant-ai-workplace.mp4", poster: "assets/tiktok/top-28/posters/02-instant-ai-workplace.jpg", posted: "4d ago", theme: "Instant / AI workflow" },
+        { rank: 3, title: "Proof that AI is conscious?", caption: "What’s crazier is they didn’t even build this into the model. It just...", views: 600, video: "assets/tiktok/top-28/web/03-ai-conscious-paper.mp4", poster: "assets/tiktok/top-28/posters/03-ai-conscious-paper.jpg", posted: "2w ago", theme: "AI behavior / model intuition" },
+        { rank: 4, title: "Loop architecture", caption: "Designing an architecture that works without you is a complet...", views: 555, video: "assets/tiktok/top-28/web/04-loop-architecture.mp4", poster: "assets/tiktok/top-28/posters/04-loop-architecture.jpg", posted: "2w ago", theme: "Agent architecture" },
+        { rank: 5, title: "Finding leads", caption: "Not a fan of this part. Maybe I’m just not good enough at it yet....", views: 509, video: "assets/tiktok/top-28/web/05-finding-leads.mp4", poster: "assets/tiktok/top-28/posters/05-finding-leads.jpg", posted: "1w ago", theme: "Lead generation honesty" },
+        { rank: 6, title: "Telegram reactions", caption: "Or she. I didn’t mean to assume 👀 not new but still a cool use o...", views: 434, video: "assets/tiktok/top-28/web/06-telegram-reactions.mp4", poster: "assets/tiktok/top-28/posters/06-telegram-reactions.jpg", posted: "1mo ago", theme: "Agent reactions / Telegram" },
+        { rank: 7, title: "Tokens explained", caption: "Think of “token” like a syllable or common word or phrase that th...", views: 429, video: "assets/tiktok/top-28/web/07-tokens-explained.mp4", poster: "assets/tiktok/top-28/posters/07-tokens-explained.jpg", posted: "3d ago", theme: "AI education" },
+        { rank: 8, title: "Gymstant Client #2", caption: "Different strokes for different folks I guess. If I close this deal...", views: 421, video: "assets/tiktok/top-28/web/08-gymstant-client-2.mp4", poster: "assets/tiktok/top-28/posters/08-gymstant-client-2.jpg", posted: "1w ago", theme: "Client pipeline" },
+        { rank: 9, title: "Automate annoying tasks", caption: "All tasks that are annoying and cumbersome should be automa...", views: 406, video: "assets/tiktok/top-28/web/09-automate-annoying-tasks.mp4", poster: "assets/tiktok/top-28/posters/09-automate-annoying-tasks.jpg", posted: "1mo ago", theme: "Automation philosophy" },
+        { rank: 10, title: "AI-proof business ideas", caption: "I got two moats I see. What yall think? 🤔 #ai #chatgpt #vibeco...", views: 398, video: "assets/tiktok/top-28/web/10-ai-proof-business-ideas.mp4", poster: "assets/tiktok/top-28/posters/10-ai-proof-business-ideas.jpg", posted: "4d ago", theme: "AI-proof ideas" },
+      ];
 
       const savedTheme = localStorage.getItem("portfolio-theme");
       const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -1467,6 +2123,10 @@
       let renderedTop = 0;
       let renderedOpacity = 0.09;
       let activeProjectId = "";
+      let tiktokAutoIndex = 0;
+      let tiktokAutoActive = false;
+      let tiktokUserHovering = false;
+      let tiktokObserver = null;
       const projectRailLabels = [
         "Agentic OS",
         "AI Floor Music",
@@ -1492,12 +2152,13 @@
 
       function updateWorkPhysics() {
         const rect = workSection.getBoundingClientRect();
-        const heroRect = heroInner.getBoundingClientRect();
+        const heroRect = hero.getBoundingClientRect();
         const naturalHeight = Math.max(workWord.offsetHeight, 1);
         const maxScale = clamp(window.innerHeight / Math.max(workWord.offsetHeight, 1), 3.6, 24);
         const gap = clamp(window.innerHeight * 0.24, 150, 240);
         const attachedTop = heroRect.bottom + gap;
-        const entry = clamp((window.innerHeight - rect.top) / Math.max(gap, 1), 0, 1);
+        const visibleAttachedTop = Math.min(attachedTop, window.innerHeight - clamp(window.innerHeight * 0.11, 74, 116));
+        const entry = clamp((window.innerHeight - attachedTop) / Math.max(gap, 1), 0, 1);
         const locked = rect.top <= 0 && rect.bottom > window.innerHeight;
         const leaving = rect.bottom <= window.innerHeight && rect.bottom > 0;
         const active = rect.top < window.innerHeight && rect.bottom > 0;
@@ -1511,7 +2172,7 @@
         document.documentElement.style.setProperty("--work-layer-visibility", "visible");
         document.documentElement.style.setProperty("--work-layer-opacity", "1");
 
-        let desiredTop = attachedTop;
+        let desiredTop = visibleAttachedTop;
         let desiredScale = 1 + (maxScale - 1) * easeInOut(entry);
 
         if (locked) {
@@ -1556,8 +2217,10 @@
           button.dataset.target = card.id;
           button.dataset.title = title;
           button.setAttribute("aria-label", `Jump to ${title}: ${label}`);
+          const imageWidth = image?.getAttribute("width") || "1360";
+          const imageHeight = image?.getAttribute("height") || "860";
           button.innerHTML = `
-            <span class="project-rail-thumb" aria-hidden="true"><img src="${image?.getAttribute("src") || ""}" alt="" loading="lazy" /></span>
+            <span class="project-rail-thumb" aria-hidden="true"><img src="${image?.getAttribute("src") || ""}" alt="" width="${imageWidth}" height="${imageHeight}" loading="lazy" decoding="async" /></span>
             <span class="project-rail-label">${label}</span>
           `;
           button.addEventListener("click", () => {
@@ -1613,7 +2276,7 @@
         stewartos: {
           kicker: "Multi-agent operating structure",
           title: "AgenticOS",
-          image: "assets/previews/stewartos.png",
+          image: "assets/previews/agenticos-hero.png",
           summary: "A private control plane that coordinates specialist agents, durable memory, approval gates, project work, and source-backed outputs.",
           bullets: [
             "Built as a working multi-agent operating layer, not a mock dashboard.",
@@ -1636,7 +2299,6 @@
           kicker: "Risk and research system",
           title: "Impulse",
           image: "assets/previews/impulse.png",
-          email: "quanmakestrades@gmail.com",
           summary: "A trading research and review environment built around fail-closed discipline, broker receipts, exposure checks, and session review.",
           bullets: [
             "Prioritizes evidence-backed state over dashboard confidence.",
@@ -1691,12 +2353,12 @@
         lab: {
           kicker: "Product laboratory",
           title: "Product Lab",
-          image: "assets/previews/more-builds.png",
-          summary: "A collection of launch systems, content dashboards, video tools, plugin experiments, product briefs, and internal build surfaces.",
+          image: "assets/previews/more-builds.jpg",
+          summary: "A collection of launch systems, content dashboards, internal analytics control-plane work, public-safe data surfaces, product briefs, and infrastructure work.",
           bullets: [
-            "Includes MenuLens, Brick PDF Store, Growth Desk, Secret Flipper, and content strategy systems.",
-            "Built to test markets, package capabilities, and move from idea to working surface quickly.",
-            "Prospective clients can request a tailored walkthrough of relevant artifacts."
+            "Latest source-backed milestone: the July 21 conversion-handoff control-plane integration ranks the assessment-to-delivery handoff as the top bottleneck, covers 3 acquisition routes and 8 fail-closed funnel stages, and verifies 395 readiness passes with 1 warning plus 31 localhost smoke probes with 0 failures.",
+            "Public-facing experiments are kept separate from private working material and no-send/no-deploy approval gates remain explicit.",
+            "Walkthroughs stay focused on what is ready to show, with unknowns and proof gaps labeled honestly."
           ]
         }
       };
@@ -1735,9 +2397,14 @@
       }
 
       function track(type, data = {}) {
+        if (location.protocol === "file:") return;
         const body = JSON.stringify({ type, data: analyticsPayload(data) });
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon("/.netlify/functions/analytics", new Blob([body], { type: "application/json" }));
+        try {
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon("/.netlify/functions/analytics", new Blob([body], { type: "application/json" }));
+            return;
+          }
+        } catch {
           return;
         }
         fetch("/.netlify/functions/analytics", {
@@ -1746,6 +2413,214 @@
           body,
           keepalive: true,
         }).catch(() => {});
+      }
+
+      function formatCount(value) {
+        const number = Number(value);
+        if (!Number.isFinite(number)) return "--";
+        return new Intl.NumberFormat("en", { notation: number >= 10000 ? "compact" : "standard" }).format(number);
+      }
+
+      function formatMetric(value) {
+        return value === null || value === undefined || value === "" ? "--" : formatCount(value);
+      }
+
+      function setLiveStat(name, value) {
+        document.querySelectorAll(`[data-live-stat="${name}"]`).forEach((node) => {
+          node.textContent = value;
+        });
+      }
+
+      function renderTikToks(items) {
+        if (!tiktokRow) return;
+        tiktokRow.replaceChildren(...items.slice(0, 10).map((item) => {
+          const card = document.createElement("article");
+          card.className = "tiktok-card";
+          const headMarkup = `
+            <div class="tiktok-card-head">
+              <div class="tiktok-rank">${String(item.rank).padStart(2, "0")}</div>
+              <h3 class="tiktok-title">${item.title}</h3>
+            </div>
+          `;
+          const footMarkup = `
+            <div class="tiktok-card-foot">
+              <div class="tiktok-metrics">
+                <div class="tiktok-views">${formatCount(item.views)}</div>
+                <div class="tiktok-meta">${item.views} views / ${item.posted}</div>
+                <div class="tiktok-meta">${formatMetric(item.likes)} likes / ${formatMetric(item.comments)} comments</div>
+                <div class="tiktok-meta">${item.theme}</div>
+              </div>
+            </div>
+          `;
+          card.innerHTML = item.video
+            ? `${headMarkup}<div class="tiktok-media"><video muted preload="metadata" playsinline poster="${item.poster || ""}" src="${item.video}"></video><div class="tiktok-controls"><button class="tiktok-play" type="button" aria-label="Play ${item.title}" data-state="paused">▶</button><input class="tiktok-scrubber" type="range" min="0" max="100" value="0" step="0.1" aria-label="Scrub ${item.title}" /></div></div>${footMarkup}`
+            : `${headMarkup}<div class="tiktok-fallback"><p class="tiktok-caption">${item.caption}</p></div>${footMarkup}`;
+          if (item.url) {
+            card.addEventListener("click", () => {
+              track("click", { label: `TikTok top ${item.rank}: ${item.title}`, target: item.url });
+              window.open(item.url, "_blank", "noopener");
+            });
+          }
+          return card;
+        }));
+      }
+
+      function pauseOtherTikToks(activeVideo) {
+        document.querySelectorAll(".tiktok-card video").forEach((video) => {
+          if (video === activeVideo) return;
+          video.pause();
+          const button = video.closest(".tiktok-card")?.querySelector(".tiktok-play");
+          if (button) {
+            button.textContent = "▶";
+            button.dataset.state = "paused";
+          }
+        });
+      }
+
+      function updateTikTokButton(video) {
+        const button = video.closest(".tiktok-card")?.querySelector(".tiktok-play");
+        if (!button) return;
+        button.textContent = video.paused ? "▶" : "Ⅱ";
+        button.dataset.state = video.paused ? "paused" : "playing";
+      }
+
+      function visibleTikTokVideos() {
+        const rowBox = tiktokRow?.getBoundingClientRect();
+        if (!rowBox) return [];
+        return Array.from(document.querySelectorAll(".tiktok-card video")).filter((video) => {
+          const box = video.closest(".tiktok-card")?.getBoundingClientRect();
+          if (!box) return false;
+          const visibleWidth = Math.min(box.right, rowBox.right, window.innerWidth) - Math.max(box.left, rowBox.left, 0);
+          return visibleWidth > box.width * 0.55;
+        });
+      }
+
+      function playTikTokVideo(video, { user = false } = {}) {
+        if (!video) return;
+        if (user) tiktokUserHovering = true;
+        pauseOtherTikToks(video);
+        video.muted = true;
+        video.play().catch(() => {});
+        updateTikTokButton(video);
+      }
+
+      function playVisibleTikTokAt(index = 0) {
+        if (!tiktokAutoActive || tiktokUserHovering) return;
+        const videos = visibleTikTokVideos();
+        if (!videos.length) return;
+        tiktokAutoIndex = ((index % videos.length) + videos.length) % videos.length;
+        const video = videos[tiktokAutoIndex];
+        video.currentTime = 0;
+        playTikTokVideo(video);
+      }
+
+      function advanceVisibleTikTok(video) {
+        if (!tiktokAutoActive || tiktokUserHovering) return;
+        const videos = visibleTikTokVideos();
+        const current = videos.indexOf(video);
+        playVisibleTikTokAt(current >= 0 ? current + 1 : tiktokAutoIndex + 1);
+      }
+
+      function setupTikTokAutoObserver() {
+        if (!tiktokRow || tiktokObserver) return;
+        tiktokObserver = new IntersectionObserver((entries) => {
+          const entry = entries[0];
+          tiktokAutoActive = !!entry?.isIntersecting;
+          if (tiktokAutoActive) {
+            playVisibleTikTokAt(tiktokAutoIndex);
+          } else {
+            pauseOtherTikToks(null);
+          }
+        }, { threshold: 0.42 });
+        tiktokObserver.observe(tiktokRow);
+      }
+
+      function wireTikTokCards() {
+        document.querySelectorAll(".tiktok-card").forEach((card) => {
+          const video = card.querySelector("video");
+          const button = card.querySelector(".tiktok-play");
+          const scrubber = card.querySelector(".tiktok-scrubber");
+          if (!video || !button || !scrubber || card.dataset.wired === "true") return;
+          card.dataset.wired = "true";
+          video.muted = true;
+
+          const playMuted = () => {
+            playTikTokVideo(video, { user: true });
+          };
+          const pauseVideo = () => {
+            video.pause();
+            updateTikTokButton(video);
+          };
+
+          card.addEventListener("mouseenter", playMuted);
+          card.addEventListener("focusin", playMuted);
+          card.addEventListener("mouseleave", () => {
+            tiktokUserHovering = false;
+            pauseVideo();
+            if (tiktokAutoActive) playVisibleTikTokAt(tiktokAutoIndex);
+          });
+          card.addEventListener("focusout", () => {
+            tiktokUserHovering = false;
+            if (tiktokAutoActive) playVisibleTikTokAt(tiktokAutoIndex);
+          });
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            tiktokUserHovering = true;
+            if (video.paused) playTikTokVideo(video, { user: true });
+            else pauseVideo();
+          });
+          scrubber.addEventListener("input", () => {
+            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+            video.currentTime = (Number(scrubber.value) / 100) * video.duration;
+          });
+          video.addEventListener("timeupdate", () => {
+            if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+            scrubber.value = String((video.currentTime / video.duration) * 100);
+          });
+          video.addEventListener("play", () => updateTikTokButton(video));
+          video.addEventListener("pause", () => updateTikTokButton(video));
+          video.addEventListener("ended", () => advanceVisibleTikTok(video));
+        });
+        setupTikTokAutoObserver();
+      }
+
+      async function hydrateTikTokStats() {
+        renderTikToks(fallbackTikToks);
+        wireTikTokCards();
+        try {
+          const response = await fetch("/assets/data/tiktok-top-28.json", { headers: { accept: "application/json" } });
+          if (!response.ok) return;
+          const payload = await response.json();
+          renderTikToks(payload.items || fallbackTikToks);
+          wireTikTokCards();
+        } catch {
+          renderTikToks(fallbackTikToks);
+          wireTikTokCards();
+        }
+      }
+
+      async function hydrateProofStats() {
+        try {
+          const response = await fetch("/.netlify/functions/analytics?public=summary", { headers: { accept: "application/json" } });
+          if (!response.ok) return;
+          const payload = await response.json();
+          setLiveStat("traffic", formatCount(payload.summary?.pageviews));
+          setLiveStat("visitors", formatCount(payload.summary?.visitors));
+          setLiveStat("likes", formatCount(payload.summary?.likes));
+        } catch {
+          setLiveStat("traffic", "--");
+          setLiveStat("likes", "--");
+        }
+      }
+
+      function hydrateSpeedStat() {
+        const update = () => {
+          const nav = performance.getEntriesByType("navigation")[0];
+          const loadMs = nav?.loadEventEnd ? Math.round(nav.loadEventEnd) : Math.round(performance.now());
+          if (loadMs > 0) setLiveStat("speed", `${(loadMs / 1000).toFixed(loadMs < 1000 ? 2 : 1)}s`);
+        };
+        if (document.readyState === "complete") update();
+        else window.addEventListener("load", update, { once: true });
       }
 
       document.querySelectorAll("[data-case]").forEach((button) => {
@@ -1757,6 +2632,30 @@
       document.querySelectorAll(".work-card a[href]").forEach((link) => {
         link.addEventListener("click", () => {
           track("click", { label: link.textContent.trim(), target: link.href });
+        });
+      });
+      workCards.forEach((card) => {
+        const link = card.querySelector(".work-link[href]");
+        if (!link) return;
+        const title = card.querySelector("h3")?.textContent.trim() || "case study";
+        card.tabIndex = 0;
+        card.setAttribute("role", "link");
+        card.setAttribute("aria-label", `View ${title} case study`);
+        card.addEventListener("click", (event) => {
+          if (event.target.closest("a, button")) return;
+          track("click", { label: `Work card: ${title}`, target: link.href });
+          window.location.href = link.href;
+        });
+        card.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          track("click", { label: `Work card: ${title}`, target: link.href });
+          window.location.href = link.href;
+        });
+      });
+      document.querySelectorAll(".hero-actions a[href], .social-grid a[href], .business-links a[href]").forEach((link) => {
+        link.addEventListener("click", () => {
+          track("click", { label: link.getAttribute("aria-label") || link.textContent.trim(), target: link.href });
         });
       });
       caseClose.addEventListener("click", closeCaseStudy);
@@ -1835,10 +2734,14 @@
       });
 
       track("pageview");
+      hydrateProofStats();
+      hydrateSpeedStat();
+      hydrateTikTokStats();
 
       setupProjectRail();
-      renderedTop = heroInner.getBoundingClientRect().bottom + clamp(window.innerHeight * 0.24, 150, 240);
+      renderedTop = hero.getBoundingClientRect().bottom + clamp(window.innerHeight * 0.24, 150, 240);
       requestAnimationFrame(frame);
     </script>
+    <script src="/assets/site-analytics.js" defer></script>
   </body>
 </html>

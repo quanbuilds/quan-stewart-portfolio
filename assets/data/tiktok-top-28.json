@@ -1,0 +1,137 @@
+{
+  "source": "Manual extraction from TikTok Studio Analytics screenshots AirDropped on 2026-07-23 at 6:04 AM.",
+  "accounts": {
+    "manual": [
+      "quanbuilds"
+    ],
+    "futureOauth": [
+      "quanbuilds",
+      "floordstudios"
+    ]
+  },
+  "period": "last 28 days",
+  "capturedAtLocal": "2026-07-23T06:04:00-05:00",
+  "oauthStatus": "Manual screenshots used today. Future plan is approved TikTok OAuth/API access for both @quanbuilds and @floordstudios.",
+  "items": [
+    {
+      "rank": 1,
+      "title": "150 calls, 4 meetings set, 1 sale",
+      "caption": "150 calls, 4 meetings set, 1 sale 🏆 #coldcalling #entrepreneur...",
+      "views": 657,
+      "video": "assets/tiktok/top-28/web/01-150-calls.mp4",
+      "poster": "assets/tiktok/top-28/posters/01-150-calls.jpg",
+      "posted": "Posted on Jun 24",
+      "theme": "Cold calling / sales proof",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 2,
+      "title": "It’s called Instant",
+      "caption": "It’s called Instant. #instant #ai #claude #chatgpt #business",
+      "views": 604,
+      "video": "assets/tiktok/top-28/web/02-instant-ai-workplace.mp4",
+      "poster": "assets/tiktok/top-28/posters/02-instant-ai-workplace.jpg",
+      "posted": "4d ago",
+      "theme": "Instant / AI workflow",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 3,
+      "title": "Proof that AI is conscious?",
+      "caption": "What’s crazier is they didn’t even build this into the model. It just...",
+      "views": 600,
+      "video": "assets/tiktok/top-28/web/03-ai-conscious-paper.mp4",
+      "poster": "assets/tiktok/top-28/posters/03-ai-conscious-paper.jpg",
+      "posted": "2w ago",
+      "theme": "AI behavior / model intuition",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 4,
+      "title": "Loop architecture",
+      "caption": "Designing an architecture that works without you is a complet...",
+      "views": 555,
+      "video": "assets/tiktok/top-28/web/04-loop-architecture.mp4",
+      "poster": "assets/tiktok/top-28/posters/04-loop-architecture.jpg",
+      "posted": "2w ago",
+      "theme": "Agent architecture",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 5,
+      "title": "Finding leads",
+      "caption": "Not a fan of this part. Maybe I’m just not good enough at it yet....",
+      "views": 509,
+      "video": "assets/tiktok/top-28/web/05-finding-leads.mp4",
+      "poster": "assets/tiktok/top-28/posters/05-finding-leads.jpg",
+      "posted": "1w ago",
+      "theme": "Lead generation honesty",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 6,
+      "title": "Telegram reactions",
+      "caption": "Or she. I didn’t mean to assume 👀 not new but still a cool use o...",
+      "views": 434,
+      "video": "assets/tiktok/top-28/web/06-telegram-reactions.mp4",
+      "poster": "assets/tiktok/top-28/posters/06-telegram-reactions.jpg",
+      "posted": "1mo ago",
+      "theme": "Agent reactions / Telegram",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 7,
+      "title": "Tokens explained",
+      "caption": "Think of “token” like a syllable or common word or phrase that th...",
+      "views": 429,
+      "video": "assets/tiktok/top-28/web/07-tokens-explained.mp4",
+      "poster": "assets/tiktok/top-28/posters/07-tokens-explained.jpg",
+      "posted": "3d ago",
+      "theme": "AI education",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 8,
+      "title": "Gymstant Client #2",
+      "caption": "Different strokes for different folks I guess. If I close this deal...",
+      "views": 421,
+      "video": "assets/tiktok/top-28/web/08-gymstant-client-2.mp4",
+      "poster": "assets/tiktok/top-28/posters/08-gymstant-client-2.jpg",
+      "posted": "1w ago",
+      "theme": "Client pipeline",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 9,
+      "title": "Automate annoying tasks",
+      "caption": "All tasks that are annoying and cumbersome should be automa...",
+      "views": 406,
+      "video": "assets/tiktok/top-28/web/09-automate-annoying-tasks.mp4",
+      "poster": "assets/tiktok/top-28/posters/09-automate-annoying-tasks.jpg",
+      "posted": "1mo ago",
+      "theme": "Automation philosophy",
+      "likes": null,
+      "comments": null
+    },
+    {
+      "rank": 10,
+      "title": "AI-proof business ideas",
+      "caption": "I got two moats I see. What yall think? 🤔 #ai #chatgpt #vibeco...",
+      "views": 398,
+      "video": "assets/tiktok/top-28/web/10-ai-proof-business-ideas.mp4",
+      "poster": "assets/tiktok/top-28/posters/10-ai-proof-business-ideas.jpg",
+      "posted": "4d ago",
+      "theme": "AI-proof ideas",
+      "likes": null,
+      "comments": null
+    }
+  ]
+}

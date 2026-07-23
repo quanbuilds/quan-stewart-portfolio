@@ -4,19 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>F10.0R&#39;D / JIM Case Study | QuanBuilds</title>
-    <meta name="description" content="A music studio, catalog, licensing workflow, content engine, outreach machine, and operating dashboard for gymnast-first floor music." />
+    <meta name="description" content="A gymnastics floor-music studio and commerce system with public catalog/order surfaces, custom intake, content workflows, buyer-safety checks, and approval-gated operating reports." />
     <link rel="canonical" href="https://quanbuilds.netlify.app/case-studies/f10rd/" />
     <meta name="robots" content="index,follow" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="https://quanbuilds.netlify.app/case-studies/f10rd/" />
     <meta property="og:title" content="F10.0R&#39;D / JIM Case Study | QuanBuilds" />
-    <meta property="og:description" content="A music studio, catalog, licensing workflow, content engine, outreach machine, and operating dashboard for gymnast-first floor music." />
+    <meta property="og:description" content="A gymnastics floor-music studio and commerce system with public catalog/order surfaces, custom intake, content workflows, buyer-safety checks, and approval-gated operating reports." />
     
     <meta property="og:image" content="https://quanbuilds.netlify.app/assets/case-studies/f10rd/live-home.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://quanbuilds.netlify.app/assets/case-studies/f10rd/live-home.png" />
     <meta name="twitter:title" content="F10.0R&#39;D / JIM Case Study | QuanBuilds" />
-    <meta name="twitter:description" content="A music studio, catalog, licensing workflow, content engine, outreach machine, and operating dashboard for gymnast-first floor music." />
+    <meta name="twitter:description" content="A gymnastics floor-music studio and commerce system with public catalog/order surfaces, custom intake, content workflows, buyer-safety checks, and approval-gated operating reports." />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -68,6 +68,7 @@
       a { color: inherit; text-decoration: none; }
       button, input, textarea { font: inherit; color: inherit; }
       button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 1px solid var(--fg); outline-offset: 5px; }
+      .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
       .topbar {
         position: fixed;
@@ -234,6 +235,145 @@
         color: var(--gold);
         border-color: color-mix(in srgb, var(--gold) 45%, var(--line));
         background: var(--gold-soft);
+      }
+
+      .jumpbar,
+      .slides {
+        display: none;
+      }
+
+      .jim-story {
+        width: min(var(--max), 100%);
+        margin: 0 auto;
+        padding: clamp(54px, 9vw, 118px) var(--pad);
+        display: grid;
+        gap: clamp(34px, 7vw, 86px);
+      }
+
+      .jim-ledger {
+        display: grid;
+        grid-template-columns: 0.78fr 1.22fr;
+        gap: clamp(28px, 6vw, 78px);
+        align-items: start;
+      }
+
+      .jim-ledger h2,
+      .jim-proof h2 {
+        font-size: clamp(42px, 7vw, 104px);
+        line-height: 0.86;
+      }
+
+      .jim-ledger p {
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(18px, 2.1vw, 26px);
+        line-height: 1.25;
+      }
+
+      .jim-thread {
+        display: grid;
+        gap: 12px;
+        counter-reset: thread;
+      }
+
+      .jim-thread article {
+        display: grid;
+        grid-template-columns: 74px 1fr;
+        gap: 18px;
+        padding: clamp(18px, 3vw, 28px);
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .jim-thread article::before {
+        counter-increment: thread;
+        content: counter(thread, decimal-leading-zero);
+        color: var(--gold);
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: 42px;
+        line-height: 0.9;
+      }
+
+      .jim-thread h3 {
+        font-size: clamp(25px, 3.2vw, 44px);
+        line-height: 0.92;
+      }
+
+      .jim-thread p {
+        margin: 8px 0 0;
+        color: var(--muted);
+      }
+
+      .jim-proof {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .jim-proof-head {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: clamp(24px, 5vw, 70px);
+        align-items: end;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .jim-proof-head p {
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 23px);
+        line-height: 1.28;
+      }
+
+      .proof-tile {
+        min-height: 180px;
+        display: grid;
+        align-content: space-between;
+        gap: 18px;
+        padding: clamp(18px, 3vw, 28px);
+        border: 1px solid color-mix(in srgb, var(--gold) 30%, var(--line));
+        background:
+          linear-gradient(135deg, var(--gold-soft), transparent 44%),
+          var(--panel);
+      }
+
+      .proof-tile strong {
+        font-family: "Bodoni 72", "Didot", "Baskerville", Georgia, serif;
+        font-size: clamp(38px, 6vw, 78px);
+        font-weight: 500;
+        line-height: 0.88;
+        color: var(--gold);
+      }
+
+      .proof-tile span {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.13em;
+      }
+
+      .jim-status {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .jim-status article {
+        padding: clamp(18px, 3vw, 28px);
+        border-top: 1px solid var(--line);
+      }
+
+      .jim-status h3 {
+        margin-bottom: 14px;
+        font-size: clamp(30px, 4vw, 58px);
+      }
+
+      .jim-status p {
+        margin: 0;
+        color: var(--muted);
       }
 
       .slides {
@@ -434,7 +574,7 @@
       }
 
       @media (max-width: 820px) {
-        .hero-grid, .slide, .fact-grid, .comment-form {
+        .hero-grid, .slide, .fact-grid, .comment-form, .jim-ledger, .jim-proof, .jim-proof-head, .jim-status {
           grid-template-columns: 1fr;
         }
         .hero { min-height: 88svh; }
@@ -473,13 +613,13 @@
           <div>
             <p class="eyebrow" id="caseKicker">Gymnastics floor-music studio</p>
             <h1 id="caseTitle">F10.0R&#39;D / JIM</h1>
-            <p class="deck" id="caseDeck">A music studio, catalog, licensing workflow, content engine, outreach machine, and operating dashboard for gymnast-first floor music.</p>
+            <p class="deck" id="caseDeck">A gymnastics floor-music studio and commerce system with public catalog/order surfaces, custom intake, content workflows, buyer-safety checks, and approval-gated operating reports.</p>
           </div>
           <aside class="hero-panel" aria-label="Project facts">
             <div class="meta-row"><span class="meta-label">Category</span><strong id="caseCategory">Music commerce</strong></div>
-            <div class="meta-row"><span class="meta-label">Status</span><strong id="caseStatus">Live commerce/order routes recovered in the latest source report; direct /tracks remains a watch item.</strong></div>
-            <div class="meta-row"><span class="meta-label">Last Edited</span><strong id="caseEdited">JIM/F10 report refreshed 2026-06-25; JIM repo last git commit observed 2026-05-22.</strong></div>
-            <div class="meta-row"><span class="meta-label">Business Model</span><strong id="caseBusiness">Sell premade and custom gymnastics floor music, Studio sessions, licensing workflows, and related customer/order experiences.</strong></div>
+            <div class="meta-row"><span class="meta-label">Status</span><strong id="caseStatus">Active and partially monetized, but intentionally approval-bound before traffic scale or public-change deployment.</strong></div>
+            <div class="meta-row"><span class="meta-label">Last Edited</span><strong id="caseEdited">Evidence checked against JIM memory, client folders, storefront stats, and Stripe monitor receipts.</strong></div>
+            <div class="meta-row"><span class="meta-label">Business Model</span><strong id="caseBusiness">Sell premade and custom gymnastics floor music, Studio sessions, licensing workflows, and related customer/order experiences; current public-safe sources support early $50 premade / $150 custom-deposit planning, not final pricing or achieved MRR.</strong></div>
             <div class="meta-row" id="externalRow"><span class="meta-label">External Links</span><div class="external-links" id="caseExternalLinks"><a href="https://www.f100rd.com/" rel="noopener">Public site</a><a href="https://www.f100rd.com/shop" rel="noopener">Shop</a><a href="https://www.f100rd.com/studio" rel="noopener">Studio</a><a href="https://www.instagram.com/floordstudios/" rel="noopener">Instagram</a></div></div>
           </aside>
         </div>
@@ -489,8 +629,70 @@
         <div class="jumptrack" id="jumptrack"><a href="#section-1">What We Built</a>
 <a href="#section-2">Why It Exists</a>
 <a href="#section-3">How We Approached It</a>
-<a href="#section-4">Where It Stands</a></div>
+<a href="#section-4">Mistakes &amp; Remedies</a>
+<a href="#section-5">Where It Stands</a></div>
       </nav>
+
+      <section class="jim-story" aria-label="F10.0RD story">
+        <div class="jim-ledger">
+          <div>
+            <p class="eyebrow">The real build</p>
+            <h2>Music, commerce, and operations had to become one system.</h2>
+          </div>
+          <p>
+            F10.0R'D started in spring 2026 as a custom floor-music studio around the first Harper build and a soft-launch JIM site. The customer problem was simple: gymnasts, parents, and coaches need routine music that feels made for the athlete, not pulled from a generic pile. The business quickly became more than a storefront: catalog judgment, preview generation, customer intake, delivery safety, content planning, payment tracking, and an operator view all had to work together.
+          </p>
+        </div>
+
+        <div class="jim-thread" aria-label="Build narrative">
+          <article>
+            <div>
+              <h3>The storefront made the offer real.</h3>
+              <p>The public surfaces now include a main site, shop, studio route, order routes, and profile links. The offer moved from “I can make this” to a visible product with deposits, premades, custom work, and edits.</p>
+            </div>
+          </article>
+          <article>
+            <div>
+              <h3>Customer Jim turned taste into operations.</h3>
+              <p>The intake flow captures level, vibe, references, duration, and gym context, then keeps preview audio and project notes attached to the conversation. That matters when a customer needs revision, recovery, or a human close.</p>
+            </div>
+          </article>
+          <article>
+            <div>
+              <h3>Marketing is proof-led, not random posting.</h3>
+              <p>Instagram has been the main discovery lane: named-athlete routine commentary, premade previews, carousels, and founder-approved replies. TikTok launch tracking exists, but current TikTok metrics still need fresh manual Studio snapshots before the portfolio should claim “top posts.” Paid ads and public replies remain approval-gated.</p>
+            </div>
+          </article>
+          <article>
+            <div>
+              <h3>The ops layer learned to say no.</h3>
+              <p>Instead of treating every generated track, lead, or traffic spike as a win, the system keeps approval gates around public changes, delivery paths, checkout fixes, content automation, revenue claims, and customer contact.</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="jim-proof" aria-label="Evidence snapshot">
+          <div class="jim-proof-head">
+            <h2>Where the business stands.</h2>
+            <p>These numbers come from local client folders, JIM site stats, and Stripe monitor receipts. They are intentionally conservative because the page is client-facing.</p>
+          </div>
+          <div class="proof-tile"><strong>Spring 2026</strong><span>business and JIM soft-launch period, beginning with Harper project work</span></div>
+          <div class="proof-tile"><strong>6</strong><span>client folders / clients served reflected in the JIM workspace and site stats</span></div>
+          <div class="proof-tile"><strong>$250</strong><span>verified gross checkout volume in Stripe monitor receipts</span></div>
+          <div class="proof-tile"><strong>$225</strong><span>clearly client-attributable Stripe checkout volume; one $25 session needs classification</span></div>
+        </div>
+
+        <div class="jim-status" aria-label="Capability and current state">
+          <article>
+            <h3>Capability demonstrated</h3>
+            <p>QuanBuilds can turn a creative service into a product system: public site, commerce path, intake, generated previews, review queue, analytics, content calendar, operator reports, and approval-safe automation.</p>
+          </article>
+          <article>
+            <h3>Current truth</h3>
+            <p>F10.0R'D is active and partially monetized. The storefront has premades, custom/deposit logic, and six known client folders, but traffic scale is still held until delivery and checkout guard fixes are approved.</p>
+          </article>
+        </div>
+      </section>
 
       <section class="slides" id="slides" aria-label="Scrollytelling case study">
         <article class="slide" id="section-1" data-section="What We Built">
@@ -505,7 +707,7 @@
           <div class="slide-copy">
             <p class="eyebrow">01 / Music commerce</p>
             <h2>What We Built</h2>
-            <p>A working music-commerce system around F10.0R&#39;D: public site, catalog, shop/order routes, Studio surfaces, content loops, and JIM-backed operating reports.</p>
+            <p>A working music-commerce system around F10.0R&#39;D: public site, catalog, shop/order routes, Studio surfaces, customer Jim intake, lead triage, content queues, newsletter/founder-update workflows, and JIM-backed operating reports.</p>
           </div>
         </article>
 <article class="slide" id="section-2" data-section="Why It Exists">
@@ -527,7 +729,7 @@
           <div class="slide-visual">
             <figure>
               <div class="image-frame" tabindex="0" role="button" aria-label="Animate How We Approached It visual">
-                <img src="/assets/case-studies/f10rd/reel-frame-003s.png" alt="F10.0R&#39;D / JIM visual 3" loading="lazy" />
+                <img src="/assets/case-studies/f10rd/reel-frame-025s.png" alt="F10.0R&#39;D / JIM visual 3" loading="lazy" />
               </div>
               <figcaption class="image-caption">AI Floor Music / How We Approached It</figcaption>
             </figure>
@@ -535,22 +737,37 @@
           <div class="slide-copy">
             <p class="eyebrow">03 / Music commerce</p>
             <h2>How We Approached It</h2>
-            <p>The build favors field notes, Studio starter links, approval-gated outreach, and customer-visible proof over generic promo mail.</p>
+            <p>The build measures the catalog before marketing it: July 9 revenue-safety proof preserved 50 current public-approved premades, a 43-track post-hold traffic-safe subset, and 7 current delivery-hold rows that need fix/hide approval before traffic scales. Later bounded route/API checks and aggregate activity proof stay separate from revenue claims.</p>
           </div>
         </article>
-<article class="slide" id="section-4" data-section="Where It Stands">
+<article class="slide" id="section-4" data-section="Mistakes &amp; Remedies">
+          <div class="slide-visual">
+            <figure>
+              <div class="image-frame" tabindex="0" role="button" aria-label="Animate Mistakes &amp; Remedies visual">
+                <img src="/assets/case-studies/f10rd/reel-frame-014s.png" alt="F10.0R&#39;D / JIM visual 4" loading="lazy" />
+              </div>
+              <figcaption class="image-caption">AI Floor Music / Mistakes &amp; Remedies</figcaption>
+            </figure>
+          </div>
+          <div class="slide-copy">
+            <p class="eyebrow">04 / Music commerce</p>
+            <h2>Mistakes &amp; Remedies</h2>
+            <p>Earlier drift included route/API issues, fragile customer handoff, duplicate lead events, delivery safety gaps, and content automation that could chase weak signals. The remedies were route QA, transcript/logging improvements, owner-review queues, delivery-safety gates, dedupe checks, and song/content gates that can reject weak outputs instead of pretending they are wins.</p>
+          </div>
+        </article>
+<article class="slide" id="section-5" data-section="Where It Stands">
           <div class="slide-visual">
             <figure>
               <div class="image-frame" tabindex="0" role="button" aria-label="Animate Where It Stands visual">
-                <img src="/assets/case-studies/f10rd/reel-frame-014s.png" alt="F10.0R&#39;D / JIM visual 4" loading="lazy" />
+                <img src="/assets/case-studies/f10rd/reel-frame-003s.png" alt="F10.0R&#39;D / JIM visual 5" loading="lazy" />
               </div>
               <figcaption class="image-caption">AI Floor Music / Where It Stands</figcaption>
             </figure>
           </div>
           <div class="slide-copy">
-            <p class="eyebrow">04 / Music commerce</p>
+            <p class="eyebrow">05 / Music commerce</p>
             <h2>Where It Stands</h2>
-            <p>The latest local report says homepage, shop, checkout, order, products, API orders, API checkout, API tracks, and founder digest JSON returned 200. Direct /tracks still needs a route/redirect decision.</p>
+            <p>As of the July 9 evidence packet, F10.0R&#39;D/JIM is active and partially monetized but approval-bound: route/API surfaces are bounded and reachable, current local activity exists, the prepared delivery-hold and checkout-guard fixes still need owner approval, and traffic/payment-monitor observations remain non-certifying until source logs prove purchases, revenue, ROI, and checkout-to-download delivery.</p>
           </div>
         </article>
       </section>
@@ -565,25 +782,29 @@
           <article class="fact-card">
             <p class="meta-label">Approach</p>
             <h3>How we tried</h3>
-            <p id="caseApproach">The system combines a public site, shop/order surfaces, catalog APIs, content dashboard, newsletter workflow, approval-gated outreach, and Studio starter links.</p>
+            <p id="caseApproach">The system combines a public site, shop/order surfaces, catalog APIs, Studio starter links, customer Jim intake/preview flows, lead triage, content queues, newsletter/founder-update workflows, and approval-gated operating reports.</p>
           </article>
           <article class="fact-card">
             <p class="meta-label">Outcome</p>
             <h3>Did it work?</h3>
-            <p id="caseOutcome">Partially achieved. The latest report shows core public commerce routes returning 200, but some route and scheduler truth remains watchlisted.</p>
+            <p id="caseOutcome">Partially achieved. July 9 public-safe sources show reachable public shop/studio/order surfaces, active Customer Jim and lead-capture logs, directional July 7 growth activity, 50 current public-approved premades, a 43-track post-hold traffic-safe subset, 7 current delivery-hold rows, and preapproval-ready delivery/checkout guard patches that are not applied or deployed yet.</p>
           </article>
           <article class="fact-card">
             <p class="meta-label">Still Unknown</p>
             <h3>Needs owner truth</h3>
-            <ul class="source-list" id="caseUnknowns"><li>Current revenue, conversion rate, and customer count were not present in the inspected public-safe source files.</li>
-<li>Final pricing/catalog strategy beyond current public routes needs owner confirmation.</li></ul>
+            <ul class="source-list" id="caseUnknowns"><li>Current statistically significant conversion rate, current ROI, MRR, full customer count, and checkout-to-download delivery proof were not present in inspected public-safe sources.</li>
+<li>Final pricing/catalog strategy and delivery/checkout guard rollout still need owner-approved source truth.</li>
+<li>Traffic and Stripe-monitor observations remain directional or aggregate-only; they do not prove purchases, revenue, ROI, or delivery success.</li></ul>
           </article>
           <article class="fact-card">
             <p class="meta-label">Sources</p>
             <h3>What this page used</h3>
-            <ul class="source-list" id="caseSources"><li>Downloads/JIM/docs/studio_weekly_newsletter_strategy.md</li>
-<li>.openclaw/agents/botler/workspace/reports/jim-f10/latest.md</li>
-<li>Projects/F10rd-JIM/Status.md</li></ul>
+            <ul class="source-list" id="caseSources"><li>2026-07-02 public-safe F10.0R&#39;D evidence packet</li>
+<li>2026-07-06 public-safe F10.0R&#39;D revenue-safety lock and aggregate activity packet</li>
+<li>2026-07-09 public-safe F10.0R&#39;D revenue-safety QA and delivery evidence delta</li>
+<li>2026-07-01 conversion readiness, delivery reconciliation, and traffic-safe subset reports</li>
+<li>2026-07-02 campaign launch and content-scout summaries</li>
+<li>Public portfolio QA review</li></ul>
           </article>
           <article class="fact-card">
             <p class="meta-label">Next</p>
@@ -604,10 +825,13 @@
             <span class="feedback-status" id="feedbackStatus">Loading feedback</span>
           </div>
         </div>
-        <form class="comment-form" id="commentForm">
-          <input id="commentName" name="name" autocomplete="name" maxlength="80" placeholder="Name" />
-          <textarea id="commentText" name="comment" maxlength="700" required placeholder="What did this make you want to know, buy, test, or challenge?"></textarea>
-          <button class="submit-button" type="submit">Send</button>
+        <form class="comment-form" id="commentForm" aria-describedby="commentHelp" data-testid="case-comment-form">
+          <p class="sr-only" id="commentHelp">Public feedback form. Name is optional. Comment is required and limited to 700 characters.</p>
+          <label class="sr-only" for="commentName">Name (optional)</label>
+          <input id="commentName" name="name" autocomplete="name" maxlength="80" placeholder="Name" data-testid="case-comment-name" />
+          <label class="sr-only" for="commentText">Comment (required)</label>
+          <textarea id="commentText" name="comment" maxlength="700" required aria-required="true" placeholder="What did this make you want to know, buy, test, or challenge?" data-testid="case-comment-text"></textarea>
+          <button class="submit-button" type="submit" data-testid="case-comment-submit">Send</button>
         </form>
         <div class="comments" id="comments"></div>
       </section>
@@ -632,7 +856,7 @@
 
       const slugFromPath = location.pathname.split("/").filter(Boolean).pop();
       const params = new URLSearchParams(location.search);
-      const slug = params.get("project") || (slugFromPath === "case-studies" ? "stewartos" : slugFromPath);
+      const slug = params.get("project") || (slugFromPath === "case-studies" ? "agenticos" : slugFromPath);
       const cases = window.CASE_STUDIES || [];
       const item = cases.find((entry) => entry.slug === slug) || cases[0];
       const hasImages = Array.isArray(item.images) && item.images.length > 0;
@@ -864,5 +1088,6 @@
       track("pageview", { label: "case_study" });
       loadFeedback();
     </script>
+    <script src="/assets/site-analytics.js" defer></script>
   </body>
 </html>
