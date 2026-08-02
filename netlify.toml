@@ -5,6 +5,12 @@
 [functions]
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/output/pdf/signallabs-partnership-method.pdf"
+  to = "/404.html"
+  status = 404
+  force = true
+
 [[headers]]
   for = "/internal-analytics-qs/*"
   [headers.values]

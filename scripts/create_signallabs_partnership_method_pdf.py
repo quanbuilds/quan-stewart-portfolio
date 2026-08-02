@@ -8,7 +8,7 @@ from reportlab.pdfgen import canvas
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pdf" / "signallabs-partnership-method.pdf"
+OUT = Path.home() / "Documents" / "SignalLabs" / "Internal" / "signallabs-partnership-method.pdf"
 LOGO = ROOT / "signallabs" / "assets" / "brand" / "signallabs-logo-a.png"
 
 BLACK = colors.HexColor("#0B0B0A")
