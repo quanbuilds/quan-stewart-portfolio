@@ -1,0 +1,25 @@
+{
+  "name": "go",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-12",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "tidelinestrats.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.tidelinestrats.com",
+      "custom_domain": true
+    }
+  ],
+  "assets": { "directory": "site", "binding": "ASSETS", "run_worker_first": true },
+  "d1_databases": [
+    {
+      "binding": "CONTACT_DB",
+      "database_name": "tideline-contact",
+      "database_id": "0d9ef612-2f04-4754-8ab0-54e2b5888e21",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
