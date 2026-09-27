@@ -1,8 +1,8 @@
-const NETLIFY_ORIGIN = "https://quanbuilds.netlify.app";
 const CANONICAL_HOST = "tidelinestrats.com";
 const LEGACY_HOST = "go.signallabs.workers.dev";
 const WWW_HOST = "www.tidelinestrats.com";
 const CONTACT_PATH = "/api/contact";
+const CONTACT_RECIPIENT = "c.knudsen@tidelinestrats.com";
 
 function contactJson(status, body) {
   return Response.json(body, {
@@ -65,8 +65,8 @@ async function receiveContact(request, env, url) {
 
   try {
     const inserted = await env.CONTACT_DB.prepare(
-      "INSERT OR IGNORE INTO contact_inquiries (id, submitted_at, name, business, email, phone, message) VALUES (?, ?, ?, ?, ?, ?, ?)"
-    ).bind(id, new Date().toISOString(), name, business, email, phone, message).run();
+      "INSERT OR IGNORE INTO contact_inquiries (id, submitted_at, name, business, email, phone, message, notification_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+    ).bind(id, new Date().toISOString(), name, business, email, phone, message, `awaiting Cloudflare email setup for ${CONTACT_RECIPIENT}`).run();
     if (inserted.meta?.changes === 0) {
       const prior = await env.CONTACT_DB.prepare(
         "SELECT notification_status FROM contact_inquiries WHERE id = ?"
@@ -80,59 +80,9 @@ async function receiveContact(request, env, url) {
     return contactJson(503, { ok: false, error: "storage_unavailable" });
   }
 
-  let notificationStatus = "pending";
-  let notificationDetail = "form_submission_failed";
-  try {
-    const payload = new URLSearchParams({
-      "form-name": "tideline-contact",
-      name, business, email, phone, message,
-      "request-id": id,
-    });
-    const notification = await fetch(`${NETLIFY_ORIGIN}/tideline-contact-form.html`, {
-      method: "POST",
-      headers: { "content-type": "application/x-www-form-urlencoded" },
-      body: payload.toString(),
-    });
-    if (notification.ok) {
-      notificationStatus = "accepted";
-      notificationDetail = "netlify_form_accepted";
-    } else {
-      notificationDetail = `http_${notification.status}`;
-    }
-  } catch (error) {
-    console.error("Tideline contact notification failed", error);
-  }
-  try {
-    await env.CONTACT_DB.prepare(
-      "UPDATE contact_inquiries SET notification_status = ?, notification_detail = ? WHERE id = ?"
-    ).bind(notificationStatus, notificationDetail, id).run();
-  } catch (error) {
-    console.error("Tideline contact receipt update failed", error);
-  }
-  return contactJson(notificationStatus === "accepted" ? 200 : 202, { ok: true, id, notificationStatus });
-}
-
-function isAllowedOrigin(request) {
-  const origin = request.headers.get("origin");
-  if (!origin) return true;
-  try {
-    const hostname = new URL(origin).hostname;
-    return hostname === CANONICAL_HOST || hostname === LEGACY_HOST || hostname === WWW_HOST;
-  } catch {
-    return false;
-  }
-}
-
-async function proxyNetlifyFunction(request, url) {
-  const headers = new Headers(request.headers);
-  headers.set("origin", NETLIFY_ORIGIN);
-  headers.delete("host");
-  return fetch(new Request(`${NETLIFY_ORIGIN}${url.pathname}${url.search}`, {
-    method: request.method,
-    headers,
-    body: request.method === "GET" || request.method === "HEAD" ? undefined : request.body,
-    redirect: "manual",
-  }));
+  // Cloudflare Email Sending is unavailable for this account. Persist the inquiry
+  // without claiming an email was sent; the recipient can be notified once enabled.
+  return contactJson(202, { ok: true, id, notificationStatus: "pending" });
 }
 
 export default {
@@ -142,10 +92,6 @@ export default {
       return Response.redirect(`https://${CANONICAL_HOST}${url.pathname}${url.search}`, 301);
     }
     if (url.pathname === CONTACT_PATH) return receiveContact(request, env, url);
-    if (url.pathname.startsWith("/.netlify/functions/")) {
-      if (!isAllowedOrigin(request)) return Response.json({ ok: false, error: "origin_not_allowed" }, { status: 403 });
-      return proxyNetlifyFunction(request, url);
-    }
     return env.ASSETS.fetch(request);
   },
 };

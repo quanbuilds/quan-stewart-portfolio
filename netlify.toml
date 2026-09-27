@@ -2,9 +2,6 @@
   publish = "."
   functions = "netlify/functions"
 
-  [build.processing]
-    ignore_html_forms = false
-
 [functions]
   node_bundler = "esbuild"
 
