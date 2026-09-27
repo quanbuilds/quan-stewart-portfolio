@@ -5,18 +5,25 @@ import { readFile } from 'node:fs/promises';
 const source = await readFile(new URL('../src/index.js', import.meta.url), 'utf8');
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;
 
-function setup() {
+function setup(send) {
   const rows = new Map();
+  const sent = [];
   const db = {
     prepare(sql) {
       return {
         bind(...args) {
           return {
             async run() {
-              if (!sql.startsWith('INSERT')) throw new Error(`unexpected SQL: ${sql}`);
-              if (rows.has(args[0])) return { meta: { changes: 0 } };
-              rows.set(args[0], { id: args[0], notification_status: 'pending', notification_detail: args[7], values: args });
-              return { meta: { changes: 1 } };
+              if (sql.startsWith('INSERT')) {
+                if (rows.has(args[0])) return { meta: { changes: 0 } };
+                rows.set(args[0], { id: args[0], notification_status: 'pending', notification_detail: args[7], values: args });
+                return { meta: { changes: 1 } };
+              }
+              if (sql.startsWith('UPDATE')) {
+                Object.assign(rows.get(args[2]), { notification_status: args[0], notification_detail: args[1] });
+                return { meta: { changes: 1 } };
+              }
+              throw new Error(`unexpected SQL: ${sql}`);
             },
             async first() { return rows.get(args[0]); },
           };
@@ -24,7 +31,9 @@ function setup() {
       };
     },
   };
-  return { rows, env: { CONTACT_DB: db, ASSETS: { fetch: () => new Response('site') } } };
+  const env = { CONTACT_DB: db, ASSETS: { fetch: () => new Response('site') } };
+  if (send) env.EMAIL = { send: async (message) => { sent.push(message); return send(message); } };
+  return { rows, sent, env };
 }
 
 const url = 'https://tidelinestrats.com/api/contact';
@@ -34,7 +43,7 @@ const request = (body = payload, origin = 'https://tidelinestrats.com') => new R
   method: 'POST', headers: { origin, 'content-type': 'application/json' }, body: JSON.stringify(body),
 });
 
-test('stores a valid inquiry for Cody without claiming an email was sent', async () => {
+test('stores an inquiry without claiming delivery when email is unavailable', async () => {
   const ctx = setup();
   const response = await worker.fetch(request(), ctx.env);
   assert.equal(response.status, 202);
@@ -44,6 +53,28 @@ test('stores a valid inquiry for Cody without claiming an email was sent', async
   const repeat = await worker.fetch(request(), ctx.env);
   assert.equal((await repeat.json()).duplicate, true);
   assert.equal(ctx.rows.size, 1);
+});
+
+test('Cloudflare email binding sends once to Cody and saves receipt', async () => {
+  const ctx = setup(async () => ({ messageId: 'email-123' }));
+  const response = await worker.fetch(request(), ctx.env);
+  assert.equal(response.status, 200);
+  assert.equal((await response.json()).notificationStatus, 'sent');
+  assert.equal(ctx.sent.length, 1);
+  assert.equal(ctx.sent[0].to, 'c.knudsen@tidelinestrats.com');
+  assert.equal(ctx.sent[0].replyTo, payload.email);
+  assert.match(ctx.sent[0].text, /Please contact me/);
+  assert.equal(ctx.rows.get(id).notification_detail, 'cloudflare:email-123');
+  await worker.fetch(request(), ctx.env);
+  assert.equal(ctx.sent.length, 1);
+});
+
+test('email failure preserves the inquiry and reports pending', async () => {
+  const ctx = setup(async () => { throw Object.assign(new Error('Unavailable'), { code: 'E_SENDER_NOT_VERIFIED' }); });
+  const response = await worker.fetch(request(), ctx.env);
+  assert.equal(response.status, 202);
+  assert.equal((await response.json()).notificationStatus, 'pending');
+  assert.equal(ctx.rows.get(id).notification_detail, 'cloudflare_error:E_SENDER_NOT_VERIFIED');
 });
 
 test('rejects cross-site and invalid requests before writing', async () => {

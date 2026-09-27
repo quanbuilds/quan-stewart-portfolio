@@ -3,6 +3,7 @@ const LEGACY_HOST = "go.signallabs.workers.dev";
 const WWW_HOST = "www.tidelinestrats.com";
 const CONTACT_PATH = "/api/contact";
 const CONTACT_RECIPIENT = "c.knudsen@tidelinestrats.com";
+const CONTACT_SENDER = "contact@tidelinestrats.com";
 
 function contactJson(status, body) {
   return Response.json(body, {
@@ -80,9 +81,40 @@ async function receiveContact(request, env, url) {
     return contactJson(503, { ok: false, error: "storage_unavailable" });
   }
 
-  // Cloudflare Email Sending is unavailable for this account. Persist the inquiry
-  // without claiming an email was sent; the recipient can be notified once enabled.
-  return contactJson(202, { ok: true, id, notificationStatus: "pending" });
+  let notificationStatus = "pending";
+  let notificationDetail = `awaiting Cloudflare email setup for ${CONTACT_RECIPIENT}`;
+  if (env.EMAIL) {
+    try {
+      const receipt = await env.EMAIL.send({
+        to: CONTACT_RECIPIENT,
+        from: CONTACT_SENDER,
+        replyTo: email,
+        subject: `TideLine website inquiry from ${business}`,
+        text: [
+          "New TideLine website inquiry", "",
+          `Name: ${name}`,
+          `Business: ${business}`,
+          `Email: ${email}`,
+          `Phone: ${phone || "Not provided"}`,
+          "", "Message:", message,
+        ].join("\n"),
+      });
+      notificationStatus = "sent";
+      notificationDetail = `cloudflare:${receipt.messageId}`;
+    } catch (error) {
+      notificationDetail = `cloudflare_error:${String(error?.code || "send_failed").slice(0, 80)}`;
+      console.error("Tideline email notification failed", error?.code || error);
+    }
+  }
+  try {
+    await env.CONTACT_DB.prepare(
+      "UPDATE contact_inquiries SET notification_status = ?, notification_detail = ? WHERE id = ?"
+    ).bind(notificationStatus, notificationDetail, id).run();
+  } catch (error) {
+    console.error("Tideline contact receipt update failed", error);
+  }
+  return contactJson(notificationStatus === "sent" ? 200 : 202,
+    { ok: true, id, notificationStatus });
 }
 
 export default {

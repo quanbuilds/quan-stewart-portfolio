@@ -838,7 +838,7 @@ initKadenceDemo();
       if (!response.ok || !result.ok) throw new Error('contact_failed');
       form.reset();
       delete form.dataset.requestId;
-      status.textContent = result.notificationStatus === 'accepted' ? 'Received. We will review your message and follow up.' : 'Your message was saved, but email delivery is pending. If urgent, email c.knudsen@tidelinestrats.com directly.';
+      if (result.notificationStatus === 'sent') { status.textContent = 'Received. We will review your message and follow up.'; } else { status.innerHTML = 'Your message was saved, but email delivery is pending. If urgent, <a href="mailto:c.knudsen@tidelinestrats.com">email Cody directly</a>.'; }
     } catch (_) {
       status.textContent = 'The form did not go through. Please email c.knudsen@tidelinestrats.com directly.';
     } finally {button.disabled = false;}
