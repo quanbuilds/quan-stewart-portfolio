@@ -8,12 +8,40 @@ const CONTACT_SENDER = "contact@tidelinestrats.com";
 function contactJson(status, body) {
   return Response.json(body, {
     status,
-    headers: { "cache-control": "no-store", "x-content-type-options": "nosniff" },
+    headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", "strict-transport-security": "max-age=31536000" },
   });
 }
 
 function clean(value, max) {
   return String(value ?? "").trim().slice(0, max);
+}
+
+function cleanLine(value, max) {
+  return clean(value, max).replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
+}
+
+async function readLimitedText(request, maxBytes) {
+  const reader = request.body?.getReader();
+  if (!reader) return "";
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
 }
 
 function isContactOrigin(request, url) {
@@ -32,6 +60,14 @@ function isContactOrigin(request, url) {
 async function receiveContact(request, env, url) {
   if (request.method !== "POST") return contactJson(405, { ok: false, error: "method_not_allowed" });
   if (!isContactOrigin(request, url)) return contactJson(403, { ok: false, error: "origin_not_allowed" });
+  try {
+    const key = request.headers.get("cf-connecting-ip") || "unknown";
+    const { success } = await env.CONTACT_RATE_LIMIT.limit({ key: `contact:${key}` });
+    if (!success) return contactJson(429, { ok: false, error: "rate_limited" });
+  } catch (error) {
+    console.error("Tideline contact rate limiter unavailable", error);
+    return contactJson(503, { ok: false, error: "intake_unavailable" });
+  }
   if (!request.headers.get("content-type")?.startsWith("application/json")) {
     return contactJson(415, { ok: false, error: "json_required" });
   }
@@ -41,8 +77,8 @@ async function receiveContact(request, env, url) {
 
   let input;
   try {
-    const raw = await request.text();
-    if (new TextEncoder().encode(raw).length > 8192) return contactJson(413, { ok: false, error: "payload_too_large" });
+    const raw = await readLimitedText(request, 8192);
+    if (raw === null) return contactJson(413, { ok: false, error: "payload_too_large" });
     input = JSON.parse(raw);
   } catch {
     return contactJson(400, { ok: false, error: "invalid_json" });
@@ -55,10 +91,10 @@ async function receiveContact(request, env, url) {
 
   const id = /^[0-9a-f]{8}-[0-9a-f-]{27,36}$/i.test(String(input.requestId || ""))
     ? String(input.requestId) : crypto.randomUUID();
-  const name = clean(input.name, 120);
-  const business = clean(input.business, 180);
+  const name = cleanLine(input.name, 120);
+  const business = cleanLine(input.business, 180);
   const email = clean(input.email, 180);
-  const phone = clean(input.phone, 80);
+  const phone = cleanLine(input.phone, 80);
   const message = clean(input.message, 2000);
   if (!name || !business || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return contactJson(400, { ok: false, error: "required_fields" });
@@ -120,6 +156,9 @@ async function receiveContact(request, env, url) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.protocol === "http:") {
+      return Response.redirect(`https://${url.host}${url.pathname}${url.search}`, 301);
+    }
     if (url.hostname === LEGACY_HOST || url.hostname === WWW_HOST) {
       return Response.redirect(`https://${CANONICAL_HOST}${url.pathname}${url.search}`, 301);
     }

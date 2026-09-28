@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 const source = await readFile(new URL('../src/index.js', import.meta.url), 'utf8');
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;
 
-function setup(send) {
+function setup(send, rateAllowed = true) {
   const rows = new Map();
   const sent = [];
   const db = {
@@ -31,7 +31,11 @@ function setup(send) {
       };
     },
   };
-  const env = { CONTACT_DB: db, ASSETS: { fetch: () => new Response('site') } };
+  const env = {
+    CONTACT_DB: db,
+    CONTACT_RATE_LIMIT: { limit: async () => ({ success: rateAllowed }) },
+    ASSETS: { fetch: () => new Response('site') },
+  };
   if (send) env.EMAIL = { send: async (message) => { sent.push(message); return send(message); } };
   return { rows, sent, env };
 }
@@ -82,5 +86,32 @@ test('rejects cross-site and invalid requests before writing', async () => {
   assert.equal((await worker.fetch(request(payload, 'https://other.example'), ctx.env)).status, 403);
   assert.equal((await worker.fetch(request({ ...payload, email: 'bad' }), ctx.env)).status, 400);
   assert.equal((await worker.fetch(request({ ...payload, website: 'spam.example' }), ctx.env)).status, 200);
+  assert.equal(ctx.rows.size, 0);
+});
+
+test('rate limits contact attempts before reading or storing submissions', async () => {
+  const ctx = setup(undefined, false);
+  const response = await worker.fetch(request(), ctx.env);
+  assert.equal(response.status, 429);
+  assert.equal((await response.json()).error, 'rate_limited');
+  assert.equal(ctx.rows.size, 0);
+});
+
+test('bounds streamed request bodies and strips control characters from email subjects', async () => {
+  const ctx = setup(async () => ({ messageId: 'email-456' }));
+  const oversized = request({ ...payload, message: 'x'.repeat(9000) });
+  oversized.headers.delete('content-length');
+  assert.equal((await worker.fetch(oversized, ctx.env)).status, 413);
+  assert.equal(ctx.rows.size, 0);
+  const valid = request({ ...payload, business: 'Example\r\nBcc: attacker@example.com' });
+  assert.equal((await worker.fetch(valid, ctx.env)).status, 200);
+  assert.equal(ctx.sent[0].subject.includes('\n'), false);
+});
+
+test('redirects insecure requests before serving the site or contact API', async () => {
+  const ctx = setup();
+  const response = await worker.fetch(new Request('http://tidelinestrats.com/api/contact?source=test'), ctx.env);
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('location'), 'https://tidelinestrats.com/api/contact?source=test');
   assert.equal(ctx.rows.size, 0);
 });

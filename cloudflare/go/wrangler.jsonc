@@ -21,5 +21,8 @@
       "database_id": "0d9ef612-2f04-4754-8ab0-54e2b5888e21",
       "migrations_dir": "migrations"
     }
+  ],
+  "ratelimits": [
+    { "name": "CONTACT_RATE_LIMIT", "namespace_id": "92701", "simple": { "limit": 12, "period": 60 } }
   ]
 }
