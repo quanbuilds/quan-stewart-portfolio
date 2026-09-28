@@ -60,19 +60,19 @@ test('stores an inquiry without claiming delivery when email is unavailable', as
   assert.equal(ctx.rows.size, 1);
 });
 
-test('Cloudflare email binding addresses Cody and Quan in one inquiry notification', async () => {
+test('Cloudflare email binding sends individually to Cody and Quan and saves receipts', async () => {
   const ctx = setup(async () => ({ messageId: 'email-123' }));
   const response = await worker.fetch(request(), ctx.env);
   assert.equal(response.status, 200);
   assert.equal((await response.json()).notificationStatus, 'sent');
-  assert.equal(ctx.sent.length, 1);
+  assert.equal(ctx.sent.length, 2);
   assert.equal(ctx.sent[0].to, 'c.knudsen@tidelinestrats.com');
-  assert.equal(ctx.sent[0].cc, 'q.stewart@tidelinestrats.com');
+  assert.equal(ctx.sent[1].to, 'q.stewart@tidelinestrats.com');
   assert.equal(ctx.sent[0].replyTo, payload.email);
   assert.match(ctx.sent[0].text, /Please contact me/);
-  assert.equal(ctx.rows.get(id).notification_detail, 'cloudflare:email-123');
+  assert.equal(JSON.parse(ctx.rows.get(id).notification_detail).length, 2);
   await worker.fetch(request(), ctx.env);
-  assert.equal(ctx.sent.length, 1);
+  assert.equal(ctx.sent.length, 2);
 });
 
 test('email failure preserves the inquiry and reports pending', async () => {
@@ -80,7 +80,18 @@ test('email failure preserves the inquiry and reports pending', async () => {
   const response = await worker.fetch(request(), ctx.env);
   assert.equal(response.status, 202);
   assert.equal((await response.json()).notificationStatus, 'pending');
-  assert.equal(ctx.rows.get(id).notification_detail, 'cloudflare_error:E_SENDER_NOT_VERIFIED');
+  assert.deepEqual(JSON.parse(ctx.rows.get(id).notification_detail).map((result) => result.code), ['E_SENDER_NOT_VERIFIED', 'E_SENDER_NOT_VERIFIED']);
+});
+
+test('one rejected recipient does not block the other notification', async () => {
+  const ctx = setup(async (message) => {
+    if (message.to === 'c.knudsen@tidelinestrats.com') throw Object.assign(new Error('Not verified'), { code: 'E_RECIPIENT_NOT_ALLOWED' });
+    return { messageId: 'quan-accepted' };
+  });
+  const response = await worker.fetch(request(), ctx.env);
+  assert.equal(response.status, 202);
+  assert.equal((await response.json()).notificationStatus, 'partial');
+  assert.deepEqual(JSON.parse(ctx.rows.get(id).notification_detail).map((result) => result.status), ['pending', 'accepted']);
 });
 
 test('rejects cross-site and invalid requests before writing', async () => {

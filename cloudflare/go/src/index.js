@@ -110,7 +110,7 @@ async function receiveContact(request, env, url) {
         "SELECT notification_status FROM contact_inquiries WHERE id = ?"
       ).bind(id).first();
       const notificationStatus = prior?.notification_status || "pending";
-      return contactJson(notificationStatus === "accepted" ? 200 : 202,
+      return contactJson(notificationStatus === "sent" ? 200 : 202,
         { ok: true, id, duplicate: true, notificationStatus });
     }
   } catch (error) {
@@ -121,28 +121,33 @@ async function receiveContact(request, env, url) {
   let notificationStatus = "pending";
   let notificationDetail = `awaiting Cloudflare email setup for ${CONTACT_PRIMARY} and ${CONTACT_COPY}`;
   if (env.EMAIL) {
-    try {
-      const receipt = await env.EMAIL.send({
-        to: CONTACT_PRIMARY,
-        cc: CONTACT_COPY,
-        from: CONTACT_SENDER,
-        replyTo: email,
-        subject: `TideLine website inquiry from ${business}`,
-        text: [
-          "New TideLine website inquiry", "",
-          `Name: ${name}`,
-          `Business: ${business}`,
-          `Email: ${email}`,
-          `Phone: ${phone || "Not provided"}`,
-          "", "Message:", message,
-        ].join("\n"),
-      });
-      notificationStatus = "sent";
-      notificationDetail = `cloudflare:${receipt.messageId}`;
-    } catch (error) {
-      notificationDetail = `cloudflare_error:${String(error?.code || "send_failed").slice(0, 80)}`;
-      console.error("Tideline email notification failed", error?.code || error);
+    const notifications = [];
+    for (const recipient of [CONTACT_PRIMARY, CONTACT_COPY]) {
+      try {
+        const receipt = await env.EMAIL.send({
+          to: recipient,
+          from: CONTACT_SENDER,
+          replyTo: email,
+          subject: `TideLine website inquiry from ${business}`,
+          text: [
+            "New TideLine website inquiry", "",
+            `Name: ${name}`,
+            `Business: ${business}`,
+            `Email: ${email}`,
+            `Phone: ${phone || "Not provided"}`,
+            "", "Message:", message,
+          ].join("\n"),
+        });
+        notifications.push({ recipient, status: "accepted", messageId: receipt.messageId });
+      } catch (error) {
+        const code = String(error?.code || "send_failed").slice(0, 80);
+        notifications.push({ recipient, status: "pending", code });
+        console.error("Tideline email notification failed", recipient, code);
+      }
     }
+    const accepted = notifications.filter((result) => result.status === "accepted").length;
+    notificationStatus = accepted === 2 ? "sent" : accepted === 1 ? "partial" : "pending";
+    notificationDetail = JSON.stringify(notifications);
   }
   try {
     await env.CONTACT_DB.prepare(
