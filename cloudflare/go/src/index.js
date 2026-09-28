@@ -2,7 +2,8 @@ const CANONICAL_HOST = "tidelinestrats.com";
 const LEGACY_HOST = "go.signallabs.workers.dev";
 const WWW_HOST = "www.tidelinestrats.com";
 const CONTACT_PATH = "/api/contact";
-const CONTACT_RECIPIENT = "c.knudsen@tidelinestrats.com";
+const CONTACT_PRIMARY = "c.knudsen@tidelinestrats.com";
+const CONTACT_COPY = "q.stewart@tidelinestrats.com";
 const CONTACT_SENDER = "contact@tidelinestrats.com";
 
 function contactJson(status, body) {
@@ -103,7 +104,7 @@ async function receiveContact(request, env, url) {
   try {
     const inserted = await env.CONTACT_DB.prepare(
       "INSERT OR IGNORE INTO contact_inquiries (id, submitted_at, name, business, email, phone, message, notification_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-    ).bind(id, new Date().toISOString(), name, business, email, phone, message, `awaiting Cloudflare email setup for ${CONTACT_RECIPIENT}`).run();
+    ).bind(id, new Date().toISOString(), name, business, email, phone, message, `awaiting Cloudflare email setup for ${CONTACT_PRIMARY} and ${CONTACT_COPY}`).run();
     if (inserted.meta?.changes === 0) {
       const prior = await env.CONTACT_DB.prepare(
         "SELECT notification_status FROM contact_inquiries WHERE id = ?"
@@ -118,11 +119,12 @@ async function receiveContact(request, env, url) {
   }
 
   let notificationStatus = "pending";
-  let notificationDetail = `awaiting Cloudflare email setup for ${CONTACT_RECIPIENT}`;
+  let notificationDetail = `awaiting Cloudflare email setup for ${CONTACT_PRIMARY} and ${CONTACT_COPY}`;
   if (env.EMAIL) {
     try {
       const receipt = await env.EMAIL.send({
-        to: CONTACT_RECIPIENT,
+        to: CONTACT_PRIMARY,
+        cc: CONTACT_COPY,
         from: CONTACT_SENDER,
         replyTo: email,
         subject: `TideLine website inquiry from ${business}`,

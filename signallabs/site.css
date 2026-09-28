@@ -256,6 +256,8 @@
   .contact-wrap{max-width:700px; margin:0 auto; padding:90px 24px 120px; text-align:left;}
   .contact-wrap h2{font-family:var(--font-display); font-size:28px; color:var(--navy-deep); margin:0 0 16px;}
   .contact-wrap p{color:var(--steel); font-size:16px; margin:0 0 28px;}
+  .contact-wrap .contact-direct{font-size:14px;margin-top:-8px;margin-bottom:32px;}
+  .contact-direct a{color:var(--navy);font-weight:600;text-underline-offset:3px;}
 
   .tideline-logo,.hero-brandmark,.voyage-brandmark{display:block;background-image:url('assets/brand/tideline-boat-transparent.png');background-repeat:no-repeat;background-position:center;background-size:contain;}
   .tideline-logo{width:48px;height:48px;flex:none;}

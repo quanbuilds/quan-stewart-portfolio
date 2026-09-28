@@ -54,18 +54,20 @@ test('stores an inquiry without claiming delivery when email is unavailable', as
   assert.equal((await response.json()).notificationStatus, 'pending');
   assert.equal(ctx.rows.size, 1);
   assert.match(ctx.rows.get(id).notification_detail, /c\.knudsen@tidelinestrats\.com/);
+  assert.match(ctx.rows.get(id).notification_detail, /q\.stewart@tidelinestrats\.com/);
   const repeat = await worker.fetch(request(), ctx.env);
   assert.equal((await repeat.json()).duplicate, true);
   assert.equal(ctx.rows.size, 1);
 });
 
-test('Cloudflare email binding sends once to Cody and saves receipt', async () => {
+test('Cloudflare email binding addresses Cody and Quan in one inquiry notification', async () => {
   const ctx = setup(async () => ({ messageId: 'email-123' }));
   const response = await worker.fetch(request(), ctx.env);
   assert.equal(response.status, 200);
   assert.equal((await response.json()).notificationStatus, 'sent');
   assert.equal(ctx.sent.length, 1);
   assert.equal(ctx.sent[0].to, 'c.knudsen@tidelinestrats.com');
+  assert.equal(ctx.sent[0].cc, 'q.stewart@tidelinestrats.com');
   assert.equal(ctx.sent[0].replyTo, payload.email);
   assert.match(ctx.sent[0].text, /Please contact me/);
   assert.equal(ctx.rows.get(id).notification_detail, 'cloudflare:email-123');

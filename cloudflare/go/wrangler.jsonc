@@ -24,5 +24,12 @@
   ],
   "ratelimits": [
     { "name": "CONTACT_RATE_LIMIT", "namespace_id": "92701", "simple": { "limit": 12, "period": 60 } }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["contact@tidelinestrats.com"],
+      "allowed_destination_addresses": ["c.knudsen@tidelinestrats.com", "q.stewart@tidelinestrats.com"]
+    }
   ]
 }
