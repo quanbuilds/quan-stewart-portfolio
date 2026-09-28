@@ -43,7 +43,7 @@
   /* ---- Voyage scroll section ---- */
   .voyage{position:relative;}
   .voyage-stage{
-    height:70vh; overflow:hidden;
+    position:relative; height:70vh; overflow:hidden;
     background:linear-gradient(180deg, #eaf5fb 0%, #cfe6f2 45%, #9cc7dd 100%);
   }
   .voyage-caption{position:absolute; top:64px; left:50%; transform:translateX(-50%); text-align:center; z-index:6; width:90%;}
