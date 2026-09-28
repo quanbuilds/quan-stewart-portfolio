@@ -263,10 +263,10 @@
   .contact-wrap h2{font-family:var(--font-display); font-size:28px; color:var(--navy-deep); margin:0 0 16px;}
   .contact-wrap p{color:var(--steel); font-size:16px; margin:0 0 28px;}
 
-  .tideline-logo,.hero-brandmark,.voyage-brandmark{display:block;background-image:url('assets/brand/tideline-signature.jpeg');background-repeat:no-repeat;background-color:#fff;}
-  .tideline-logo{width:38px;height:38px;background-size:130px 74px;background-position:-20px -18px;border-radius:3px;flex:none;}
-  .hero-brandmark{position:absolute;right:5%;top:26px;width:210px;height:205px;background-size:675px 386px;background-position:-85px -92px;mix-blend-mode:multiply;opacity:.92;}
-  .voyage-brandmark{width:130px;height:110px;background-size:395px 226px;background-position:-50px -52px;border-radius:10px;mix-blend-mode:multiply;}
+  .tideline-logo,.hero-brandmark,.voyage-brandmark{display:block;background-image:url('assets/brand/tideline-boat-transparent.png');background-repeat:no-repeat;background-position:center;background-size:contain;}
+  .tideline-logo{width:48px;height:48px;flex:none;}
+  .hero-brandmark{position:absolute;right:max(3%,16px);top:18px;width:clamp(230px,31vw,410px);aspect-ratio:1;opacity:.96;z-index:1;}
+  .voyage-brandmark{width:clamp(160px,18vw,230px);aspect-ratio:1;}
   .workshop-card{background:#f8fafc;border-style:dashed;}
   .concept-note{font-weight:600;color:var(--navy);font-size:12px!important;margin-top:8px!important;}
   .loki-mark{float:right;width:58px;height:58px;object-fit:contain;margin-left:12px;}
@@ -281,11 +281,11 @@
   .form-status{min-height:1.3em;color:var(--navy-deep)!important;}
   .contact-form button{border:0;cursor:pointer;font:inherit;justify-self:start;}
   .contact-form button:disabled{opacity:.6;cursor:wait;}
-  @media(max-width:700px){.hero-brandmark{position:relative;right:auto;top:auto;margin-left:auto;width:110px;height:90px;background-size:355px 203px;background-position:-45px -48px;}.contact-form{grid-template-columns:1fr;}.form-row{grid-column:1/-1;}}
+  @media(max-width:700px){.hero-brandmark{position:relative;right:auto;top:auto;margin:12px 16px -12px auto;width:min(44vw,210px);}.voyage-brandmark{width:175px;}.contact-form{grid-template-columns:1fr;}.form-row{grid-column:1/-1;}}
   html,body{scrollbar-width:none;} html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{display:none;}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important;}}
 </style>
-<link href="assets/brand/tideline-signature.jpeg" rel="icon" type="image/jpeg"/><link href="https://tidelinestrats.com/" rel="canonical"/></head>
+<link href="assets/brand/tideline-boat-transparent.png" rel="icon" type="image/png"/><link href="https://tidelinestrats.com/" rel="canonical"/></head>
 <body>
 <header>
 <div class="logo"><span aria-label="TideLine Strategies Viking boat logo" class="tideline-logo" role="img"></span><span class="logo-wordmark">TideLine</span></div>
