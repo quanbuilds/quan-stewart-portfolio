@@ -156,9 +156,9 @@ initKadenceDemo();
       if (!response.ok || !result.ok) throw new Error('contact_failed');
       form.reset();
       delete form.dataset.requestId;
-      if (result.notificationStatus === 'sent') { status.textContent = 'Received. We will review your message and follow up.'; } else { status.innerHTML = 'Your message was saved, but email delivery is pending. If urgent, <a href="mailto:c.knudsen@tidelinestrats.com">email Cody directly</a>.'; }
+      if (result.notificationStatus === 'sent') { status.textContent = 'Received. We will review your message and follow up.'; } else { status.innerHTML = 'Your message was saved, but email delivery is pending. If urgent, <a href="mailto:c.knudsen@tidelinestrats.com?cc=q.stewart%40tidelinestrats.com">email Cody directly and copy Quan</a>.'; }
     } catch (error) {
-      status.textContent = error.message === 'rate_limited' ? 'Too many attempts. Please wait a minute and try again.' : 'The form did not go through. Please email c.knudsen@tidelinestrats.com directly.';
+      status.innerHTML = error.message === 'rate_limited' ? 'Too many attempts. Please wait a minute and try again.' : 'The form did not go through. Please <a href="mailto:c.knudsen@tidelinestrats.com?cc=q.stewart%40tidelinestrats.com">email Cody directly and copy Quan</a>.';
     } finally {button.disabled = false;}
   });
 })();
