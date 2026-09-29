@@ -1,961 +1,452 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SignalLabs by QuanBuilds | Practical AI Systems for Service Businesses</title>
-    <meta name="description" content="Stop losing hours to inefficient systems. SignalLabs diagnoses the friction, bulletproofs the foundation, and hands daily execution over to custom AI so owners can focus on growth." />
-    <meta name="theme-color" content="#0b0b0a" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="SignalLabs by QuanBuilds" />
-    <meta property="og:description" content="Stop losing hours to inefficient systems. We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom AI so you can focus on growth." />
-    <meta property="og:image" content="https://quanbuilds.netlify.app/signallabs/assets/illustrations/hero-bust.webp" />
-    <meta property="og:image:alt" content="SignalLabs hero illustration" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://quanbuilds.netlify.app/signallabs/assets/illustrations/hero-bust.webp" />
-    <style>
-      :root {
-        color-scheme: dark;
-        --black: #0b0b0a;
-        --black-2: #11110f;
-        --black-3: #181714;
-        --stone: #d8d1c4;
-        --paper: #f0ece3;
-        --muted: #aaa397;
-        --dim: #746f66;
-        --gold: #c79b49;
-        --gold-light: #e1c278;
-        --line: rgba(216, 209, 196, 0.15);
-        --line-strong: rgba(199, 155, 73, 0.45);
-        --max: 1180px;
-        --pad: clamp(20px, 5vw, 72px);
-        --serif: Didot, "Bodoni 72", "Bodoni MT", Georgia, serif;
-        --sans: "Avenir Next", Avenir, "Helvetica Neue", Arial, sans-serif;
-      }
+<head>
+<meta charset="utf-8"/>
+<meta content="TideLine Strategies helps owner-led service businesses diagnose operational friction, strengthen their systems, and build practical software." name="description"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>TideLine Strategies | Systems for owner-led service businesses</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="site.css" rel="stylesheet"/>
+<link href="assets/brand/tideline-boat-transparent.png" rel="icon" type="image/png"/><link href="https://tidelinestrats.com/" rel="canonical"/></head>
+<body>
+<header>
+<div class="logo"><span aria-label="TideLine Strategies Viking boat logo" class="tideline-logo" role="img"></span><span class="logo-wordmark">TideLine</span></div>
+<button aria-label="Turn on dark mode" aria-pressed="false" class="theme-toggle" id="themeToggle" type="button"><span aria-hidden="true" class="theme-icon">☾</span><span class="theme-label">Dark mode</span></button>
+</header>
+<nav class="tabs">
+<button class="tab active" data-tab="home">Home</button>
+<button class="tab" data-tab="audit">Ask Loki</button>
+<button class="tab" data-tab="services">Services</button>
+<button class="tab" data-tab="about">About</button>
+<button class="tab" data-tab="contact">Contact</button>
+</nav>
+<!-- HOME -->
+<section class="tabpanel active" id="tab-home">
+<div class="hero">
+<div aria-label="TideLine Strategies Viking boat logo" class="hero-brandmark" role="img"></div>
+<div class="hero-inner">
+<div class="eyebrow">Systems &amp; software for owner-led service businesses</div>
+<h1>Stop losing hours to inefficient systems.</h1>
+<p class="sub">We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom technology so you can focus on growth.</p>
+<div class="ctas">
+<a class="cta-primary" href="#" id="heroStartCta">Audit your business with Loki</a>
+<a class="cta-secondary" href="#">How partnership works</a>
+</div>
+<p class="method-note">We start with your people, process, and culture — not the tools. Decisions get co-authored with you, tested by failing fast, and grounded in where you are today while built for who you're scaling into.</p>
+</div>
+<svg class="wave-divider" preserveaspectratio="none" viewbox="0 0 1200 70"><path d="M0,40 C300,80 900,0 1200,40 L1200,70 L0,70 Z" fill="#F3F8FB"></path></svg>
+</div>
+<div class="voyage">
+<div class="voyage-stage">
+<div class="voyage-caption">
+<h2>One voyage, start to finish.</h2>
+<p>From the first diagnostic to daily execution — we're on board the whole way.</p>
+</div>
+<div class="wave-layer wave-back">
+<svg preserveaspectratio="none" viewbox="0 0 800 200"><path d="M0,100 C50,50 150,50 200,100 C250,150 350,150 400,100 C450,50 550,50 600,100 C650,150 750,150 800,100 L800,200 L0,200 Z" fill="#9fc7de"></path></svg>
+</div>
+<div class="wave-layer wave-mid">
+<svg preserveaspectratio="none" viewbox="0 0 800 200"><path d="M0,110 C60,70 140,70 200,110 C260,150 340,150 400,110 C460,70 540,70 600,110 C660,150 740,150 800,110 L800,200 L0,200 Z" fill="#6fa9c9"></path></svg>
+</div>
+<div class="ship-outer" id="voyageShip">
+<div class="ship-bob">
+<div aria-label="TideLine Strategies Viking boat logo" class="voyage-brandmark" role="img"></div>
+</div>
+</div>
+<div class="wave-layer wave-front">
+<svg preserveaspectratio="none" viewbox="0 0 800 200"><path d="M0,120 C55,85 145,85 200,120 C255,155 345,155 400,120 C455,85 545,85 600,120 C655,155 745,155 800,120 L800,200 L0,200 Z" fill="#3E7CB1"></path></svg>
+</div>
+</div>
+</div>
+<div class="process">
+<h2>Find the friction. Fix the system. Then automate — where it fits.</h2>
+<div class="steps">
+<div class="step"><div class="n">01</div><h3>Diagnose the drag</h3><p>We trace intake, scheduling, follow-up, and handoffs to see where time and leads are leaking out.</p></div>
+<div class="step"><div class="n">02</div><h3>Bulletproof the foundation</h3><p>We clean up the tools, docs, and ownership rules so staff work from one dependable source of truth.</p></div>
+<div class="step"><div class="n">03</div><h3>Hand off daily execution</h3><p>Custom software — including AI, when it's the right tool — takes over the repeat work, while decisions stay with your team.</p></div>
+</div>
+</div>
+</section>
+<!-- LOKI AUDIT -->
+<section class="tabpanel" id="tab-audit">
+<div class="audit-wrap">
+<div class="audit-heading"><img alt="" height="64" src="assets/loki/loki-avatar.png" width="64"/><div><div class="eyebrow">Complimentary interactive audit</div><h1>Find the drag with Loki.</h1><p>Loki will ask about one real workflow, trace what slows it down, and leave you with practical next steps. No account or software connection is needed.</p></div></div>
+<div class="audit-onboard" id="auditOnboard"><label for="auditBusiness">What does your business do?</label><div class="audit-start-row"><input id="auditBusiness" maxlength="240" placeholder="We run a small gym with classes and private lessons…"/><button class="cta-primary" id="auditStart" type="button">Start with Loki</button></div><p>Describe the business in one sentence. Please leave out customer details, passwords, and private records. Loki saves the conversation privately so you can finish this session.</p><p aria-live="polite" id="auditStartStatus" role="status"></p></div>
+<div class="audit-workspace" hidden id="auditWorkspace">
+<div class="audit-conversation"><div aria-live="polite" class="audit-transcript" id="auditTranscript"></div><form class="audit-answer" id="auditAnswerForm"><label class="sr-only" for="auditAnswer">Your answer to Loki</label><textarea id="auditAnswer" maxlength="1000" placeholder="Tell Loki what happens…" required rows="2"></textarea><button class="cta-primary" type="submit">Send</button></form><button class="audit-finish" hidden id="auditFinish" type="button">I’m ready for my audit</button><p aria-live="polite" class="audit-status" id="auditStatus" role="status"></p></div>
+<aside class="audit-findings"><h2>What Loki has learned</h2><ul id="auditInsights"><li>We’ll build this from your answers.</li></ul><p>Correct Loki whenever an assumption is wrong. You can ask for the audit after four answers.</p></aside>
+</div>
+<div class="audit-result" hidden id="auditResult"><div class="eyebrow">Your working audit</div><h2>Three places to begin</h2><p>These recommendations are based on what you told Loki. Review the assumptions before acting.</p><div id="auditOpportunities"></div><div class="audit-pilot"><h3>Your two-week pilot</h3><p id="auditPilot"></p></div><button class="audit-print" id="auditPrint" type="button">Print or save this plan</button><button class="audit-delete" id="auditDelete" type="button">Delete this audit</button>
+<div class="audit-text-offer" id="auditTextOffer"><h3>Keep working with Loki by text</h3><p>Opt in to receive a setup text for a TideLine business assistant focused on your goals and recurring bottlenecks.</p><form id="auditTextForm"><label for="auditPhone">Mobile number</label><input autocomplete="tel" id="auditPhone" inputmode="tel" placeholder="(555) 123-4567" required type="tel"/><label class="audit-consent"><input id="auditConsent" required type="checkbox"/><span>I agree to receive TideLine Loki setup and business assistant texts at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out.</span></label><button class="cta-primary" type="submit">Text me to set up Loki</button></form><p aria-live="polite" id="auditTextStatus" role="status"></p></div>
+</div>
+</div>
+</section>
+<!-- SERVICES -->
+<section class="tabpanel" id="tab-services">
+<div class="services-wrap">
+<div class="services-intro">
+<h2>What we build</h2>
+<p>We're not an AI shop first. TideLine is a systems and operations partner for owner-led service businesses — we start with how the business actually runs, and the technology, AI included, comes after that's understood.</p>
+</div>
+<h3 class="services-subhead">How we get there</h3>
+<p class="services-subnote">The same method, applied to any owner-led service business.</p>
+<div class="service-grid">
+<div class="service-card">
+<div class="kicker">Start here</div>
+<h3>Operational Diagnostic</h3>
+<p>We map intake, scheduling, follow-up, and reporting to find exactly where time and leads are leaking before anything gets built.</p>
+<ul>
+<li>Workflow and handoff mapping</li>
+<li>Tooling and source-of-truth audit</li>
+<li>One clear first opportunity to fix</li>
+</ul>
+</div>
+<div class="service-card">
+<h3>Custom Software Builds</h3>
+<p>Bespoke tools built around how your business actually runs, not a generic template you have to bend to fit.</p>
+<ul>
+<li>Built with your team, not just for them</li>
+<li>Works with the systems you already use</li>
+<li>You own the accounts, data, and documentation</li>
+</ul>
+</div>
+<div class="service-card"><img alt="Loki assistant icon" class="loki-mark" height="58" loading="lazy" src="assets/loki/loki-avatar.png" width="58"/>
+<h3>Automation, Where It Fits</h3>
+<p>Once the foundation is solid, custom AI can take over repeatable daily work — drafting replies, updating records, monitoring queues — with people still owning the decisions that matter.</p>
+<ul>
+<li>Only where the risk is low or you've approved it</li>
+<li>Sensitive actions stay as drafts or review items</li>
+<li>One piece of the toolkit, not the whole pitch</li>
+</ul>
+</div>
+</div>
+<h3 class="services-subhead" style="margin-top:56px;">Who we serve</h3>
+<p class="services-subnote">Where that method turns into a specific, named product.</p>
+<div class="service-card flagship" style="margin-bottom:24px;">
+<div class="kicker">All-in-one class management software</div>
+<h3>OnePlace</h3>
+<div class="op2-frame" id="op2Frame">
+<div class="op2-topbar">
+<div class="op2-search">⌕ Find a family or class</div>
+<div class="op2-topicons">🔔 ⚙</div>
+</div>
+<div class="op2-body">
+<div class="op2-sidebar">
+<div class="op2-brand"><span class="op2-brand-mark">O</span>OnePlace</div>
+<div class="op2-group">Operate</div>
+<div class="op2-nav" data-page="0">⌂ Command center</div>
+<div class="op2-nav" data-page="1">▦ Schedule</div>
+<div class="op2-nav" data-page="2">✓ Attendance &amp; makeups</div>
+<div class="op2-nav" data-page="3">👪 Families &amp; students</div>
+<div class="op2-group">Grow</div>
+<div class="op2-nav" data-page="4">↗ Enrollment &amp; waitlists</div>
+<div class="op2-nav">✉ Mailbox</div>
+<div class="op2-group">Manage</div>
+<div class="op2-nav" data-page="5">◎ Skills &amp; progress</div>
+<div class="op2-nav">⚙ Settings &amp; access</div>
+<div class="op2-nav">🤸 Flip</div>
+<div class="op2-user"><span class="op2-avatar">A</span><div><div class="op2-user-name">Studio Team</div><div class="op2-user-sub">Staff access</div></div></div>
+</div>
+<div class="op2-main" id="op2Main">
+<!-- Page 0: Command center -->
+<div class="op2-page active" data-idx="0">
+<div class="op2-eyebrow">Live operations</div>
+<h4 class="op2-h">Command center</h4>
+<div class="op2-metrics">
+<div class="op2-metric"><div class="op2-mnum">1,842</div><div class="op2-mlabel">Families</div></div>
+<div class="op2-metric"><div class="op2-mnum">2,610</div><div class="op2-mlabel">Students</div></div>
+<div class="op2-metric"><div class="op2-mnum">42</div><div class="op2-mlabel">Today's meetings</div></div>
+<div class="op2-metric"><div class="op2-mnum">1,203</div><div class="op2-mlabel">Active enrollments</div></div>
+<div class="op2-metric"><div class="op2-mnum">96</div><div class="op2-mlabel">Makeups to review</div></div>
+<div class="op2-metric"><div class="op2-mnum">2</div><div class="op2-mlabel">Message queue</div></div>
+</div>
+<div class="op2-panel">
+<div class="op2-panel-head">Today's schedule <span class="op2-tag">Live</span></div>
+<div class="op2-row"><span class="op2-time">9:30 AM</span><span>Tiny Tumblers</span><span class="op2-dim">0/6 marked</span></div>
+<div class="op2-row"><span class="op2-time">10:30 AM</span><span>Parent &amp; Tot</span><span class="op2-dim">0/9 marked</span></div>
+<div class="op2-row"><span class="op2-time">1:00 PM</span><span>Girls Team</span><span class="op2-dim">0/11 marked</span></div>
+</div>
+</div>
+<!-- Page 1: Schedule -->
+<div class="op2-page" data-idx="1">
+<div class="op2-eyebrow">Scheduling</div>
+<h4 class="op2-h">Class calendar</h4>
+<div class="op2-cal">
+<div class="op2-cal-col"><div class="op2-cal-day">Mon</div><div class="op2-chip c1">9:00 Tiny Tumblers</div><div class="op2-chip c2">10:30 Munchkins</div></div>
+<div class="op2-cal-col"><div class="op2-cal-day">Tue</div><div class="op2-chip c3">9:30 Parent &amp; Tot</div></div>
+<div class="op2-cal-col"><div class="op2-cal-day">Wed</div><div class="op2-chip c1">9:00 Tiny Tumblers</div><div class="op2-chip c2">2:00 Boys Beginner</div></div>
+<div class="op2-cal-col"><div class="op2-cal-day">Thu</div><div class="op2-chip c3">10:30 Munchkins</div></div>
+<div class="op2-cal-col"><div class="op2-cal-day">Fri</div><div class="op2-chip c1">2:45 Girls Team</div></div>
+</div>
+</div>
+<!-- Page 2: Attendance -->
+<div class="op2-page" data-idx="2">
+<div class="op2-eyebrow">Instruction</div>
+<h4 class="op2-h">Attendance &amp; makeups</h4>
+<div class="op2-panel">
+<div class="op2-panel-head">Today live <span class="op2-tag">1/312 day</span></div>
+<div class="op2-row"><span class="op2-time">9:30 AM</span><span>Munchkins</span><span class="op2-dim">All present</span></div>
+<div class="op2-row"><span class="op2-time">10:30 AM</span><span>Tiny Tumblers</span><span class="op2-dim">0/6 marked</span></div>
+</div>
+<div class="op2-btnrow"><span class="op2-btn dark">Roll call</span><span class="op2-btn">Makeup board</span></div>
+</div>
+<!-- Page 3: Families -->
+<div class="op2-page" data-idx="3">
+<div class="op2-eyebrow">Connected directory</div>
+<h4 class="op2-h">Families &amp; students</h4>
+<table class="op2-table">
+<tr><th>Household</th><th>Balance</th><th>Students</th><th>Status</th></tr>
+<tr><td>Whitfield</td><td>$0.00</td><td>Maren, Cole</td><td class="op2-ok">active</td></tr>
+<tr><td>Marsh</td><td>$45.00</td><td>Iris</td><td class="op2-ok">active</td></tr>
+<tr><td>Contreras</td><td>$0.00</td><td>Diego, Ana, Luz</td><td class="op2-dim2">inactive</td></tr>
+</table>
+</div>
+<!-- Page 4: Enrollment -->
+<div class="op2-page" data-idx="4">
+<div class="op2-eyebrow">Registration</div>
+<h4 class="op2-h">Enrollment &amp; waitlists</h4>
+<table class="op2-table">
+<tr><th>Student</th><th>Class</th><th>Status</th><th>Starts</th></tr>
+<tr><td>M. Whitfield</td><td>Girls Beginner</td><td class="op2-ok">active</td><td>2026-08-12</td></tr>
+<tr><td>I. Marsh</td><td>Parent &amp; Tot</td><td class="op2-ok">active</td><td>2026-07-20</td></tr>
+<tr><td>D. Contreras</td><td>Boys Beginner</td><td class="op2-pending">waitlist</td><td>—</td></tr>
+</table>
+</div>
+<!-- Page 5: Skills -->
+<div class="op2-page" data-idx="5">
+<div class="op2-eyebrow">Instruction</div>
+<h4 class="op2-h">Skills &amp; progress</h4>
+<div class="op2-panel">
+<div class="op2-panel-head">Girls Recreational Gymnastics <span class="op2-tag">5 levels</span></div>
+<div class="op2-row"><span>Girls Beginner</span><span class="op2-dim">4 events</span></div>
+<div class="op2-row"><span>Girls Advanced Beginner</span><span class="op2-dim">4 events</span></div>
+<div class="op2-row"><span>Girls Intermediate</span><span class="op2-dim">4 events</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="op2-flip"><span class="op2-flip-dot"></span>🤸 Flip</div>
+</div>
+<p>Scheduling, attendance, billing, family communication, and staff coordination in one system — built for gyms, studios, and dance and wellness teams running class-based operations.</p>
+<ul>
+<li>Class scheduling and attendance tracking</li>
+<li>Billing and family communication in one place</li>
+<li>Staff coordination without the spreadsheet juggling</li>
+<li>Flip, a built-in assistant for quick scheduling and attendance questions</li>
+</ul>
+</div>
+<div class="service-card">
+<h3>Other owner-led service teams</h3>
+<p>Gyms, cheer, dance, and wellness are the strongest starting lane because of firsthand operating experience — but the same diagnostic-first approach applies anywhere repeated computer work is consuming payroll.</p>
+<ul>
+<li>Appointment-heavy service businesses</li>
+<li>Recurring admin work across staff and locations</li>
+<li>Custom-scoped, not a one-size-fits-all package</li>
+</ul>
+</div><h3 class="services-subhead" id="workshop">In the workshop</h3><p class="services-subnote">Future products we are exploring. These previews show direction, not live software or customer results.</p><div class="service-card workshop-card" style="margin-bottom:24px;">
+<div class="kicker">In development · Early childhood education</div>
+<h3>Rootline</h3><p class="concept-note">Illustrative workshop concept with sample data. This product is not yet available.</p>
+<div class="rl-frame" id="rlFrame">
+<div class="rl-topbar">
+<div class="rl-search">⌕ Search scholars, families, or staff</div>
+<div class="rl-topright">🔔 <span class="rl-avatar">J</span> <span class="rl-who">J. Alvarez<br/><span class="rl-who-sub">Family Advocate · Northside</span></span></div>
+</div>
+<div class="rl-body">
+<div class="rl-sidebar">
+<div class="rl-brand"><span class="rl-leaf">🌱</span>Rootline</div>
+<div class="rl-tagline">Concept for a birth–8th grade continuum school</div>
+<div class="rl-group">Overview</div>
+<div class="rl-nav" data-rpage="0">▦ Dashboard</div>
+<div class="rl-group">Programs</div>
+<div class="rl-nav">👪 Scholars &amp; families</div>
+<div class="rl-nav" data-rpage="1">📋 Attendance</div>
+<div class="rl-nav" data-rpage="2">💬 Family communication</div>
+<div class="rl-nav">📊 Assessments</div>
+<div class="rl-group">Operations</div>
+<div class="rl-nav">🪪 Staff</div>
+<div class="rl-nav">🤍 Financial assistance</div>
+<div class="rl-campuses">Northside Campus<br/>Riverwood Campus</div>
+</div>
+<div class="rl-main" id="rlMain">
+<!-- Page 0: Dashboard -->
+<div class="rl-page active" data-ridx="0">
+<div class="rl-banner">
+<div class="rl-banner-label">Enrolled across the continuum · Fall term</div>
+<div class="rl-banner-num">740</div>
+<div class="rl-banner-sub">scholars, birth through 8th grade, partnered with 610 families this year.</div>
+</div>
+<div class="rl-stats">
+<div class="rl-stat"><div class="rl-snum">24%<span class="rl-up">↑</span></div><div class="rl-slabel">Kindergarten readiness gain</div></div>
+<div class="rl-stat"><div class="rl-snum">88%</div><div class="rl-slabel">Average attendance</div></div>
+<div class="rl-stat"><div class="rl-snum">93%</div><div class="rl-slabel">Parents who feel their child is safe</div></div>
+</div>
+<div class="rl-panel">
+<div class="rl-panel-head">Enrollment by program <span class="rl-dim">today</span></div>
+<div class="rl-erow"><span>Infant &amp; Preschool</span><span class="rl-dim">225 scholars</span><span class="rl-pill good">91%</span></div>
+<div class="rl-erow"><span>Elementary &amp; Middle</span><span class="rl-dim">390 scholars</span><span class="rl-pill good">89%</span></div>
+<div class="rl-erow"><span>After School</span><span class="rl-dim">125 scholars</span><span class="rl-pill warn">81%</span></div>
+</div>
+</div>
+<!-- Page 1: Attendance -->
+<div class="rl-page" data-ridx="1">
+<div class="rl-h">Attendance</div>
+<div class="rl-stats">
+<div class="rl-stat"><div class="rl-snum">88%</div><div class="rl-slabel">Average this week</div></div>
+<div class="rl-stat"><div class="rl-snum">+1%</div><div class="rl-slabel">Change from last week</div></div>
+<div class="rl-stat"><div class="rl-snum">11</div><div class="rl-slabel">Scholars flagged</div></div>
+</div>
+<div class="rl-panel">
+<div class="rl-panel-head">Needs follow-up</div>
+<div class="rl-erow"><span>A. Bennett</span><span class="rl-dim">Preschool A</span><span class="rl-pill warn">74%</span></div>
+<div class="rl-erow"><span>T. Osei</span><span class="rl-dim">3rd–4th</span><span class="rl-pill warn">80%</span></div>
+<div class="rl-erow"><span>R. Nakamura</span><span class="rl-dim">Kindergarten</span><span class="rl-pill warn">83%</span></div>
+</div>
+</div>
+<!-- Page 2: Family communication -->
+<div class="rl-page" data-ridx="2">
+<div class="rl-h">Family communication</div>
+<div class="rl-panel">
+<div class="rl-erow"><span><strong>Kim family</strong></span><span class="rl-dim">Confirming Thursday pickup change</span><span class="rl-dim">12m</span></div>
+<div class="rl-erow"><span><strong>Osei family</strong></span><span class="rl-dim">Attendance follow-up thread</span><span class="rl-dim">1h</span></div>
+<div class="rl-erow"><span><strong>All Infant &amp; Preschool</strong></span><span class="rl-dim">Broadcast — field trip forms</span><span class="rl-dim">1d</span></div>
+</div>
+</div>
+</div>
+</div>
+<div class="rl-trellis"><span class="rl-trellis-dot"></span>🌱 Trellis</div>
+</div>
+<p>A planned early learning platform for curriculum, assessment, family engagement, and staff development in one daily workspace.</p>
+<ul>
+<li>Curriculum planning and delivery in one place</li>
+<li>Ongoing assessment tied directly to the curriculum</li>
+<li>Family engagement and communication built in</li>
+<li>Staff professional development and growth tracking</li>
+</ul>
+</div>
+<div class="service-card workshop-card" style="margin-bottom:24px;">
+<div class="kicker">In development · Dance studio operations</div>
+<h3>Kadence</h3><p class="concept-note">Illustrative workshop concept with sample data. This product is not yet available.</p>
+<div class="kd-frame" id="kdFrame">
+<div class="kd-topbar">
+<div class="kd-brand"><span class="kd-mark">K</span>Kadence <span class="kd-loc">Oswego, IL</span></div>
+<div class="kd-avatar"></div>
+</div>
+<div class="kd-body">
+<div class="kd-sidebar">
+<div class="kd-navgroup">Menu</div>
+<div class="kd-nav" data-kpage="0">Dashboard</div>
+<div class="kd-nav" data-kpage="1">Schedule</div>
+<div class="kd-nav" data-kpage="2">Financials</div>
+<div class="kd-nav" data-kpage="3">Time clock</div>
+</div>
+<div class="kd-main" id="kdMain">
+<!-- Page 0: Dashboard -->
+<div class="kd-page active" data-kidx="0">
+<div class="kd-label">Room utilization — live</div>
+<div class="kd-row"><span>Studio 1 — Hip Hop Co.</span><span class="kd-gold">14/15</span></div>
+<div class="kd-row"><span>Studio 2 — Ballet Tech</span><span class="kd-gold">8/12</span></div>
+<div class="kd-row"><span>Studio 3 — Tap Rec</span><span class="kd-gold">6/10</span></div>
+<div class="kd-row"><span class="kd-faded">Studio 4</span><span class="kd-faded">Free room</span></div>
+<div class="kd-label" style="margin-top:14px;">Weekly processing preview</div>
+<div class="kd-row"><span>Est. ACH</span><span>$24,500</span></div>
+<div class="kd-row"><span>Est. card</span><span>$12,100</span></div>
+</div>
+<!-- Page 1: Schedule -->
+<div class="kd-page" data-kidx="1">
+<div class="kd-label">Studio schedule — this week</div>
+<div class="kd-cal">
+<div class="kd-cal-col"><div class="kd-cal-day">Mon</div><div class="kd-chip">4:00 Hip Hop Co.</div></div>
+<div class="kd-cal-col"><div class="kd-cal-day">Tue</div><div class="kd-chip">5:30 Ballet Tech</div></div>
+<div class="kd-cal-col"><div class="kd-cal-day">Wed</div><div class="kd-chip">4:00 Hip Hop Co.</div><div class="kd-chip">6:00 Tap Rec</div></div>
+<div class="kd-cal-col"><div class="kd-cal-day">Thu</div><div class="kd-chip">5:30 Ballet Tech</div></div>
+<div class="kd-cal-col"><div class="kd-cal-day">Fri</div><div class="kd-chip">6:00 Tap Rec</div></div>
+</div>
+</div>
+<!-- Page 2: Financials -->
+<div class="kd-page" data-kidx="2">
+<div class="kd-label">Weekly processing</div>
+<div class="kd-row"><span>Est. ACH</span><span>$24,500</span></div>
+<div class="kd-row"><span>Est. card</span><span>$12,100</span></div>
+<div class="kd-row"><span class="kd-faded">Next batch</span><span class="kd-faded">Sep 20</span></div>
+<div class="kd-alert">4 accounts look likely to miss their next installment.</div>
+</div>
+<!-- Page 3: Time clock -->
+<div class="kd-page" data-kidx="3">
+<div class="kd-label">Staff clock-in</div>
+<div class="kd-row"><span>Sarah M.</span><span class="kd-faded">Studio 1 · 9:02 AM</span></div>
+<div class="kd-row"><span>David K.</span><span class="kd-faded">Studio 2 · 9:15 AM</span></div>
+<div class="kd-btn">+ Clock in</div>
+</div>
+</div>
+</div>
+<div class="kd-rhythm-badge"><span class="kd-rhythm-dot"></span>🩰 Rhythm</div>
+</div>
+<p>A planned operations platform for multi-room dance and activity studios, with room scheduling, billing, staff time, and an assistant called Rhythm.</p>
+<ul>
+<li>Live room and studio utilization across locations</li>
+<li>ACH and card billing previews with automated payment nudges</li>
+<li>Staff time clock built into the same system</li>
+<li>Rhythm greets instructors with class updates and keeps parents posted without a cold text</li>
+</ul>
+</div>
 
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; background: var(--black); }
-      body {
-        margin: 0;
-        min-width: 0;
-        overflow-x: hidden;
-        color: var(--stone);
-        background:
-          linear-gradient(rgba(11, 11, 10, 0.9), rgba(11, 11, 10, 0.94)),
-          url("assets/textures/concrete-download.webp") center top / 820px auto fixed,
-          var(--black);
-        font-family: var(--sans);
-        line-height: 1.55;
-        letter-spacing: 0;
-      }
-
-      body::-webkit-scrollbar { width: 0; height: 0; }
-      a { color: inherit; text-decoration: none; }
-      button, input, textarea { font: inherit; }
-      img, video { display: block; max-width: 100%; }
-      button { color: inherit; }
-      ::selection { color: var(--black); background: var(--gold-light); }
-
-      a:focus-visible,
-      button:focus-visible,
-      input:focus-visible,
-      textarea:focus-visible,
-      summary:focus-visible {
-        outline: 2px solid var(--gold);
-        outline-offset: 4px;
-      }
-
-      .shell { overflow: clip; }
-      section[id] { scroll-margin-top: 82px; }
-      .wrap { width: min(calc(100% - (var(--pad) * 2)), var(--max)); margin: 0 auto; }
-      .rule { height: 1px; background: var(--line); }
-      .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-      .gold { color: var(--gold-light); }
-      .eyebrow {
-        margin: 0 0 20px;
-        color: var(--gold);
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-      }
-
-      .topbar {
-        position: fixed;
-        z-index: 50;
-        inset: 0 0 auto;
-        padding: 16px var(--pad);
-        background: linear-gradient(to bottom, rgba(11,11,10,.96), rgba(11,11,10,.78) 72%, transparent);
-      }
-
-      .topbar-inner {
-        width: min(100%, var(--max));
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 50px;
-      }
-
-      .brand { display: inline-flex; align-items: center; gap: 12px; }
-      .brand img { width: 34px; height: 34px; object-fit: contain; }
-      .brand-copy { display: grid; line-height: 1.05; }
-      .brand-copy strong { color: var(--paper); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
-      .brand-copy span { margin-top: 6px; color: var(--dim); font-size: 9px; letter-spacing: .15em; text-transform: uppercase; }
-
-      .nav { display: flex; align-items: center; gap: 26px; }
-      .nav a {
-        color: var(--muted);
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .1em;
-        transition: color 180ms ease;
-      }
-      .nav a:hover { color: var(--paper); }
-      .nav .nav-cta { color: var(--black); background: var(--gold); padding: 11px 15px; }
-
-      .menu-toggle {
-        display: none;
-        width: 44px;
-        height: 44px;
-        padding: 0;
-        border: 1px solid var(--line);
-        background: var(--black-2);
-        cursor: pointer;
-      }
-      .menu-toggle span,
-      .menu-toggle::before,
-      .menu-toggle::after {
-        content: "";
-        display: block;
-        width: 18px;
-        height: 1px;
-        margin: 5px auto;
-        background: var(--paper);
-        transition: transform 180ms ease, opacity 180ms ease;
-      }
-
-      .hero {
-        position: relative;
-        min-height: 94svh;
-        display: grid;
-        align-items: end;
-        padding: 150px 0 76px;
-        border-bottom: 1px solid var(--line);
-        isolation: isolate;
-      }
-      .hero::before {
-        content: "";
-        position: absolute;
-        z-index: -2;
-        inset: 0;
-        background: url("assets/illustrations/hero-bust.webp") 72% center / cover no-repeat;
-        filter: saturate(.7) contrast(1.08) brightness(.58);
-      }
-      .hero::after {
-        content: "";
-        position: absolute;
-        z-index: -1;
-        inset: 0;
-        background:
-          linear-gradient(90deg, rgba(11,11,10,.98) 0%, rgba(11,11,10,.9) 38%, rgba(11,11,10,.28) 74%, rgba(11,11,10,.68) 100%),
-          linear-gradient(0deg, rgba(11,11,10,.95), transparent 50%);
-      }
-
-      .hero-copy { max-width: var(--max); }
-      .hero h1 {
-        margin: 0;
-        color: var(--paper);
-        font-family: var(--serif);
-        font-size: clamp(80px, 15.2vw, 218px);
-        font-weight: 500;
-        line-height: .78;
-        letter-spacing: 0;
-        white-space: nowrap;
-      }
-      .hero-lead {
-        max-width: 720px;
-        margin: 36px 0 0;
-        color: var(--paper);
-        font-size: clamp(21px, 2.3vw, 34px);
-        line-height: 1.24;
-        font-weight: 520;
-      }
-      .hero-lead strong,
-      .hero-lead span { display: block; }
-      .hero-lead strong { font-weight: 750; }
-      .hero-lead span { max-width: 650px; margin-top: 13px; color: var(--stone); font-size: .75em; font-weight: 500; line-height: 1.45; }
-      .hero-sub {
-        max-width: 610px;
-        margin: 20px 0 0;
-        color: var(--muted);
-        font-size: 16px;
-      }
-      .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
-      .hero-note { max-width: 520px; margin: 18px 0 0; color: var(--gold-light); font-size: 13px; }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 50px;
-        padding: 0 20px;
-        border: 1px solid var(--line);
-        background: transparent;
-        color: var(--paper);
-        font-size: 11px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: .11em;
-        cursor: pointer;
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
-      }
-      .button:hover { transform: translateY(-2px); border-color: var(--line-strong); }
-      .button.primary { color: var(--black); border-color: var(--gold); background: var(--gold); }
-      .button.primary:hover { background: var(--gold-light); }
-
-      .outcome-band { border-bottom: 1px solid var(--line); background: rgba(17,17,15,.8); }
-      .outcome-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-      .outcome { padding: 24px 0; border-right: 1px solid var(--line); }
-      .outcome + .outcome { padding-left: 30px; }
-      .outcome:last-child { border-right: 0; }
-      .outcome strong { display: block; color: var(--paper); font-family: var(--serif); font-size: 28px; font-weight: 500; }
-      .outcome span { color: var(--dim); font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
-
-      .compact-section { padding: clamp(64px, 8vw, 108px) 0; border-bottom: 1px solid var(--line); }
-      .compact-head {
-        display: grid;
-        grid-template-columns: minmax(0, .82fr) minmax(280px, .72fr);
-        gap: clamp(28px, 6vw, 76px);
-        align-items: end;
-        margin-bottom: 38px;
-      }
-      .compact-head h2 {
-        margin: 0;
-        color: var(--paper);
-        font-family: var(--serif);
-        font-size: clamp(42px, 6vw, 82px);
-        font-weight: 500;
-        line-height: .94;
-      }
-      .compact-head p { margin: 0; color: var(--muted); font-size: 17px; }
-      .compact-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); }
-      .compact-card {
-        min-height: 315px;
-        padding: clamp(24px, 3vw, 34px);
-        border-right: 1px solid var(--line);
-        background: rgba(17,17,15,.58);
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
-      }
-      .compact-card:last-child { border-right: 0; }
-      .compact-card:hover { transform: translateY(-3px); background: rgba(199,155,73,.055); border-color: var(--line-strong); }
-      .compact-card b { color: var(--gold); font-family: var(--serif); font-size: 22px; }
-      .compact-card h3 { margin: 44px 0 12px; color: var(--paper); font-size: clamp(24px, 2.7vw, 34px); line-height: 1.05; }
-      .compact-card p { margin: 0; color: var(--muted); font-size: 15px; }
-      .proof-partnership {
-        display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(340px, .95fr);
-        gap: 1px;
-        border: 1px solid var(--line);
-        background: var(--line);
-      }
-      .proof-panel,
-      .partnership-panel { min-width: 0; background: var(--black); }
-      .proof-panel { padding: clamp(22px, 4vw, 42px); }
-      .proof-panel h2,
-      .partnership-panel h2,
-      .trust-copy h2,
-      .contact-copy h2 {
-        margin: 0;
-        color: var(--paper);
-        font-family: var(--serif);
-        font-weight: 500;
-        line-height: .96;
-      }
-      .proof-panel h2 { margin-top: 24px; font-size: clamp(34px, 4vw, 56px); }
-      .proof-panel p { color: var(--muted); }
-      .proof-video { margin-top: 26px; width: 100%; }
-      .proof-video .video-frame { width: 100%; }
-      .mini-quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 22px; background: var(--line); }
-      .mini-quote { padding: 18px; background: var(--black-2); }
-      .mini-quote blockquote { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 22px; }
-      .mini-quote p { margin: 12px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
-      .partnership-panel { padding: clamp(22px, 4vw, 42px); }
-      .partnership-panel h2 { font-size: clamp(36px, 4.6vw, 64px); }
-      .partnership-stack { display: grid; gap: 12px; margin-top: 28px; }
-      .partnership-row {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 18px;
-        align-items: center;
-        padding: 18px 0;
-        border-top: 1px solid var(--line);
-      }
-      .partnership-row:last-child { border-bottom: 1px solid var(--line); }
-      .partnership-row h3 { margin: 0 0 4px; color: var(--paper); font-size: 16px; }
-      .partnership-row p { margin: 0; color: var(--muted); font-size: 13px; }
-      .partnership-panel .button { width: 100%; margin-top: 14px; }
-      .quick-note { margin: 14px 0 0; color: var(--dim); font-size: 12px; }
-      .trust-strip {
-        display: grid;
-        grid-template-columns: 180px minmax(0, 1fr) minmax(250px, .48fr);
-        gap: clamp(24px, 5vw, 58px);
-        align-items: center;
-      }
-      .trust-photo img {
-        width: 180px;
-        height: 220px;
-        object-fit: cover;
-        object-position: center top;
-        filter: grayscale(.35) contrast(1.05);
-      }
-      .trust-photo p { margin: 10px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
-      .trust-copy h2 { font-size: clamp(34px, 4.6vw, 62px); }
-      .trust-copy p { color: var(--muted); }
-      .trust-list { display: grid; gap: 10px; color: var(--stone); font-size: 13px; }
-      .trust-list span { padding-top: 10px; border-top: 1px solid var(--line); }
-      .trust-list span::before { content: "+"; color: var(--gold); margin-right: 9px; }
-      .faq-compact { max-width: 900px; }
-      .faq-compact .compact-head { margin-bottom: 26px; }
-      .faq-compact .compact-head h2 { font-size: clamp(38px, 5vw, 68px); }
-      .faq-compact .compact-head p { font-size: 15px; }
-      .faq-compact .faq-item summary { padding: 15px 0; }
-      .faq-compact .faq-item summary h3 { font-size: 15px; }
-      .faq-compact .faq-item summary::after { font-size: 21px; }
-      .faq-compact .faq-item p { max-width: 720px; margin: -3px 0 18px; font-size: 13px; line-height: 1.5; }
-
-      .section { padding: clamp(88px, 12vw, 160px) 0; border-bottom: 1px solid var(--line); }
-      .section-head { max-width: 760px; margin-bottom: 64px; }
-      .section-head h2,
-      .section-title {
-        margin: 0;
-        color: var(--paper);
-        font-family: var(--serif);
-        font-size: clamp(46px, 6.5vw, 88px);
-        font-weight: 500;
-        line-height: .98;
-      }
-      .section-head p { max-width: 650px; margin: 24px 0 0; color: var(--muted); font-size: 18px; }
-
-      .demo-list { display: grid; gap: 1px; background: var(--line); }
-      .demo-row {
-        display: grid;
-        grid-template-columns: minmax(270px, .75fr) minmax(0, 1.25fr);
-        min-height: 600px;
-        background: var(--black);
-      }
-      .demo-row:nth-child(even) { grid-template-columns: minmax(0, 1.25fr) minmax(270px, .75fr); }
-      .demo-row:nth-child(even) .demo-copy { order: 2; }
-      .demo-row:nth-child(even) .demo-visual { order: 1; }
-      .demo-copy { display: flex; flex-direction: column; justify-content: center; padding: clamp(34px, 6vw, 72px); }
-      .demo-number { color: var(--gold); font-family: var(--serif); font-size: 20px; }
-      .demo-copy h3 { margin: 44px 0 20px; color: var(--paper); font-size: clamp(29px, 3.4vw, 46px); line-height: 1.06; }
-      .demo-copy p { max-width: 470px; margin: 0; color: var(--muted); font-size: 16px; }
-      .demo-result { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--stone); font-size: 13px; }
-      .demo-result strong { color: var(--gold-light); }
-
-      .included-site {
-        display: grid;
-        grid-template-columns: 130px 1fr auto;
-        gap: 28px;
-        align-items: center;
-        margin-top: 1px;
-        padding: 30px clamp(24px, 5vw, 58px);
-        border: 1px solid var(--line-strong);
-        background: rgba(199,155,73,.065);
-      }
-      .included-site .included-label { color: var(--gold); font-family: var(--serif); font-size: 22px; }
-      .included-site h3 { margin: 0 0 5px; color: var(--paper); font-size: 18px; }
-      .included-site p { margin: 0; color: var(--muted); font-size: 13px; }
-
-      .demo-visual {
-        position: relative;
-        min-width: 0;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-        padding: clamp(24px, 5vw, 64px);
-        background:
-          linear-gradient(rgba(24,23,20,.82), rgba(11,11,10,.96)),
-          url("assets/textures/concrete-download.webp") center / 620px auto;
-      }
-      .demo-visual::before {
-        content: "";
-        position: absolute;
-        inset: 22px;
-        border: 1px solid rgba(199,155,73,.2);
-        pointer-events: none;
-      }
-
-      .window {
-        position: relative;
-        z-index: 1;
-        width: min(100%, 620px);
-        border: 1px solid rgba(216,209,196,.2);
-        background: #10100f;
-        box-shadow: 0 32px 90px rgba(0,0,0,.52);
-      }
-      .window-bar { height: 42px; display: flex; align-items: center; gap: 7px; padding: 0 14px; border-bottom: 1px solid var(--line); }
-      .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
-      .window-title { margin-left: auto; color: var(--dim); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-
-      .call-flow { padding: 28px; }
-      .call-status { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
-      .call-status strong { color: var(--paper); font-size: 15px; }
-      .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 0 rgba(199,155,73,.6); animation: pulse 2s infinite; }
-      .messages { display: grid; gap: 12px; padding-top: 26px; }
-      .message { width: 82%; padding: 14px 16px; background: #1a1916; border-left: 2px solid var(--dim); color: var(--muted); font-size: 13px; opacity: 0; transform: translateY(8px); animation: messageIn 9s infinite; }
-      .message:nth-child(2) { margin-left: auto; border-color: var(--gold); animation-delay: 1.7s; }
-      .message:nth-child(3) { animation-delay: 3.4s; }
-      .message:nth-child(4) { margin-left: auto; border-color: #688767; animation-delay: 5.1s; }
-      .message b { display: block; margin-bottom: 5px; color: var(--paper); }
-
-      .video-frame { width: min(100%, 520px); overflow: hidden; border: 1px solid rgba(216,209,196,.2); background: #080808; box-shadow: 0 32px 90px rgba(0,0,0,.52); }
-      .video-frame video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #080808; }
-      .video-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid var(--line); color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
-      .video-caption span:last-child { color: var(--gold); }
-
-      .kb-body { padding: 28px; }
-      .kb-source { display: grid; gap: 8px; margin-bottom: 24px; }
-      .source-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; }
-      .source-check { width: 15px; height: 15px; display: grid; place-items: center; border: 1px solid var(--gold); color: var(--gold); font-size: 9px; }
-      .source-row em { color: #718c70; font-style: normal; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
-      .customer-question { margin-top: 18px; padding: 14px; border: 1px solid var(--line); color: var(--paper); font-size: 13px; }
-      .answer { margin-top: 10px; padding: 16px; background: rgba(199,155,73,.1); border-left: 2px solid var(--gold); color: var(--stone); font-size: 13px; }
-      .answer small { display: block; margin-top: 10px; color: var(--gold); }
-
-      .queue-body { padding: 20px; }
-      .queue-row { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--line); }
-      .queue-icon { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid var(--line); color: var(--gold); font-family: var(--serif); }
-      .queue-row strong { display: block; color: var(--paper); font-size: 12px; }
-      .queue-row span { color: var(--dim); font-size: 10px; }
-      .approval { padding: 8px 10px; border: 1px solid var(--line-strong); color: var(--gold); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-
-      .more-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-      .more-item { position: relative; min-height: 245px; overflow: hidden; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--black); cursor: pointer; outline: 0; }
-      .more-front,
-      .more-solution { position: absolute; inset: 0; padding: 26px; transition: opacity 220ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
-      .more-front { opacity: 1; transform: none; }
-      .more-front > span { color: var(--gold); font-family: var(--serif); font-size: 18px; }
-      .more-front h3 { margin: 30px 0 8px; color: var(--paper); font-size: 16px; }
-      .more-front p { margin: 0; color: var(--dim); font-size: 13px; }
-      .more-solution { display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(12px); background: #15140f; pointer-events: none; }
-      .more-solution small { color: var(--gold); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-      .more-solution strong { display: block; margin-top: 14px; color: var(--paper); font-size: 14px; }
-      .more-solution p { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
-      .more-item:hover .more-front,
-      .more-item:focus-visible .more-front,
-      .more-item.is-open .more-front { opacity: .08; transform: scale(.97); }
-      .more-item:hover .more-solution,
-      .more-item:focus-visible .more-solution,
-      .more-item.is-open .more-solution { opacity: 1; transform: none; }
-      .more-item:focus-visible { box-shadow: inset 0 0 0 2px var(--gold); }
-
-      .workflow-prompt { grid-column: 1 / -1; padding: clamp(26px, 5vw, 48px); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(199,155,73,.05); }
-      .workflow-prompt h3 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(28px, 3vw, 42px); font-weight: 500; }
-      .workflow-prompt > p { max-width: 720px; margin: 10px 0 24px; color: var(--muted); }
-      .workflow-prompt-form { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-      .workflow-prompt-form input { min-width: 0; border: 1px solid var(--line); border-radius: 0; background: var(--black); color: var(--paper); padding: 15px 16px; outline: 0; }
-      .workflow-prompt-form input:focus { border-color: var(--gold); }
-      .workflow-prompt-status { min-height: 18px; margin: 10px 0 0; color: var(--gold); font-size: 11px; }
-
-      .intake-dialog { width: min(720px, calc(100% - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 0; border: 1px solid var(--line-strong); border-radius: 0; background: var(--black-2); color: var(--stone); box-shadow: 0 38px 110px rgba(0,0,0,.75); scrollbar-width: none; }
-      .intake-dialog::-webkit-scrollbar { display: none; }
-      .intake-dialog::backdrop { background: rgba(0,0,0,.78); backdrop-filter: blur(8px); }
-      .dialog-card { position: relative; padding: clamp(26px, 5vw, 48px); }
-      .dialog-close { position: absolute; top: 16px; right: 16px; width: 38px; height: 38px; border: 1px solid var(--line); background: transparent; color: var(--paper); cursor: pointer; font-size: 20px; }
-      .dialog-card h2 { max-width: 560px; margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(34px, 5vw, 56px); font-weight: 500; line-height: 1; }
-      .dialog-card > p { margin: 16px 0 24px; color: var(--muted); }
-      .workflow-preview { padding: 14px; border-left: 2px solid var(--gold); background: rgba(199,155,73,.08); color: var(--stone); font-size: 13px; }
-      .dialog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 22px; }
-      .dialog-status { min-height: 18px; margin: 12px 0 0; color: var(--gold); font-size: 11px; }
-
-      .proof-layout { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(32px, 7vw, 90px); align-items: center; }
-      .proof-media { position: relative; padding: 24px; border: 1px solid var(--line); background: var(--black-2); }
-      .proof-media img { width: 100%; }
-      .proof-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(42px, 5.3vw, 74px); font-weight: 500; line-height: .98; }
-      .proof-copy > p { margin: 25px 0 0; color: var(--muted); font-size: 17px; }
-      .case-steps { display: grid; gap: 0; margin-top: 34px; border-top: 1px solid var(--line); }
-      .case-step { display: grid; grid-template-columns: 36px 1fr; gap: 14px; padding: 16px 0; border-bottom: 1px solid var(--line); }
-      .case-step b { color: var(--gold); font-family: var(--serif); font-size: 18px; }
-      .case-step span { color: var(--stone); font-size: 14px; }
-      .case-status { margin-top: 22px; color: var(--dim); font-size: 12px; }
-
-      .quotes { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 80px; border: 1px solid var(--line); }
-      .quote { min-height: 190px; padding: 28px; border-right: 1px solid var(--line); }
-      .quote:last-child { border-right: 0; }
-      .quote blockquote { margin: 0; color: var(--paper); font-family: var(--serif); font-size: 26px; }
-      .quote p { margin: 28px 0 0; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
-
-      .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); }
-      .process-step { padding: 30px 28px; border-right: 1px solid var(--line); }
-      .process-step:last-child { border-right: 0; }
-      .process-step b { color: var(--gold); font-family: var(--serif); font-size: 22px; }
-      .process-step h3 { margin: 46px 0 10px; color: var(--paper); font-size: 18px; }
-      .process-step p { margin: 0; color: var(--dim); font-size: 13px; }
-
-
-      .team-layout { display: grid; grid-template-columns: 320px 1fr; gap: clamp(40px, 8vw, 110px); align-items: start; }
-      .founder-photo { position: sticky; top: 100px; }
-      .founder-photo img { width: 100%; height: auto; object-fit: contain; filter: grayscale(.35) contrast(1.05); }
-      .founder-photo p { margin: 14px 0 0; color: var(--dim); font-size: 10px; text-transform: uppercase; letter-spacing: .12em; }
-      .team-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(44px, 5vw, 72px); font-weight: 500; line-height: 1; }
-      .team-copy { min-width: 0; }
-      .team-copy .lead { margin: 28px 0; color: var(--paper); font-size: 21px; line-height: 1.4; }
-      .team-copy p { color: var(--muted); }
-
-      .faq-list { border-top: 1px solid var(--line); }
-      .faq-item { border-bottom: 1px solid var(--line); }
-      .faq-item summary { display: grid; grid-template-columns: 1fr 30px; gap: 18px; align-items: center; padding: 24px 0; cursor: pointer; list-style: none; }
-      .faq-item summary::-webkit-details-marker { display: none; }
-      .faq-item summary h3 { margin: 0; color: var(--paper); font-size: 17px; }
-      .faq-item summary::after { content: "+"; color: var(--gold); font-family: var(--serif); font-size: 26px; text-align: center; }
-      .faq-item[open] summary::after { content: "-"; }
-      .faq-item p { max-width: 760px; margin: -2px 0 26px; color: var(--muted); }
-
-      .contact-section { padding-bottom: 70px; }
-      .contact-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(38px, 8vw, 110px); align-items: start; }
-      .contact-copy h2 { margin: 0; color: var(--paper); font-family: var(--serif); font-size: clamp(50px, 7vw, 94px); font-weight: 500; line-height: .92; }
-      .contact-copy p { max-width: 480px; margin: 28px 0 0; color: var(--muted); font-size: 17px; }
-      .lead-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-      .field { display: grid; gap: 7px; }
-      .field.full { grid-column: 1 / -1; }
-      .field label { color: var(--dim); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
-      .field input,
-      .field textarea { width: 100%; border: 1px solid var(--line); border-radius: 0; background: rgba(17,17,15,.8); color: var(--paper); padding: 14px; outline: 0; }
-      .field input:focus,
-      .field textarea:focus { border-color: var(--gold); }
-      .field textarea { min-height: 120px; resize: vertical; }
-      .form-note { grid-column: 1 / -1; margin: 0; color: var(--dim); font-size: 11px; }
-      .form-status { grid-column: 1 / -1; min-height: 20px; margin: 0; color: var(--gold); font-size: 12px; }
-
-      footer { padding: 28px 0 38px; border-top: 1px solid var(--line); }
-      .footer-inner { display: flex; justify-content: space-between; gap: 24px; color: var(--dim); font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
-      .footer-inner a:hover { color: var(--gold); }
-
-      .reveal { opacity: 0; transform: translateY(18px); transition: opacity 700ms ease, transform 700ms cubic-bezier(.2,.8,.2,1); }
-      .reveal.visible { opacity: 1; transform: none; }
-
-      @keyframes pulse {
-        70% { box-shadow: 0 0 0 10px rgba(199,155,73,0); }
-        100% { box-shadow: 0 0 0 0 rgba(199,155,73,0); }
-      }
-      @keyframes messageIn {
-        0%, 8% { opacity: 0; transform: translateY(8px); }
-        14%, 78% { opacity: 1; transform: none; }
-        90%, 100% { opacity: 0; transform: translateY(-5px); }
-      }
-
-      @media (max-width: 980px) {
-        .menu-toggle { display: block; }
-        .nav {
-          position: absolute;
-          top: 66px;
-          right: var(--pad);
-          width: min(330px, calc(100vw - (var(--pad) * 2)));
-          display: grid;
-          gap: 0;
-          padding: 10px;
-          border: 1px solid var(--line);
-          background: rgba(11,11,10,.98);
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(-8px);
-          transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
-        }
-        .nav a { padding: 13px; border-bottom: 1px solid var(--line); }
-        .nav .nav-cta { margin-top: 8px; text-align: center; }
-        body.menu-open .nav { opacity: 1; visibility: visible; transform: none; }
-        body.menu-open .menu-toggle span { opacity: 0; }
-        body.menu-open .menu-toggle::before { transform: translateY(6px) rotate(45deg); }
-        body.menu-open .menu-toggle::after { transform: translateY(-6px) rotate(-45deg); }
-        .compact-head,
-        .proof-partnership,
-        .trust-strip { grid-template-columns: 1fr; }
-        .compact-grid { grid-template-columns: 1fr; }
-        .compact-card { min-height: 230px; border-right: 0; border-bottom: 1px solid var(--line); }
-        .compact-card:last-child { border-bottom: 0; }
-        .trust-strip { align-items: start; }
-        .trust-photo { display: flex; gap: 14px; align-items: end; }
-        .more-grid { grid-template-columns: repeat(2, 1fr); }
-        .proof-layout, .contact-grid { grid-template-columns: 1fr; }
-        .proof-copy { max-width: 760px; }
-        .process-grid { grid-template-columns: repeat(2, 1fr); }
-        .process-step { border-bottom: 1px solid var(--line); }
-      }
-
-      @media (max-width: 760px) {
-        :root { --pad: 20px; }
-        .topbar { padding-top: 12px; }
-        .brand-copy span { display: none; }
-        .hero { min-height: 88svh; padding: 128px 0 48px; }
-        .hero::before { background-position: 62% center; }
-        .hero::after { background: linear-gradient(0deg, rgba(11,11,10,.98) 0%, rgba(11,11,10,.75) 68%, rgba(11,11,10,.5)); }
-        .hero h1 { font-size: clamp(54px, 17vw, 76px); white-space: normal; }
-        .hero-lead { font-size: 23px; }
-        .hero-sub { font-size: 14px; }
-        .hero-actions .button { width: 100%; }
-        .hero-note { font-size: 12px; }
-        .outcome-grid { grid-template-columns: 1fr; }
-        .outcome, .outcome + .outcome { padding: 18px 0; border-right: 0; border-bottom: 1px solid var(--line); }
-        .outcome:last-child { border-bottom: 0; }
-        .section { padding: 88px 0; }
-        .section-head { margin-bottom: 42px; }
-        .demo-row, .demo-row:nth-child(even) { grid-template-columns: 1fr; min-height: 0; }
-        .demo-row:nth-child(even) .demo-copy, .demo-copy { order: 1; padding: 38px 24px; }
-        .demo-row:nth-child(even) .demo-visual, .demo-visual { order: 2; min-height: 480px; padding: 38px 24px; }
-        .demo-copy h3 { margin-top: 28px; }
-        .included-site { grid-template-columns: 1fr; gap: 12px; }
-        .video-frame { width: 90%; }
-        .proof-video .video-frame { width: 100%; }
-        .mini-quotes { grid-template-columns: 1fr; }
-        .partnership-row { grid-template-columns: 1fr; }
-        .trust-photo img { width: 96px; height: 120px; }
-        .trust-photo p { display: none; }
-        .more-grid { grid-template-columns: repeat(2, 1fr); }
-        .more-grid { grid-template-columns: 1fr; }
-        .more-item { min-height: 220px; }
-        .more-front, .more-solution { padding: 22px; }
-        .more-front h3 { margin-top: 20px; }
-        .workflow-prompt-form { grid-template-columns: 1fr; }
-        .workflow-prompt-form .button { width: 100%; }
-        .dialog-grid { grid-template-columns: 1fr; }
-        .quotes { grid-template-columns: 1fr; margin-top: 48px; }
-        .quote { min-height: 150px; border-right: 0; border-bottom: 1px solid var(--line); }
-        .quote:last-child { border-bottom: 0; }
-        .process-grid { grid-template-columns: 1fr; }
-        .process-step { border-right: 0; }
-        .team-layout { grid-template-columns: 100px minmax(0, 1fr); gap: 18px; }
-        .founder-photo { top: 90px; }
-        .founder-photo p { display: none; }
-        .team-copy .lead { font-size: 18px; }
-        .team-copy h2 { font-size: clamp(36px, 10vw, 48px); overflow-wrap: anywhere; }
-        .lead-form { grid-template-columns: 1fr; }
-        .field.full, .form-note, .form-status { grid-column: auto; }
-        .footer-inner { flex-direction: column; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-        .reveal { opacity: 1; transform: none; }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="shell">
-      <header class="topbar">
-        <div class="topbar-inner">
-          <a class="brand" href="#top" aria-label="SignalLabs top">
-            <img src="assets/brand/signallabs-logo-a.png" alt="" />
-            <span class="brand-copy"><strong>SignalLabs</strong><span>A QuanBuilds company</span></span>
-          </a>
-          <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
-          <nav class="nav" aria-label="Primary navigation">
-            <a href="#work">What we do</a>
-            <a href="#proof">Proof</a>
-            <a href="#partnership">Partnership</a>
-            <a href="#faq">FAQ</a>
-            <a href="#contact" class="nav-cta">Contact us</a>
-          </nav>
-        </div>
-      </header>
-
-      <main>
-        <section class="hero" id="top">
-          <div class="wrap">
-            <div class="hero-copy reveal">
-              <p class="eyebrow">SignalLabs / AI systems for owner-led service businesses</p>
-              <h1>SignalLabs</h1>
-              <p class="hero-lead"><strong>Stop losing hours to inefficient systems.</strong><span>We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom AI so you can focus on growth.</span></p>
-              <div class="hero-actions">
-                <a class="button primary" href="#contact">Start the conversation</a>
-                <a class="button" href="#partnership">How partnership works</a>
-              </div>
-              <p class="hero-note">We build around the work you actually need to keep improving.</p>
-            </div>
-          </div>
-        </section>
-
-        <div class="outcome-band">
-          <div class="wrap outcome-grid">
-            <div class="outcome"><strong>Leads recovered</strong><span>Calls, forms, messages, follow-up</span></div>
-            <div class="outcome"><strong>Steps removed</strong><span>Data entry, handoffs, repeat admin</span></div>
-            <div class="outcome"><strong>Time returned</strong><span>Five hours a week or the audit is free</span></div>
-          </div>
-        </div>
-
-        <section class="compact-section" id="work">
-          <div class="wrap">
-            <header class="compact-head reveal">
-              <div>
-                <p class="eyebrow">What we do</p>
-                <h2>Find the friction. Fix the system. Then automate.</h2>
-              </div>
-              <p>We do not start by throwing AI at messy work. We watch how the business actually runs, remove the steps that should not be there, tighten the source of truth, and then build the AI layer that can safely carry the repeatable work.</p>
-            </header>
-            <div class="compact-grid reveal">
-              <article class="compact-card">
-                <b>01</b>
-                <h3>Diagnose the drag</h3>
-                <p>We trace intake, scheduling, follow-up, reporting, inbox work, and handoffs to see where time, leads, and attention are leaking out.</p>
-              </article>
-              <article class="compact-card">
-                <b>02</b>
-                <h3>Bulletproof the foundation</h3>
-                <p>We clean up the tools, policies, docs, forms, and ownership rules so staff and AI are working from the same dependable information.</p>
-              </article>
-              <article class="compact-card">
-                <b>03</b>
-                <h3>Hand off daily execution</h3>
-                <p>Custom AI can draft replies, monitor queues, update records, summarize reports, and operate browser workflows while important decisions stay with a person.</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="compact-section" id="proof">
-          <div class="wrap proof-partnership">
-            <div class="proof-panel reveal">
-              <p class="eyebrow">Proof</p>
-              <h2>Real admin work, moving through the browser.</h2>
-              <p>This Gymstant workflow shows an AI-operated admin process reviewing class information, preparing the next action, and keeping the operator in control.</p>
-              <figure class="proof-video">
-                <div class="video-frame">
-                  <video autoplay muted loop playsinline preload="metadata" poster="assets/case-studies/jackrabbit-appointment-roadmap.png">
-                    <source src="assets/demos/gymstant-final-output.mp4" type="video/mp4" />
-                  </video>
-                  <figcaption class="video-caption"><span>Ava missed-class workflow</span><span>Real build footage</span></figcaption>
-                </div>
-              </figure>
-              <div class="mini-quotes">
-                <article class="mini-quote"><blockquote>"Awesome."</blockquote><p>Gym owner</p></article>
-                <article class="mini-quote"><blockquote>"It did it right!"</blockquote><p>Gym manager</p></article>
-                <article class="mini-quote"><blockquote>Founder-operated.</blockquote><p>Built directly with Quan</p></article>
-              </div>
-            </div>
-
-            <div class="partnership-panel reveal" id="partnership">
-              <p class="eyebrow">Partnership</p>
-              <h2>Build the right operating system, then keep making it better.</h2>
-              <div class="partnership-stack">
-                <div class="partnership-row">
-                  <div><h3>Start with the real work</h3><p>Our first conversation is about the staff, systems, bottlenecks, and outcome that matter most - not a pre-set package.</p></div>
-                </div>
-                <div class="partnership-row">
-                  <div><h3>Shape the right scope together</h3><p>We define the practical first build, success measures, ownership, and support needed to make the change stick.</p></div>
-                </div>
-                <div class="partnership-row">
-                  <div><h3>Operate and improve over time</h3><p>After launch, we stay close to the work with training, maintenance, reporting, and the next improvements as your business evolves.</p></div>
-                </div>
-              </div>
-              <a class="button primary" href="#contact">Contact us for a tailored proposal</a>
-              <p class="quick-note">SignalLabs is designed as an ongoing operating partnership. Scope and investment are shaped around your workflow, systems, and goals.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="compact-section" id="team">
-          <div class="wrap team-layout">
-            <div class="founder-photo reveal"><img src="assets/team/quan-stewart-founder.jpeg" alt="Quan Stewart, founder of SignalLabs" width="2316" height="3088" loading="lazy" decoding="async" /><p>Quan Stewart / Founder and systems builder</p></div>
-            <div class="team-copy reveal">
-              <p class="eyebrow">Meet the founder</p>
-              <h2>A technical builder who understands service work.</h2>
-              <p class="lead">I built computers as a kid, started designing webpages around 11, and spent years teaching myself complex creative and technical systems. Coaching gymnastics taught me the part that matters most here: find the source of the problem, explain it clearly, and apply the right correction.</p>
-              <p>My path has not been polished or traditional. I did not finish college and I do not have a computer science degree. I have worked manual labor, coached preschoolers through regional champions, served as senior gym staff, and spent the last several years obsessively studying AI, automation, entrepreneurship, and how modern tools can change the economics of a small business.</p>
-              <p>I built systems across operations, customer intake, reporting, communications, and agent workflows. SignalLabs is where those lessons become one focused commercial service for owner-led businesses. I am starting where I have the deepest operating context - gymnastics, cheer, dance, wellness, and appointment-heavy service teams - while building methods that apply anywhere repeated computer work is consuming payroll.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="compact-section" id="faq">
-          <div class="wrap faq-compact">
-            <header class="compact-head reveal">
-              <div>
-                <p class="eyebrow">FAQ</p>
-                <h2>Quick answers.</h2>
-              </div>
-              <p>The short version: we work around the tools you already use, keep risky decisions in human hands, and build a partnership that can improve with the business.</p>
-            </header>
-            <div class="faq-list reveal">
-              <details class="faq-item"><summary><h3>Do we have to replace the software we already use?</h3></summary><p>Usually not. We start with the systems already carrying the work and look for practical ways to connect, operate, or simplify them.</p></details>
-              <details class="faq-item"><summary><h3>What happens in the first working session?</h3></summary><p>We map the repeated workflow, estimate where time and leads are being lost, and agree on the most useful first opportunity before proposing a tailored engagement.</p></details>
-              <details class="faq-item"><summary><h3>Will AI be allowed to send things or change records on its own?</h3></summary><p>Only where you approve it and the risk is low. Sensitive actions can remain drafts, review items, or owner-approved steps.</p></details>
-              <details class="faq-item"><summary><h3>Are you only working with gyms and studios?</h3></summary><p>No. That is the strongest starting lane because of firsthand experience, but the same approach applies to service businesses with recurring admin work.</p></details>
-              <details class="faq-item"><summary><h3>Is the website really included?</h3></summary><p>Yes. When a straightforward website is needed to support the system we are implementing, the build can be included with paid concierge implementation at no extra build fee. You still own and pay for your domain, hosting, payment processing, or other outside services.</p></details>
-              <details class="faq-item"><summary><h3>Who owns the automations and what happens if we stop working together?</h3></summary><p>The ownership and handoff are defined before implementation begins. Whenever the platform allows it, the business owns its accounts, data, documentation, and production workflows.</p></details>
-              <details class="faq-item"><summary><h3>How quickly can we start?</h3></summary><p>We can schedule an initial conversation as soon as a time is available. Once we agree on the plan and responsibilities, we set a launch sequence that fits your team.</p></details>
-            </div>
-          </div>
-        </section>
-
-        <section class="compact-section contact-section" id="contact">
-          <div class="wrap contact-grid">
-            <div class="contact-copy reveal">
-            <p class="eyebrow">Start a SignalLabs partnership</p>
-              <h2>Show us the work that keeps coming back.</h2>
-              <p>Tell us where your staff gets stuck, what keeps pulling you back into the process, or where customers tend to disappear. We will identify one useful place to begin.</p>
-            </div>
-            <form class="lead-form reveal" id="leadForm" data-testid="signallabs-lead-form">
-              <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" data-testid="lead-name" required /></div>
-              <div class="field"><label for="business">Business</label><input id="business" name="business" autocomplete="organization" data-testid="lead-business" required /></div>
-              <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" data-testid="lead-email" required /></div>
-              <div class="field"><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" data-testid="lead-phone" /></div>
-              <div class="field full"><label for="notes">What work would you like to make easier?</label><textarea id="notes" name="notes" autocomplete="off" data-testid="lead-notes" placeholder="A few sentences is enough."></textarea></div>
-              <p class="form-note">We use this information to prepare the first conversation and follow up about your assessment. We do not sell your contact information.</p>
-              <button class="button primary field full" type="submit" data-testid="lead-submit">Request a conversation</button>
-              <p class="form-status" aria-live="polite"></p>
-            </form>
-          </div>
-        </section>
-      </main>
-
-      <footer>
-        <div class="wrap footer-inner"><span>SignalLabs / A QuanBuilds company</span><span><a href="https://quanbuilds.netlify.app/">QuanBuilds</a> / AI systems for owner-led service businesses</span></div>
-      </footer>
-    </div>
-
-    <script>
-      const menuButton = document.querySelector(".menu-toggle");
-      const nav = document.querySelector(".nav");
-      menuButton.addEventListener("click", () => {
-        const open = document.body.classList.toggle("menu-open");
-        menuButton.setAttribute("aria-expanded", String(open));
-      });
-      nav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
-        document.body.classList.remove("menu-open");
-        menuButton.setAttribute("aria-expanded", "false");
-      }));
-
-      window.addEventListener("load", () => {
-        if (!window.location.hash) return;
-        const target = document.querySelector(window.location.hash);
-        if (target) target.scrollIntoView({ block: "start" });
-      });
-
-      const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            revealObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      document.querySelectorAll(".reveal").forEach((node) => revealObserver.observe(node));
-
-      document.querySelectorAll(".faq-item").forEach((item) => {
-        item.addEventListener("toggle", () => {
-          if (!item.open) return;
-          document.querySelectorAll(".faq-item[open]").forEach((other) => {
-            if (other !== item) other.removeAttribute("open");
-          });
-        });
-      });
-
-      document.querySelectorAll(".more-item").forEach((item) => {
-        const toggle = () => {
-          const open = !item.classList.contains("is-open");
-          document.querySelectorAll(".more-item.is-open").forEach((other) => {
-            if (other !== item) {
-              other.classList.remove("is-open");
-              other.setAttribute("aria-expanded", "false");
-            }
-          });
-          item.classList.toggle("is-open", open);
-          item.setAttribute("aria-expanded", String(open));
-        };
-        item.addEventListener("click", toggle);
-        item.addEventListener("keydown", (event) => {
-          if (event.key !== "Enter" && event.key !== " ") return;
-          event.preventDefault();
-          toggle();
-        });
-      });
-
-      async function postJSON(path, body) {
-        const response = await fetch(path, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || "Request failed");
-        return data;
-      }
-
-      const workflowPromptForm = document.querySelector("#workflowPromptForm");
-      const workflowPrompt = document.querySelector("#workflowPrompt");
-      const workflowPromptStatus = document.querySelector(".workflow-prompt-status");
-      const workflowDialog = document.querySelector("#workflowDialog");
-      const workflowIntakeForm = document.querySelector("#workflowIntakeForm");
-      if (workflowPromptForm && workflowPrompt && workflowDialog && workflowIntakeForm) {
-        const workflowPreview = workflowDialog.querySelector("[data-workflow-preview]");
-        const workflowHidden = workflowIntakeForm.querySelector("input[name='workflow']");
-        const dialogStatus = workflowIntakeForm.querySelector(".dialog-status");
-
-        workflowPromptForm.addEventListener("submit", (event) => {
-          event.preventDefault();
-          const workflow = workflowPrompt.value.trim();
-          if (!workflow) {
-            workflowPromptStatus.textContent = "Tell us which task or workflow you want to improve.";
-            return;
-          }
-          workflowPromptStatus.textContent = "";
-          workflowHidden.value = workflow;
-          workflowPreview.textContent = workflow;
-          workflowDialog.showModal();
-        });
-
-        workflowDialog.querySelector(".dialog-close").addEventListener("click", () => workflowDialog.close());
-        workflowDialog.addEventListener("click", (event) => {
-          if (event.target === workflowDialog) workflowDialog.close();
-        });
-
-        workflowIntakeForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const submit = workflowIntakeForm.querySelector("button[type='submit']");
-          const data = Object.fromEntries(new FormData(workflowIntakeForm));
-          submit.disabled = true;
-          dialogStatus.textContent = "Saving your request...";
-          try {
-            await postJSON("/.netlify/functions/signallabs-crm-intake", {
-              ...data,
-              notes: data.workflow,
-              need: "Specific workflow recommendation",
-              source: "signallabs-workflow-value-grid"
-            });
-            workflowIntakeForm.reset();
-            workflowPromptForm.reset();
-            workflowDialog.close();
-            workflowPromptStatus.textContent = "Received. We will review the workflow and follow up with a practical first recommendation.";
-          } catch (error) {
-            dialogStatus.textContent = "The request did not go through. Please check your details and try again.";
-          } finally {
-            submit.disabled = false;
-          }
-        });
-      }
-
-      const leadForm = document.querySelector("#leadForm");
-      const formStatus = leadForm.querySelector(".form-status");
-      leadForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const submit = leadForm.querySelector("button[type='submit']");
-        const data = Object.fromEntries(new FormData(leadForm));
-        submit.disabled = true;
-        formStatus.textContent = "Sending...";
-        try {
-          await postJSON("/.netlify/functions/signallabs-crm-intake", { ...data, source: "signallabs-redesign-free-assessment" });
-          leadForm.reset();
-          formStatus.textContent = "Received. SignalLabs will follow up to schedule the assessment.";
-        } catch (error) {
-          formStatus.textContent = "The form did not go through. Email quan.stewart@icloud.com and we will get you scheduled.";
-        } finally {
-          submit.disabled = false;
-        }
-      });
-    </script>
-    <script src="/assets/site-analytics.js" defer></script>
-  </body>
+</div>
+</section>
+<!-- ABOUT -->
+<section class="tabpanel" id="tab-about">
+<div class="proof">
+<h2>Our story</h2>
+<p style="color:var(--steel); max-width:62ch;">TideLine Strategies is an AI consulting and custom app development company for small and mid-sized B2B businesses — we find the operational friction eating away precious employee time, then build systems that align with where your company is headed and accelerate that growth with scale in mind.</p>
+<p style="color:var(--steel); max-width:62ch;">Cody and Quan have known each other since middle school, reconnecting years later back home in Illinois after paths through California and the Southeast. A few years into a sales career, Cody was ready for a new problem to solve; months of trading ideas with Quan about AI, cybersecurity, and SaaS led to one: federal contracts are all public on SAM.gov, but sourcing and bidding on them was still a slow, manual grind. Cody had the idea, Quan built it — and the work showed them the same friction shows up everywhere, just with different paperwork. That's the thread TideLine has followed ever since.</p>
+<h2>Meet Cody Knudsen</h2>
+<img alt="Cody Knudsen, Founder and CEO of TideLine Strategies" height="1388" src="assets/team/cody-knudsen-blurred.png" style="width:180px; height:auto; float:left; margin:4px 24px 12px 0; border:1px solid var(--rule);" width="1133"/>
+<h3 style="font-style:italic; color:var(--steel); font-weight:500; margin-bottom:14px;">A relationship-first operator who learned business the hard way.</h3>
+<p style="color:var(--steel); max-width:62ch;">I dropped out of college after three years, moved to California, and started my first sales job knocking on doors and camping in parking lots for a shot at a meeting. That grind got me in the door at Impact Networking, where the culture and pace accelerated everything I knew about selling, systems, and how a business actually runs.</p>
+<p style="color:var(--steel); max-width:62ch;">TideLine Strategies is what came out of that experience — finding the friction inside a business, fixing what's underneath it, and building the right system to keep it fixed.</p>
+<div class="who" style="margin-top:8px;">Cody Knudsen / Founder &amp; CEO</div>
+<div style="clear:both;"></div>
+<h2 style="margin-top:48px;">Meet Quan Stewart</h2>
+<img alt="Quan Stewart, Co-Founder of TideLine Strategies" height="666" src="assets/team/quan-stewart-prototype.jpeg" style="width:180px; height:auto; float:left; margin:4px 24px 12px 0; border:1px solid var(--rule);" width="500"/>
+<h3 style="font-style:italic; color:var(--steel); font-weight:500; margin-bottom:14px;">A technical builder who understands service work.</h3>
+<p style="color:var(--steel); max-width:62ch;">I built computers as a kid, started designing webpages around 11, and spent years teaching myself complex creative and technical systems. Coaching gymnastics taught me the part that matters most here: find the source of the problem, explain it clearly, and apply the right correction.</p>
+<p style="color:var(--steel); max-width:62ch;">My path has not been polished or traditional. I did not finish college and I do not have a computer science degree. I have worked manual labor, coached preschoolers through regional champions, served as senior gym staff, and spent the last several years obsessively studying AI, automation, entrepreneurship, and how modern tools can change the economics of a small business.</p>
+<p style="color:var(--steel); max-width:62ch;">I built systems across operations, customer intake, reporting, communications, and agent workflows. TideLine Strategies is where those lessons become one focused commercial service for owner-led businesses. I am starting where I have the deepest operating context — gymnastics, cheer, dance, wellness, and appointment-heavy service teams — while building methods that apply anywhere repeated computer work is consuming payroll.</p>
+<div class="who" style="margin-top:8px;">Quan Stewart / Founder and systems builder</div>
+<div style="clear:both;"></div>
+<h2 style="margin-top:48px;">How we work</h2>
+<div class="pillars" style="margin-top:0;">
+<div class="pillar"><h3>People first</h3><p>Understand people, process, and culture before any tool gets chosen.</p></div>
+<div class="pillar"><h3>Co-authored</h3><p>Decisions made with the client, not handed down to them.</p></div>
+<div class="pillar"><h3>Fail fast</h3><p>Test in the real business, learn from what breaks, adjust quickly.</p></div>
+<div class="pillar"><h3>Built for who's next</h3><p>Grounded in today's facts, aimed at the business you're scaling into.</p></div>
+</div>
+<h2 style="margin-top:48px;">Real work, moving through the browser</h2>
+<p style="color:var(--steel); max-width:60ch;">The Gymstant workflow shows an AI-operated admin process reviewing class information, preparing the next action, and keeping the operator in control.</p>
+<div class="quote">"Awesome." <span class="who">Gym owner</span></div>
+<div class="quote">"It did it right!" <span class="who">Gym manager</span></div>
+</div>
+</section>
+<!-- CONTACT -->
+<section class="tabpanel" id="tab-contact">
+<div class="contact-wrap">
+<h2>Show us the work that keeps coming back.</h2>
+<p>Tell us where your staff gets stuck, what keeps pulling you back into the process, or where customers tend to disappear. We'll identify one useful place to begin.</p>
+<p class="contact-direct">Reach Cody directly: <a href="mailto:c.knudsen@tidelinestrats.com?cc=q.stewart%40tidelinestrats.com">c.knudsen@tidelinestrats.com</a></p>
+<form action="/api/contact" class="contact-form" id="contactForm" method="post">
+<div class="form-row"><label for="contact-name">Name</label><input autocomplete="name" id="contact-name" maxlength="120" name="name" required=""/></div>
+<div class="form-row"><label for="contact-business">Business</label><input autocomplete="organization" id="contact-business" maxlength="180" name="business" required=""/></div>
+<div class="form-row"><label for="contact-email">Email</label><input autocomplete="email" id="contact-email" maxlength="180" name="email" required="" type="email"/></div>
+<div class="form-row"><label for="contact-phone">Phone (optional)</label><input autocomplete="tel" id="contact-phone" maxlength="80" name="phone" type="tel"/></div>
+<div class="form-row"><label for="contact-message">What work would you like to make easier?</label><textarea id="contact-message" maxlength="2000" name="message" required="" rows="5"></textarea></div>
+<div aria-hidden="true" class="form-trap"><label for="contact-website">Website</label><input autocomplete="off" id="contact-website" name="website" tabindex="-1"/></div>
+<p class="form-note">We use your details to respond to this inquiry. Your message is saved in TideLine's private intake record. If delivery is pending, email Cody directly.</p>
+<button class="cta-primary" type="submit">Request a conversation</button>
+<p aria-live="polite" class="form-status" id="contactStatus" role="status"></p>
+</form></div>
+</section>
+<script src="site.js" defer></script>
+<script src="loki-audit.js" defer></script>
+</body>
 </html>

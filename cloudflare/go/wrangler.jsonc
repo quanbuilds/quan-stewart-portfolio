@@ -1,0 +1,37 @@
+{
+  "name": "go",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-12",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "tidelinestrats.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.tidelinestrats.com",
+      "custom_domain": true
+    }
+  ],
+  "assets": { "directory": "site", "binding": "ASSETS", "run_worker_first": true },
+  "ai": { "binding": "AI" },
+  "d1_databases": [
+    {
+      "binding": "CONTACT_DB",
+      "database_name": "tideline-contact",
+      "database_id": "0d9ef612-2f04-4754-8ab0-54e2b5888e21",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    { "name": "CONTACT_RATE_LIMIT", "namespace_id": "92701", "simple": { "limit": 12, "period": 60 } },
+    { "name": "AUDIT_START_RATE_LIMIT", "namespace_id": "92702", "simple": { "limit": 3, "period": 60 } }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": ["contact@tidelinestrats.com"],
+      "allowed_destination_addresses": ["c.knudsen@tidelinestrats.com", "q.stewart@tidelinestrats.com"]
+    }
+  ]
+}
