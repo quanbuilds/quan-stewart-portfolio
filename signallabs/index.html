@@ -17,6 +17,7 @@
 </header>
 <nav class="tabs">
 <button class="tab active" data-tab="home">Home</button>
+<button class="tab" data-tab="audit">Ask Loki</button>
 <button class="tab" data-tab="services">Services</button>
 <button class="tab" data-tab="about">About</button>
 <button class="tab" data-tab="contact">Contact</button>
@@ -30,7 +31,7 @@
 <h1>Stop losing hours to inefficient systems.</h1>
 <p class="sub">We diagnose the friction, bulletproof the foundation, and hand the daily execution over to custom technology so you can focus on growth.</p>
 <div class="ctas">
-<a class="cta-primary" href="#" id="heroStartCta">Start the conversation</a>
+<a class="cta-primary" href="#" id="heroStartCta">Audit your business with Loki</a>
 <a class="cta-secondary" href="#">How partnership works</a>
 </div>
 <p class="method-note">We start with your people, process, and culture — not the tools. Decisions get co-authored with you, tested by failing fast, and grounded in where you are today while built for who you're scaling into.</p>
@@ -65,6 +66,20 @@
 <div class="step"><div class="n">01</div><h3>Diagnose the drag</h3><p>We trace intake, scheduling, follow-up, and handoffs to see where time and leads are leaking out.</p></div>
 <div class="step"><div class="n">02</div><h3>Bulletproof the foundation</h3><p>We clean up the tools, docs, and ownership rules so staff work from one dependable source of truth.</p></div>
 <div class="step"><div class="n">03</div><h3>Hand off daily execution</h3><p>Custom software — including AI, when it's the right tool — takes over the repeat work, while decisions stay with your team.</p></div>
+</div>
+</div>
+</section>
+<!-- LOKI AUDIT -->
+<section class="tabpanel" id="tab-audit">
+<div class="audit-wrap">
+<div class="audit-heading"><img alt="" height="64" src="assets/loki/loki-avatar.png" width="64"/><div><div class="eyebrow">Complimentary interactive audit</div><h1>Find the drag with Loki.</h1><p>Loki will ask about one real workflow, trace what slows it down, and leave you with practical next steps. No account or software connection is needed.</p></div></div>
+<div class="audit-onboard" id="auditOnboard"><label for="auditBusiness">What does your business do?</label><div class="audit-start-row"><input id="auditBusiness" maxlength="240" placeholder="We run a small gym with classes and private lessons…"/><button class="cta-primary" id="auditStart" type="button">Start with Loki</button></div><p>Describe the business in one sentence. Please leave out customer details, passwords, and private records. Loki saves the conversation privately so you can finish this session.</p><p aria-live="polite" id="auditStartStatus" role="status"></p></div>
+<div class="audit-workspace" hidden id="auditWorkspace">
+<div class="audit-conversation"><div aria-live="polite" class="audit-transcript" id="auditTranscript"></div><form class="audit-answer" id="auditAnswerForm"><label class="sr-only" for="auditAnswer">Your answer to Loki</label><textarea id="auditAnswer" maxlength="1000" placeholder="Tell Loki what happens…" required rows="2"></textarea><button class="cta-primary" type="submit">Send</button></form><button class="audit-finish" hidden id="auditFinish" type="button">I’m ready for my audit</button><p aria-live="polite" class="audit-status" id="auditStatus" role="status"></p></div>
+<aside class="audit-findings"><h2>What Loki has learned</h2><ul id="auditInsights"><li>We’ll build this from your answers.</li></ul><p>Correct Loki whenever an assumption is wrong. You can ask for the audit after four answers.</p></aside>
+</div>
+<div class="audit-result" hidden id="auditResult"><div class="eyebrow">Your working audit</div><h2>Three places to begin</h2><p>These recommendations are based on what you told Loki. Review the assumptions before acting.</p><div id="auditOpportunities"></div><div class="audit-pilot"><h3>Your two-week pilot</h3><p id="auditPilot"></p></div><button class="audit-print" id="auditPrint" type="button">Print or save this plan</button><button class="audit-delete" id="auditDelete" type="button">Delete this audit</button>
+<div class="audit-text-offer" id="auditTextOffer"><h3>Keep working with Loki by text</h3><p>Opt in to receive a setup text for a TideLine business assistant focused on your goals and recurring bottlenecks.</p><form id="auditTextForm"><label for="auditPhone">Mobile number</label><input autocomplete="tel" id="auditPhone" inputmode="tel" placeholder="(555) 123-4567" required type="tel"/><label class="audit-consent"><input id="auditConsent" required type="checkbox"/><span>I agree to receive TideLine Loki setup and business assistant texts at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out.</span></label><button class="cta-primary" type="submit">Text me to set up Loki</button></form><p aria-live="polite" id="auditTextStatus" role="status"></p></div>
 </div>
 </div>
 </section>
@@ -432,5 +447,6 @@
 </form></div>
 </section>
 <script src="site.js" defer></script>
+<script src="loki-audit.js" defer></script>
 </body>
 </html>

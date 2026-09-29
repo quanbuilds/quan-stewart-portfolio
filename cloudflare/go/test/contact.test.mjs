@@ -2,7 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const source = await readFile(new URL('../src/index.js', import.meta.url), 'utf8');
+const auditSource = await readFile(new URL('../src/audit.js', import.meta.url), 'utf8');
+const auditUrl = `data:text/javascript,${encodeURIComponent(auditSource)}`;
+const textAgentSource = (await readFile(new URL('../src/text-agent.js', import.meta.url), 'utf8'))
+  .replace("from './audit.js'", `from ${JSON.stringify(auditUrl)}`);
+const textAgentUrl = `data:text/javascript,${encodeURIComponent(textAgentSource)}`;
+const source = (await readFile(new URL('../src/index.js', import.meta.url), 'utf8'))
+  .replace('import { handleAudit } from "./audit.js";', `import { handleAudit } from "${auditUrl}";`)
+  .replace('import { handleTextWebhook, sendWeeklyIdeas } from "./text-agent.js";', `import { handleTextWebhook, sendWeeklyIdeas } from "${textAgentUrl}";`);
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;
 
 function setup(send, rateAllowed = true) {

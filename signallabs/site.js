@@ -65,8 +65,8 @@ var heroStartCta = document.getElementById('heroStartCta');
 if(heroStartCta){
   heroStartCta.addEventListener('click', function(e){
     e.preventDefault();
-    var contactTabBtn = document.querySelector('.tab[data-tab="contact"]');
-    if(contactTabBtn){ contactTabBtn.click(); }
+    var auditTabBtn = document.querySelector('.tab[data-tab="audit"]');
+    if(auditTabBtn){ auditTabBtn.click(); }
   });
 }
 function initOneplaceDemo(){

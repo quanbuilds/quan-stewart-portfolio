@@ -5,6 +5,8 @@ const CONTACT_PATH = "/api/contact";
 const CONTACT_PRIMARY = "c.knudsen@tidelinestrats.com";
 const CONTACT_COPY = "q.stewart@tidelinestrats.com";
 const CONTACT_SENDER = "contact@tidelinestrats.com";
+import { handleAudit } from "./audit.js";
+import { handleTextWebhook, sendWeeklyIdeas } from "./text-agent.js";
 
 function contactJson(status, body) {
   return Response.json(body, {
@@ -170,6 +172,11 @@ export default {
       return Response.redirect(`https://${CANONICAL_HOST}${url.pathname}${url.search}`, 301);
     }
     if (url.pathname === CONTACT_PATH) return receiveContact(request, env, url);
+    if (url.pathname.startsWith("/api/audit/")) return handleAudit(request, env, url);
+    if (url.pathname === "/api/loki/sendblue") return handleTextWebhook(request, env);
     return env.ASSETS.fetch(request);
+  },
+  async scheduled(_event, env) {
+    await sendWeeklyIdeas(env);
   },
 };
