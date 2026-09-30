@@ -4,12 +4,12 @@ import { readFile } from 'node:fs/promises';
 
 const auditSource = await readFile(new URL('../src/audit.js', import.meta.url), 'utf8');
 const auditUrl = `data:text/javascript,${encodeURIComponent(auditSource)}`;
-const textAgentSource = (await readFile(new URL('../src/text-agent.js', import.meta.url), 'utf8'))
+const operatorSource = (await readFile(new URL('../src/operator.js', import.meta.url), 'utf8'))
   .replace("from './audit.js'", `from ${JSON.stringify(auditUrl)}`);
-const textAgentUrl = `data:text/javascript,${encodeURIComponent(textAgentSource)}`;
+const operatorUrl = `data:text/javascript,${encodeURIComponent(operatorSource)}`;
 const source = (await readFile(new URL('../src/index.js', import.meta.url), 'utf8'))
   .replace('import { handleAudit } from "./audit.js";', `import { handleAudit } from "${auditUrl}";`)
-  .replace('import { handleTextWebhook, sendWeeklyIdeas } from "./text-agent.js";', `import { handleTextWebhook, sendWeeklyIdeas } from "${textAgentUrl}";`);
+  .replace('import { handleOperator, refreshOperatorMoves } from "./operator.js";', `import { handleOperator, refreshOperatorMoves } from "${operatorUrl}";`);
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;
 
 function setup(send, rateAllowed = true) {

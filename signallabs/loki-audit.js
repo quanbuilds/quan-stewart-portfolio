@@ -13,12 +13,9 @@
   var result = document.getElementById('auditResult');
   var opportunities = document.getElementById('auditOpportunities');
   var pilot = document.getElementById('auditPilot');
-  var textForm = document.getElementById('auditTextForm');
-  var textStatus = document.getElementById('auditTextStatus');
   if (!startButton) return;
   var session = null;
   var count = 0;
-  var textReady = false;
 
   function el(tag, className, value){ var node = document.createElement(tag); if(className) node.className = className; if(value) node.textContent = value; return node; }
   function bubble(who, value){
@@ -52,10 +49,6 @@
     });
     pilot.textContent = message.pilot || 'Select the first opportunity, test it with your team, and compare the outcome after two weeks.';
     status.textContent = 'Your audit is ready. You can print or save it below.';
-    if(!textReady){
-      textForm.hidden = true;
-      textStatus.textContent = 'Text enrollment will open when the dedicated TideLine number is ready. No number is being collected yet.';
-    }
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   async function post(path, body){
@@ -79,7 +72,6 @@
     try {
       var data = await post('/api/audit/start', {business:business});
       session = {id:data.id, token:data.token};
-      textReady = data.textReady === true;
       try { sessionStorage.setItem('tideline-loki-audit', JSON.stringify(session)); } catch (_) {}
       onboard.hidden = true; workspace.hidden = false;
       showMessage(data.message);
@@ -111,23 +103,12 @@
       workspace.hidden = true; result.hidden = true; onboard.hidden = false; businessInput.value = '';
       startStatus.textContent = 'Your audit was deleted.';
       businessInput.focus();
-    } catch(error){ textStatus.textContent = error.code === 'text_enrollment_active' ? 'This audit is linked to text enrollment. Reply STOP to Loki and contact TideLine to remove the text-agent record.' : errorText(error); }
-  });
-  textForm.addEventListener('submit', async function(event){
-    event.preventDefault(); if(!session || !textForm.reportValidity()) return;
-    var button = textForm.querySelector('button[type="submit"]'); setBusy(button, true);
-    textStatus.textContent = 'Requesting your setup text…';
-    try {
-      await post('/api/audit/text-opt-in', {id:session.id, token:session.token, phone:document.getElementById('auditPhone').value, consent:document.getElementById('auditConsent').checked});
-      textStatus.textContent = 'Your setup text was accepted by our messaging provider. Reply with one business goal to begin.';
-      textForm.hidden = true;
-    } catch(error){ textStatus.textContent = error.code === 'text_setup_unavailable' ? 'Text setup is not available yet. No text was sent and your number was not enrolled.' : errorText(error); }
-    finally { setBusy(button, false); }
+    } catch(error){ status.textContent = error.code === 'text_enrollment_active' ? 'This audit is linked to earlier text enrollment. Contact TideLine to remove that record.' : errorText(error); }
   });
   try {
     var saved = JSON.parse(sessionStorage.getItem('tideline-loki-audit') || 'null');
     if(saved?.id && saved?.token) post('/api/audit/state', saved).then(function(data){
-      session = saved; textReady = data.textReady === true; onboard.hidden = true; workspace.hidden = false;
+      session = saved; onboard.hidden = true; workspace.hidden = false;
       (data.turns || []).forEach(function(turn){ if(turn.reply) bubble('loki', turn.reply); if(turn.question) bubble('loki', turn.question); bubble('you', turn.answer); });
       count = (data.turns || []).length; showMessage(data.message);
       if(count >= 4 && !data.message.ready) finishButton.hidden = false;

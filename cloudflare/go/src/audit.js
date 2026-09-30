@@ -1,7 +1,5 @@
 const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 const MAX_TURNS = 8;
-const CONSENT_COPY = 'I agree to receive TideLine Loki setup and business assistant texts at this number. Message frequency varies. Message and data rates may apply. Reply STOP to opt out.';
-const STOP_WORDS = new Set(['STOP', 'QUIT', 'END', 'CANCEL', 'UNSUBSCRIBE', 'REVOKE', 'OPT OUT']);
 
 const replySchema = {
   type: 'object',
@@ -37,7 +35,6 @@ export async function parseBody(request) {
 }
 async function hash(value) { const bytes = new TextEncoder().encode(value); const digest = await crypto.subtle.digest('SHA-256', bytes); return [...new Uint8Array(digest)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function token() { return [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join(''); }
-function textReady(env) { return env.LOKI_TEXT_READY === 'true' && Boolean(env.SENDBLUE_API_KEY && env.SENDBLUE_API_SECRET && env.SENDBLUE_NUMBER && env.SENDBLUE_WEBHOOK_SECRET); }
 function normalize(output, count) {
   const raw = typeof output?.response === 'string' ? JSON.parse(output.response) : output?.response;
   if (!raw || typeof raw !== 'object') throw new Error('invalid_ai_response');
@@ -56,7 +53,7 @@ async function generate(env, hint, turns) {
   const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: replySchema }, max_tokens: 1600, temperature: 0.25 });
   return normalize(output, turns.length);
 }
-async function auditRow(env, input) {
+export async function auditRow(env, input) {
   const id = line(input.id, 80), access = line(input.token, 100);
   if (!/^[0-9a-f-]{36}$/i.test(id) || !/^[0-9a-f]{64}$/.test(access)) return null;
   const row = await env.CONTACT_DB.prepare('SELECT * FROM loki_audits WHERE id = ?').bind(id).first();
@@ -81,11 +78,11 @@ export async function handleAudit(request, env, url) {
     catch (error) { console.error('Loki audit start storage failed', error); return json(503, { ok: false, error: 'storage_unavailable' }); }
     const cutoff = new Date(Date.now() - 30*24*60*60*1000).toISOString();
     await env.CONTACT_DB.prepare('DELETE FROM loki_audits WHERE id IN (SELECT id FROM loki_audits WHERE created_at < ? AND id NOT IN (SELECT audit_id FROM loki_text_optins) LIMIT 20)').bind(cutoff).run().catch(() => {});
-    return json(200, { ok: true, id, token: access, message, textReady: textReady(env) });
+    return json(200, { ok: true, id, token: access, message });
   }
   const row = await auditRow(env, input); if (!row) return json(404, { ok: false, error: 'audit_not_found' });
   if (url.pathname === '/api/audit/state') {
-    return json(200, { ok: true, business: row.business_hint, message: JSON.parse(row.last_message_json || '{}'), turns: JSON.parse(row.turns_json || '[]'), textReady: textReady(env) });
+    return json(200, { ok: true, business: row.business_hint, message: JSON.parse(row.last_message_json || '{}'), turns: JSON.parse(row.turns_json || '[]') });
   }
   if (url.pathname === '/api/audit/delete') {
     const enrolled = await env.CONTACT_DB.prepare('SELECT id FROM loki_text_optins WHERE audit_id = ?').bind(row.id).first();
@@ -113,32 +110,5 @@ export async function handleAudit(request, env, url) {
     } catch (error) { console.error('Loki audit turn storage failed', error); return json(503, { ok: false, error: 'storage_unavailable' }); }
     return json(200, { ok: true, message });
   }
-  if (url.pathname === '/api/audit/text-opt-in') {
-    if (!row.result_json) return json(409, { ok: false, error: 'finish_audit_first' });
-    if (input.consent !== true) return json(400, { ok: false, error: 'consent_required' });
-    const digits = String(input.phone || '').replace(/[^0-9]/g, '');
-    const phone = digits.length === 10 ? '+1' + digits : digits.length === 11 && digits.startsWith('1') ? '+' + digits : '';
-    if (!phone) return json(400, { ok: false, error: 'invalid_phone' });
-    if (!textReady(env)) return json(503, { ok: false, error: 'text_setup_unavailable' });
-    const existing = await env.CONTACT_DB.prepare('SELECT id, phone_e164, status FROM loki_text_optins WHERE audit_id = ?').bind(row.id).first();
-    if (existing && existing.status !== 'send_failed') return json(409, { ok: false, error: 'already_requested' });
-    if (existing && existing.phone_e164 !== phone) return json(409, { ok: false, error: 'phone_changed' });
-    const id = existing?.id || crypto.randomUUID();
-    if (existing) await env.CONTACT_DB.prepare('UPDATE loki_text_optins SET status = ? WHERE id = ?').bind('pending_send', id).run();
-    else await env.CONTACT_DB.prepare('INSERT INTO loki_text_optins (id, audit_id, phone_e164, consent_at, consent_copy, status) VALUES (?, ?, ?, ?, ?, ?)').bind(id, row.id, phone, new Date().toISOString(), CONSENT_COPY, 'pending_send').run();
-    const result = await sendText(env, phone, 'TideLine Loki: Your business assistant setup starts here. Reply with the one business goal you want to make progress on this month. Reply STOP to opt out.');
-    await env.CONTACT_DB.prepare('UPDATE loki_text_optins SET status = ?, provider_receipt = ? WHERE id = ?').bind(result.ok ? 'sent' : 'send_failed', result.receipt, id).run();
-    return json(result.ok ? 200 : 503, { ok: result.ok, status: result.ok ? 'sent' : 'send_failed' });
-  }
   return json(404, { ok: false, error: 'not_found' });
 }
-export async function sendText(env, phone, content) {
-  if (!env.SENDBLUE_API_KEY || !env.SENDBLUE_API_SECRET || !env.SENDBLUE_NUMBER) return { ok: false, receipt: 'not_configured' };
-  try {
-    const res = await fetch('https://api.sendblue.co/api/send-message', { method: 'POST', headers: { 'content-type': 'application/json', 'sb-api-key-id': env.SENDBLUE_API_KEY, 'sb-api-secret-key': env.SENDBLUE_API_SECRET }, body: JSON.stringify({ number: phone, from_number: env.SENDBLUE_NUMBER, content }) });
-    const data = await res.json().catch(() => ({}));
-    return { ok: res.ok && ['QUEUED', 'ACCEPTED', 'SENT', 'DELIVERED'].includes(data.status) && Boolean(data.message_handle), receipt: line(data.message_handle || `http_${res.status}`, 120) };
-  } catch { return { ok: false, receipt: 'network_error' }; }
-}
-export const auditConsentCopy = CONSENT_COPY;
-export const auditStopWords = STOP_WORDS;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const source = await readFile(new URL('../src/audit.js', import.meta.url), 'utf8');
-const { handleAudit, sendText } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
+const { handleAudit } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
 const origin = 'https://tidelinestrats.com';
 function request(path, body, sourceOrigin = origin) {
   return new Request(origin + path, { method:'POST', headers:{ origin:sourceOrigin, 'content-type':'application/json' }, body:JSON.stringify(body) });
@@ -47,7 +47,7 @@ test('Loki starts a real AI session and rejects unauthenticated follow-up', asyn
   assert.equal(ctx.rows.size,0);
 });
 
-test('Loki keeps a validated conversation and never claims an unconfigured text was sent', async()=>{
+test('Loki keeps a validated conversation and does not offer text enrollment', async()=>{
   const ctx=setup(()=>question);
   const start=await handleAudit(request('/api/audit/start',{business:'We operate a small gym'}),ctx.env,new URL(origin+'/api/audit/start'));
   const {id,token}=await start.json();
@@ -55,7 +55,7 @@ test('Loki keeps a validated conversation and never claims an unconfigured text 
   assert.equal(turn.status,200);
   assert.equal(JSON.parse(ctx.rows.get(id).turns_json)[0].answer,'It arrives in a shared email inbox.');
   const text=await handleAudit(request('/api/audit/text-opt-in',{id,token,phone:'5551234567',consent:true}),ctx.env,new URL(origin+'/api/audit/text-opt-in'));
-  assert.equal(text.status,409);
+  assert.equal(text.status,404);
   assert.equal(ctx.optins.size,0);
 });
 
@@ -66,17 +66,4 @@ test('Loki rejects other origins and does not store a session on AI failure', as
   const missing=await handleAudit(request('/api/audit/start',{business:'We operate a small gym'}),ctx.env,new URL(origin+'/api/audit/start'));
   assert.equal(missing.status,503);
   assert.equal(ctx.rows.size,0);
-});
-
-test('Loki only accepts a provider message receipt, not an HTTP success alone', async()=>{
-  const original=globalThis.fetch;
-  const env={SENDBLUE_API_KEY:'test',SENDBLUE_API_SECRET:'test',SENDBLUE_NUMBER:'+15550000000'};
-  try {
-    globalThis.fetch=async()=>Response.json({status:'QUEUED',message_handle:'msg_123'});
-    assert.deepEqual(await sendText(env,'+15551111111','Hello'),{ok:true,receipt:'msg_123'});
-    globalThis.fetch=async()=>Response.json({status:'ERROR',message_handle:'msg_456'});
-    assert.equal((await sendText(env,'+15551111111','Hello')).ok,false);
-    globalThis.fetch=async()=>Response.json({status:'QUEUED'});
-    assert.equal((await sendText(env,'+15551111111','Hello')).ok,false);
-  } finally { globalThis.fetch=original; }
 });
