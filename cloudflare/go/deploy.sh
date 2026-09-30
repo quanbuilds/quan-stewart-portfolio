@@ -25,4 +25,3 @@ if [ -z "$VERSION_ID" ]; then
   exit 1
 fi
 node "$WORKER_BIN" versions deploy "$VERSION_ID@100%" --profile tideline --cwd "$BUILD_DIR/go" --yes --message "Deploy TideLine Loki owner app free test"
-node "$WORKER_BIN" triggers deploy --profile tideline --cwd "$BUILD_DIR/go"

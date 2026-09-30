@@ -4,7 +4,9 @@
 `https://go.q-stewart.workers.dev`. The public site is copied from `signallabs/`.
 Use `sh cloudflare/go/deploy.sh` from the repository root. The script uploads a
 Worker version and deploys it at 100% without changing the existing domain
-triggers or Zoho MX records, then applies the declared daily cron trigger.
+triggers or Zoho MX records. The `0 14 * * *` daily cron is already attached;
+do not run a blanket `wrangler triggers deploy` from this config, because it
+also attempts to reapply the externally managed custom domains.
 `sh cloudflare/go/deploy.sh --dry-run` validates the
 package without uploading it.
 
