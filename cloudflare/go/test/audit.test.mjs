@@ -67,3 +67,25 @@ test('Loki rejects other origins and does not store a session on AI failure', as
   assert.equal(missing.status,503);
   assert.equal(ctx.rows.size,0);
 });
+
+
+test('fourth answer gets a complete audit after one bounded retry of truncated model JSON',async()=>{
+ const ctx=setup(()=>question);let calls=0;let finalArgs;
+ const report={reply:'Here is the test audit.',question:'',insights:['Shared spreadsheet'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'The owner described a shared spreadsheet.',firstStep:'Assign a front desk owner and update the sheet.',automation:'Review reminder drafts before any customer send.',metric:'Record a baseline in days 1-3 and compare days 4-14.'})),pilot:'Days 1-3 record the baseline. Days 4-14 test the agreed process.'};
+ ctx.env.AI.run=async(_model,args)=>{calls++;if(args.response_format.json_schema.properties.ready.enum[0]){finalArgs=args;return {response:calls===5?'{"reply":"truncated':JSON.stringify(report)};}return {response:question};};
+ const start=await handleAudit(request('/api/audit/start',{business:'A fictional studio for testing'}),ctx.env,new URL(origin+'/api/audit/start'));
+ const {id,token}=await start.json();let result;
+ for(let n=1;n<=4;n++){result=await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n+' using a shared sheet.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(result.status,200);}
+ const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,6);
+ assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,4);assert.ok(ctx.rows.get(id).result_json);
+ assert.equal(finalArgs.response_format.json_schema.properties.opportunities.minItems,3);assert.equal(finalArgs.max_tokens,3000);
+});
+
+test('invalid final reports preserve the saved conversation and never expose partial reports',async()=>{
+ const ctx=setup(()=>question);let calls=0;
+ ctx.env.AI.run=async(_model,args)=>{calls++;return {response:args.response_format.json_schema.properties.ready.enum[0]?{...question,ready:true,question:'',opportunities:[{title:'Incomplete',firstStep:'Try something'}]}:question};};
+ const start=await handleAudit(request('/api/audit/start',{business:'A fictional studio for testing'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
+ for(let n=1;n<=3;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n}),ctx.env,new URL(origin+'/api/audit/turn'));
+ const final=await handleAudit(request('/api/audit/turn',{id,token,answer:'Please finish the test audit.'}),ctx.env,new URL(origin+'/api/audit/turn'));
+ assert.equal(final.status,503);assert.equal(calls,6);assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,3);assert.equal(ctx.rows.get(id).result_json,'');
+});
