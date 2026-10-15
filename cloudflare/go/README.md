@@ -83,3 +83,24 @@ ID `a9283f25898ab483951c7166eaba15c2`, namespace `signallabs.workers.dev`.
 Live membership readback showed only Quan in that account. Consolidating hosting
 requires a separate migration of resources and bindings; do not change this
 script's target account as a substitute for that migration.
+
+## TideLine website analytics → Voyage
+
+Apply the additive `0004_site_analytics.sql` migration to `tideline-contact`
+before deploying the analytics collector. Traffic events use anonymous tab IDs,
+allowlisted page names, coarse device classes and referrer hostnames. No form
+answers, customer names, URL query strings, session credentials or IP addresses
+are stored in traffic events. Respect Global Privacy Control / Do Not Track;
+retain traffic for 90 days through the existing daily cron.
+
+The Voyage Worker reads this same-account D1 database through its `TIDELINE_DB`
+binding. Its existing sign-in and editor role protect `/api/tideline/analytics`
+and the inquiry import action. There is no public analytics read endpoint or
+shared analytics password. Open Profile → Admin → TideLine & Loki in Voyage.
+Audit/app totals cover retained sessions; deleted sessions are excluded. Audit
+records currently expire after 30 days, so they cannot supply 90 days of history.
+
+Inquiry imports require an editor action. They link exact matching contact
+emails or create a prospect, contact and inquiry note, with durable source IDs.
+Retries preserve later CRM edits and cannot duplicate the same inquiry. Existing
+CRM accounts are not silently overwritten and no customer message is sent.

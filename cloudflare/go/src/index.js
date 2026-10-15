@@ -5,6 +5,7 @@ const CONTACT_PATH = "/api/contact";
 const CONTACT_PRIMARY = "c.knudsen@tidelinestrats.com";
 const CONTACT_COPY = "q.stewart@tidelinestrats.com";
 const CONTACT_SENDER = "contact@tidelinestrats.com";
+import { collectAnalytics, expireAnalytics } from "./analytics.js";
 import { handleAudit } from "./audit.js";
 import { handleOperator, refreshOperatorMoves } from "./operator.js";
 
@@ -171,6 +172,7 @@ export default {
     if (url.hostname === LEGACY_HOST || url.hostname === WWW_HOST) {
       return Response.redirect(`https://${CANONICAL_HOST}${url.pathname}${url.search}`, 301);
     }
+    if (url.pathname === "/api/analytics/events") return collectAnalytics(request, env);
     if (url.pathname === CONTACT_PATH) return receiveContact(request, env, url);
     if (url.pathname.startsWith("/api/audit/")) return handleAudit(request, env, url);
     if (url.pathname.startsWith("/api/operator/")) return handleOperator(request, env, url);
@@ -178,5 +180,6 @@ export default {
   },
   async scheduled(_event, env) {
     await refreshOperatorMoves(env);
+    await expireAnalytics(env);
   },
 };
