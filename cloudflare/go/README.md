@@ -104,3 +104,20 @@ Inquiry imports require an editor action. They link exact matching contact
 emails or create a prospect, contact and inquiry note, with durable source IDs.
 Retries preserve later CRM edits and cannot duplicate the same inquiry. Existing
 CRM accounts are not silently overwritten and no customer message is sent.
+
+
+## Public site isolation from Worker request quota
+
+Serve public HTML, styles, images and the public Loki app shell directly through
+Workers Static Assets. Only `/api` and `/api/*` run the Worker first. The existing
+`signallabs/_headers` still applies CSP, HSTS and other response protections.
+This is deliberately different from the private Voyage CRM, which must run its
+authentication Worker before serving its assets. Never copy this public-site
+routing change into the authenticated CRM.
+
+Static pages remain available when the account's Worker request allowance is
+exhausted; dynamic contact, audit, app and analytics endpoints still depend on
+that allowance. A new deployment does not reset the daily quota. Alias-domain
+redirect code still runs for API requests/missing assets; matched static pages
+carry the canonical URL rather than invoking middleware solely for redirects.
+No account, domain, billing or database settings are changed.
