@@ -17,8 +17,10 @@
 </header>
 <nav class="tabs">
 <button class="tab active" data-tab="home">Home</button>
-<button class="tab" data-tab="audit">Ask Loki</button>
-<a class="tab" href="/loki/">Loki app</a>
+<details class="loki-nav" id="lokiNav">
+<summary class="loki-toggle"><img src="assets/loki/loki-avatar.png" alt="" width="24" height="24"/><span>Loki</span></summary>
+<div class="loki-links"><button class="tab" data-tab="audit">Ask Loki</button><a class="tab" href="/loki/">Loki app</a></div>
+</details>
 <button class="tab" data-tab="services">Services</button>
 <button class="tab" data-tab="about">About</button>
 <button class="tab" data-tab="contact">Contact</button>
@@ -450,5 +452,6 @@
 </section>
 <script src="site.js" defer></script>
 <script src="loki-audit.js" defer></script>
+
 </body>
 </html>
