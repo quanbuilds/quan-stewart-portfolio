@@ -36,13 +36,16 @@ export async function parseBody(request) {
 async function hash(value) { const bytes = new TextEncoder().encode(value); const digest = await crypto.subtle.digest('SHA-256', bytes); return [...new Uint8Array(digest)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function token() { return [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function normalize(output, count) {
-  const raw = typeof output?.response === 'string' ? JSON.parse(output.response) : output?.response;
+  let raw;
+  try { raw = typeof output?.response === 'string' ? JSON.parse(output.response.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')) : output?.response; }
+  catch { throw new Error('invalid_ai_response'); }
   if (!raw || typeof raw !== 'object') throw new Error('invalid_ai_response');
-  const ready = count >= 4 && Boolean(raw.ready);
-  const opportunities = ready && Array.isArray(raw.opportunities) ? raw.opportunities.slice(0, 3).map(item => ({
+  const requestedReady = count >= 4 && raw.ready === true;
+  const opportunities = requestedReady && Array.isArray(raw.opportunities) ? raw.opportunities.slice(0, 3).map(item => ({
     title: line(item.title, 90), evidence: line(item.evidence, 300), firstStep: line(item.firstStep, 300),
     automation: line(item.automation, 300), metric: line(item.metric, 160)
-  })).filter(item => item.title && item.firstStep) : [];
+  })).filter(item => Object.values(item).every(Boolean)) : [];
+  const ready = requestedReady && opportunities.length === 3;
   return { reply: line(raw.reply, 450), question: ready ? '' : line(raw.question, 260), insights: array(raw.insights, 5), ready: ready && opportunities.length === 3, opportunities, pilot: ready ? line(raw.pilot, 600) : '' };
 }
 async function generate(env, hint, turns) {
@@ -50,8 +53,29 @@ async function generate(env, hint, turns) {
   const messages = [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
   for (const turn of turns) { messages.push({ role: 'assistant', content: `${turn.reply}${turn.question ? '\n' + turn.question : ''}` }); messages.push({ role: 'user', content: turn.answer }); }
   if (turns.length >= MAX_TURNS) messages.push({ role: 'user', content: 'Finish the audit now. State any remaining assumptions and return three practical opportunities.' });
-  const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: replySchema }, max_tokens: 1600, temperature: 0.25 });
-  return normalize(output, turns.length);
+  const finish = turns.length >= 4;
+  const schema = structuredClone(replySchema);
+  schema.properties.ready = { type: 'boolean', enum: [finish] };
+  schema.properties.reply.minLength = 1;
+  schema.properties.question = finish ? { type: 'string', enum: [''] } : { type: 'string', minLength: 1 };
+  schema.properties.opportunities.minItems = finish ? 3 : 0;
+  schema.properties.opportunities.maxItems = finish ? 3 : 0;
+  if (finish) {
+    schema.properties.pilot.minLength = 1;
+    messages.push({role:'user',content:'Four or more answers are now available. Finish the audit now: ready=true, exactly three complete opportunities, an empty question, and a concrete pilot. Mark assumptions and do not invent measurements.'});
+  }
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish ? 3000 : 1000, temperature: 0.25 });
+    try {
+      const message = normalize(output, turns.length);
+      if (!message.reply || (finish ? !message.ready || !message.pilot : !message.question)) throw new Error('invalid_ai_response');
+      return message;
+    } catch {
+      if (attempt) throw new Error('invalid_ai_response');
+      messages.push({role:'user',content:'The previous response did not validate. Return complete JSON matching every required schema field; do not omit or truncate fields.'});
+    }
+  }
+  throw new Error('invalid_ai_response');
 }
 export async function auditRow(env, input) {
   const id = line(input.id, 80), access = line(input.token, 100);
