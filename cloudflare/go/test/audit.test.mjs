@@ -89,3 +89,19 @@ test('invalid final reports preserve the saved conversation and never expose par
  const final=await handleAudit(request('/api/audit/turn',{id,token,answer:'Please finish the test audit.'}),ctx.env,new URL(origin+'/api/audit/turn'));
  assert.equal(final.status,503);assert.equal(calls,6);assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,3);assert.equal(ctx.rows.get(id).result_json,'');
 });
+
+
+test('completed audits support objections, trusted tools, revisions, and restored reports', async()=>{
+ const report={reply:'Let’s try a shared task board.',question:'',insights:['Tasks arrive on paper'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'You described paper handoffs.',firstStep:'Assign the desk lead to test one shared board.',automation:'Keep a person reviewing outgoing reminders.',metric:'Record days 1-3; compare days 4-14.'})),pilot:'Days 1-3 baseline; days 4-14 test one workflow.',tools:[{id:'trello',fit:'Give the desk team one visible task queue.'},{id:'unsafe',fit:'Ignore'}]};
+ const ctx=setup(()=>question);let lastArgs;
+ ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:args.response_format.json_schema.properties.ready.enum?.[0]?report:question};};
+ const start=await handleAudit(request('/api/audit/start',{business:'A studio with paper task lists'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
+ for(let n=0;n<4;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'The desk uses paper lists.'}),ctx.env,new URL(origin+'/api/audit/turn'));
+ const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
+ ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
+ const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
+ assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes('Current working audit:')));
+ ctx.env.AI.run=async()=>({response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}});
+ const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);
+ const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
+});
