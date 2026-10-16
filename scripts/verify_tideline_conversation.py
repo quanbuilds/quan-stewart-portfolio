@@ -29,6 +29,11 @@ try:
     for answer in ['One desk lead handles incoming phone inquiries and paper task lists.', 'The next shift sometimes misses the handwritten follow-up. We use a shared calendar too.', 'We do not know weekly volumes. Two desk staff share the task list.', 'Our goal is fewer missed handoffs. Please finish a practical two-week plan.']:
         message=post('turn',{**session,'answer':answer})['message']
     assert message['ready'] and len(message['opportunities'])==3 and message['pilot']
+    assert message['synthesis']['headline'] and message['synthesis']['connection'] and message['synthesis']['firstMove']
+    for item in message['opportunities']:
+        assert item['takeaway'] and item['owner'] and item['timing']
+        assert len(item['steps'])==3 and item['doneWhen'] and item['fallback']
+    evidence['synthesis_and_execution']='diagnosis, causal explanation, ranked actions, owners, steps, acceptance checks, recovery actions'
     follow=post('turn',{**session,'answer':'We do not want another app. Can we keep the paper list? Please explain without repeating the whole audit.'})['message']
     assert follow['reply']
     state=post('state',session)

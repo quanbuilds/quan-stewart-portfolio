@@ -16,6 +16,7 @@
   if (!startButton) return;
   var session = null;
   var count = 0;
+  var hasReport = false;
 
   function el(tag, className, value){ var node = document.createElement(tag); if(className) node.className = className; if(value) node.textContent = value; return node; }
   function bubble(who, value){
@@ -33,6 +34,7 @@
     if(message.ready){ showResult(message); } else { answerInput.focus(); }
   }
   function showResult(message){
+    hasReport = true;
     answerForm.hidden = false;
     answerInput.placeholder = 'Ask a question, push back, or tell me what I missed…';
     finishButton.hidden = true;
@@ -41,26 +43,55 @@
     var toolList = document.getElementById('auditTools');
     toolList.replaceChildren();
     opportunities.replaceChildren();
+    var synthesis = message.synthesis || {};
+    document.getElementById('auditDiagnosis').textContent = synthesis.headline || 'Your next moves, in order';
+    document.getElementById('auditConnection').textContent = synthesis.connection || message.reply || 'Start with the first priority, then build on what works.';
+    var firstMove = document.getElementById('auditFirstMove');
+    firstMove.replaceChildren(el('span', 'audit-label', 'Start here'), el('strong', '', synthesis.firstMove || message.opportunities?.[0]?.firstStep || 'Choose one small workflow to test.'));
+    var overview = document.getElementById('auditOverview'); overview.replaceChildren();
     (message.opportunities || []).forEach(function(item, i){
-      var card = el('article', 'audit-opportunity');
-      card.append(el('span', 'audit-opportunity-number', '0' + (i + 1)));
-      card.append(el('h3', '', item.title));
-      [['Why Loki chose this', item.evidence], ['Start this week', item.firstStep], ['Where AI may help', item.automation], ['Measure', item.metric]].forEach(function(pair){
-        var p = el('p'); p.append(el('strong', '', pair[0] + ': ')); p.append(document.createTextNode(pair[1] || '—')); card.append(p);
+      var card = el('details', 'audit-opportunity');
+      var summary = el('summary', 'audit-action-summary');
+      var heading = el('div', 'audit-action-heading');
+      heading.append(el('span', 'audit-rank', '0' + (i + 1)), el('h3', '', item.title), el('span', 'audit-expand', 'View steps'));
+      summary.append(heading);
+      summary.append(el('p', 'audit-takeaway', item.takeaway || item.firstStep));
+      var meta = el('div', 'audit-action-meta');
+      meta.append(el('span', '', item.owner || 'Choose an owner'), el('span', '', item.timing || (i === 0 ? 'Next 48 hours' : 'During the pilot')));
+      summary.append(meta);
+      if(item.takeaway) { var move = el('p', 'audit-action-first'); move.append(el('strong', '', 'First move: '), document.createTextNode(item.firstStep)); summary.append(move); }
+      card.append(summary);
+      var body = el('div', 'audit-action-body');
+      body.append(el('div', 'audit-label', 'Why this matters'), el('p', '', item.evidence));
+      if(item.steps?.length){ var steps = el('ol', 'audit-execution'); item.steps.forEach(function(step){steps.append(el('li', '', step));}); body.append(el('h4', '', 'How to execute'), steps); }
+      else { body.append(el('h4', '', 'How to begin'), el('p', '', item.firstStep)); }
+      [['You’re done when', item.doneWhen], ['If it stalls', item.fallback], ['Check the result', item.metric], ['Automate later', item.automation]].forEach(function(pair){
+        if(!pair[1]) return;
+        var block = el('div', pair[0] === 'If it stalls' ? 'audit-check audit-recovery' : 'audit-check');
+        block.append(el('h4', '', pair[0]), el('p', '', pair[1])); body.append(block);
       });
-      card.append(askButton('Talk this through', 'Can we talk through “' + item.title + '”? What would this look like for us?'));
-      card.append(askButton('That’s not quite right', 'I’d like to correct the assumption behind “' + item.title + '”: '));
-      opportunities.append(card);
+      body.append(askButton('Walk me through this', 'Walk me through “' + item.title + '” step by step. Help me choose an owner, verify the first sample, and handle the likeliest snag.'));
+      body.append(askButton('Correct this', 'I’d like to correct the assumption behind “' + item.title + '”: '));
+      card.append(body); opportunities.append(card);
+      var jump = el('button', 'audit-priority-link'); jump.type = 'button';
+      jump.append(el('span', 'audit-label', i === 0 ? '01 · Do first' : i === 1 ? '02 · Then' : '03 · Reinforce'), el('strong', '', item.title));
+      jump.addEventListener('click', function(){card.open = true;card.scrollIntoView({behavior:'smooth',block:'start'});summary.focus({preventScroll:true});});
+      overview.append(jump);
     });
     pilot.textContent = message.pilot || 'Select the first opportunity, test it with your team, and compare the outcome after two weeks.';
     (message.tools || []).forEach(function(tool){
       var card = el('article', 'audit-tool');
       var logo = el('img'); logo.src = tool.logo; logo.alt = ''; logo.width = 32; logo.height = 32;
       logo.addEventListener('error', function(){ logo.hidden = true; });
-      card.append(logo, el('h3', '', tool.name), el('p', '', tool.description), el('p', '', tool.fit), el('p', 'audit-tool-price', tool.pricing));
+      var heading = el('div', 'audit-tool-heading'); heading.append(logo, el('h3', '', tool.name));
+      card.append(heading, el('p', 'audit-tool-fit', tool.fit || tool.description));
+      if(tool.priceLabel) card.append(el('p', 'audit-price-badge', tool.priceLabel));
+      var more = el('details', 'audit-tool-details'); more.append(el('summary', '', 'Fit, pricing & links'));
+      more.append(el('p', '', tool.description), el('p', 'audit-tool-price', tool.pricing));
       var link = el('a', '', 'Visit ' + tool.name + ' ↗'); link.href = tool.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
       var pricing = el('a', '', 'Pricing · checked ' + tool.checkedAt); pricing.href = tool.pricingUrl; pricing.target = '_blank'; pricing.rel = 'noopener noreferrer';
-      card.append(link, pricing, askButton('Ask Loki about ' + tool.name, 'How would ' + tool.name + ' fit our workflow? Explain the likely cost, limitations, and whether our existing tools could do the same job.'));
+      more.append(link, pricing);
+      card.append(more, askButton('Ask about ' + tool.name, 'How would ' + tool.name + ' fit our workflow? Explain the likely cost, limitations, and whether our existing tools could do the same job.'));
       toolList.append(card);
     });
     document.getElementById('auditToolsSection').hidden = !toolList.children.length;
@@ -109,7 +140,7 @@
       var data = await post('/api/audit/turn', {id:session.id, token:session.token, answer:answer});
       bubble('you', answer); answerInput.value = ''; count += 1;
       status.textContent = ''; showMessage(data.message);
-      if(count >= 4 && !data.message.ready){ answerInput.placeholder = 'Answer Loki, or ask for your audit now…'; finishButton.hidden = false; }
+      if(count >= 4 && !data.message.ready && !hasReport){ answerInput.placeholder = 'Answer Loki, or ask for your audit now…'; finishButton.hidden = false; }
     } catch(error){ status.textContent = errorText(error); }
     finally { setBusy(sendButton, false); answerForm.setAttribute('aria-busy', 'false'); answerInput.readOnly = false; answerInput.focus(); }
   });
@@ -120,8 +151,8 @@
     try {
       await post('/api/audit/delete', session);
       try { sessionStorage.removeItem('tideline-loki-audit'); } catch (_) {}
-      session = null; transcript.replaceChildren(); opportunities.replaceChildren();
-      workspace.hidden = true; result.hidden = true; onboard.hidden = false; businessInput.value = '';
+      session = null; hasReport = false; result.remove(); transcript.replaceChildren(); opportunities.replaceChildren();
+      workspace.hidden = true; result.hidden = true; document.querySelector(".audit-wrap").append(result); onboard.hidden = false; businessInput.value = '';
       startStatus.textContent = 'Your audit was deleted.';
       businessInput.focus();
     } catch(error){ status.textContent = error.code === 'text_enrollment_active' ? 'This audit is linked to earlier text enrollment. Contact TideLine to remove that record.' : errorText(error); }
@@ -134,7 +165,7 @@
       (data.turns || []).forEach(function(turn){ if(turn.reply || turn.question) bubble('loki', [turn.reply,turn.question].filter(Boolean).join(' ')); bubble('you', turn.answer); });
       if(data.report && !data.message.ready) showResult(data.report);
       count = (data.turns || []).length; showMessage(data.message);
-      if(count >= 4 && !data.message.ready) finishButton.hidden = false;
+      if(count >= 4 && !data.message.ready && !hasReport) finishButton.hidden = false;
     }).catch(function(){ sessionStorage.removeItem('tideline-loki-audit'); });
   } catch (_) {}
 })();
