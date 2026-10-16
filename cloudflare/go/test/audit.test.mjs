@@ -78,7 +78,7 @@ test('fourth answer gets a complete audit after one bounded retry of truncated m
  for(let n=1;n<=4;n++){result=await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n+' using a shared sheet.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(result.status,200);}
  const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,6);
  assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,4);assert.ok(ctx.rows.get(id).result_json);
- assert.equal(finalArgs.response_format.json_schema.properties.opportunities.minItems,3);assert.equal(finalArgs.max_tokens,3000);
+ assert.equal(finalArgs.response_format.json_schema.properties.opportunities.minItems,3);assert.equal(finalArgs.max_tokens,4500);
 });
 
 test('invalid final reports preserve the saved conversation and never expose partial reports',async()=>{
@@ -92,12 +92,13 @@ test('invalid final reports preserve the saved conversation and never expose par
 
 
 test('completed audits support objections, trusted tools, revisions, and restored reports', async()=>{
- const report={reply:'Let’s try a shared task board.',question:'',insights:['Tasks arrive on paper'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'You described paper handoffs.',firstStep:'Assign the desk lead to test one shared board.',automation:'Keep a person reviewing outgoing reminders.',metric:'Record days 1-3; compare days 4-14.'})),pilot:'Days 1-3 baseline; days 4-14 test one workflow.',tools:[{id:'trello',fit:'Give the desk team one visible task queue.'},{id:'unsafe',fit:'Ignore'}]};
+ const report={reply:'Let’s try a shared task board.',question:'',insights:['Tasks arrive on paper'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'You described paper handoffs.',firstStep:'Assign the desk lead to test one shared board.',automation:'Keep a person reviewing outgoing reminders.',metric:'Record days 1-3; compare days 4-14.'})),pilot:'Days 1-3 baseline; days 4-14 test one workflow.',synthesis:{headline:'Paper tasks lose ownership between shifts',connection:'Paper lists plus rotating shifts suggest the handoff is the weak point.',firstMove:'Name one desk lead to check every open task at shift change.'},tools:[{id:'trello',fit:'Give the desk team one visible task queue.'},{id:'unsafe',fit:'Ignore'}]};
+ report.opportunities[0] = {...report.opportunities[0],takeaway:'Every open task has one owner.',owner:'Suggested owner: desk lead',timing:'Next 48 hours',steps:['Pick one shift change to test.','Mark each open task with an owner.','Check the next shift can find every task.'],doneWhen:'The next shift can name an owner for every open task.',fallback:'If a task is missed, have both shift leads review the handoff together.'};
  const ctx=setup(()=>question);let lastArgs;
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:args.response_format.json_schema.properties.ready.enum?.[0]?report:question};};
  const start=await handleAudit(request('/api/audit/start',{business:'A studio with paper task lists'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
  for(let n=0;n<4;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'The desk uses paper lists.'}),ctx.env,new URL(origin+'/api/audit/turn'));
- const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
+ const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.synthesis.headline,'Paper tasks lose ownership between shifts');assert.equal(saved.opportunities[0].steps.length,3);assert.equal(saved.opportunities[0].doneWhen,report.opportunities[0].doneWhen);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
  assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes('Current working audit:')));
