@@ -356,3 +356,28 @@
 .loki-links .tab{display:block;width:100%;text-align:left;text-decoration:none;border:0;border-radius:4px;padding:10px 12px;white-space:nowrap}
 .loki-links .tab:hover,.loki-links .tab:focus-visible{background:var(--tint)}
 @media(max-width:520px){.tabs{flex-wrap:wrap}.loki-toggle{padding-left:12px;padding-right:12px}}
+
+/* Ask Loki is one continuous message workspace. */
+#tab-audit .audit-wrap{max-width:960px;padding-top:24px;padding-bottom:0;}
+#tab-audit .audit-heading{margin-bottom:20px;}
+#tab-audit .audit-heading h1{font-size:clamp(26px,4vw,40px);}
+#tab-audit .audit-workspace{display:block;}
+#tab-audit .audit-workspace[hidden]{display:none;}
+#tab-audit .audit-conversation{display:flex;flex-direction:column;height:calc(100dvh - 260px);min-height:420px;}
+#tab-audit .audit-transcript{flex:1;min-height:0;max-height:none;overflow-y:auto;padding:20px 8px 28px;scroll-behavior:smooth;}
+#tab-audit .audit-bubble{border-radius:18px;padding:14px 18px;max-width:85%;}
+#tab-audit .audit-bubble p{white-space:pre-wrap;line-height:1.6;}
+#tab-audit .audit-answer{flex-shrink:0;position:sticky;bottom:0;background:var(--paper,#fff);border:1px solid var(--line);border-radius:18px;padding:10px;box-shadow:0 -8px 24px #142c4210;}
+#tab-audit .audit-answer textarea{border:0;background:transparent;}
+#tab-audit .audit-result{max-width:100%;padding:24px;background:var(--tint);border:1px solid var(--line);border-radius:18px;margin:18px 0;}
+.audit-discuss{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--navy-deep);padding:9px 13px;margin:8px 8px 0 0;cursor:pointer;}
+.audit-discuss:hover,.audit-discuss:focus-visible{border-color:var(--navy);}
+.audit-tool{padding:20px;background:var(--paper);border:1px solid var(--line);border-radius:14px;margin-top:14px;}
+.audit-tool img{float:left;margin-right:12px;object-fit:contain;}
+.audit-tool h3{margin:4px 0 14px;}
+.audit-tool a{display:inline-block;margin:8px 16px 8px 0;}
+.audit-tool-price{font-size:14px;}
+@media(max-width:720px){#tab-audit .audit-conversation{height:calc(100dvh - 220px);}#tab-audit .audit-heading p{font-size:14px;}#tab-audit .audit-result{padding:16px;}}
+@media print{#tab-audit .audit-workspace,#tab-audit .audit-conversation,#tab-audit .audit-transcript{display:block!important;height:auto;overflow:visible;}#tab-audit .audit-bubble,#tab-audit .audit-answer,.audit-status,.audit-finish,.audit-discuss{display:none!important;}#tab-audit .audit-result{break-inside:auto;}}
+
+#tab-audit .audit-transcript>*{flex-shrink:0;}
