@@ -1,5 +1,5 @@
 """Coordinator acceptance: exact assets, deployed version, and a disposable live audit."""
-import hashlib,json,os,pathlib,subprocess,urllib.request
+import hashlib,json,os,pathlib,subprocess
 commit=os.environ['AGENT_RELEASE_COMMIT']
 assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==commit
 origin='https://tidelinestrats.com'
@@ -18,8 +18,7 @@ log=(pathlib.Path.home()/'.agent-workspaces/coordinator/logs'/f"{os.environ['AGE
 assert versions[0] in log
 
 def post(path,body):
-    req=urllib.request.Request(origin+'/api/audit/'+path,data=json.dumps(body).encode(),headers={'Origin':origin,'Content-Type':'application/json'})
-    with urllib.request.urlopen(req,timeout=90) as response: data=json.load(response)
+    data=json.loads(subprocess.check_output(['curl','--fail-with-body','--silent','--show-error','--max-time','90',origin+'/api/audit/'+path,'-H','Origin: '+origin,'-H','Content-Type: application/json','--data-binary','@-'],input=json.dumps(body).encode()))
     assert data['ok']
     return data
 session=None
