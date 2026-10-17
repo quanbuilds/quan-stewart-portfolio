@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const auditSource = await readFile(new URL('../src/audit.js', import.meta.url), 'utf8');
+const auditSource = (await readFile(new URL('../src/audit.js', import.meta.url), 'utf8')).replace("from './loki-roadmap.js'", 'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/loki-roadmap.js', import.meta.url),'utf8'))));
 const auditUrl = `data:text/javascript,${encodeURIComponent(auditSource)}`;
 const source = (await readFile(new URL('../src/operator.js', import.meta.url), 'utf8'))
   .replace("from './audit.js'", `from ${JSON.stringify(auditUrl)}`);
