@@ -26,10 +26,11 @@
       blocks.filter(function(b){return b.value;}).forEach(function(b){
         var size=b.size||11,leading=size*1.4,indent=b.number?28:0;
         var list=lines(b.value,width-indent,size,b.kind);
-        var head=b.label?19:0;
+        var head=b.label?(b.logo?36:19):0;
         if(b.reserve && b.reserve <= LIMIT-records[pi].top && y+b.reserve>LIMIT)next();
         if(y+head+Math.min(list.length,2)*leading+8>LIMIT)next();
-        if(b.label){label(b.label,x,y+3,b.color);y+=19;}
+        if(b.logo){pdf.addImage('data:image/png;base64,'+b.logo,'PNG',x,y-10,30,30,undefined,'FAST');}
+        if(b.label){label(b.label,x+(b.logo?42:0),y+3,b.color);y+=b.logo?36:19;}
         if(b.number){box(x,y-11,20,20,C.ice,5);font(10,'bold',C.navy);pdf.text(String(b.number),x+10,y+3,{align:'center'});}
         list.forEach(function(line){if(y+leading>LIMIT)next();font(size,b.kind,b.textColor||C.ink);pdf.text(line,x+indent,y+size*.85);if(b.href)pdf.link(x+indent,y,width-indent,leading,{url:b.href});y+=leading;});y+=b.gap===undefined?16:b.gap;
       });
@@ -82,7 +83,10 @@
     if(report.tools?.length){
       function toolRecord(continued){base('OPTIONAL TOOLS'+(continued?' / CONTINUED':''),true);label('USE WHAT FITS YOUR WORK',M,87,C.blue);write('Tools to consider, not a shopping list.',M,120,690,{kind:'display',size:27,color:C.deep});return{page:pdf.getCurrentPageInfo().pageNumber,top:158};}
       var tr=[toolRecord(false)],tb=[];
-      report.tools.forEach(function(tool){tb.push({label:tool.name,value:tool.fit||tool.description,kind:'bold',size:13},{value:tool.description,size:11},{label:'EXAMPLE BUDGET / USD BEFORE TAX',value:tool.pricing,size:10.5},{label:'WEBSITE',value:tool.url,href:tool.url,size:10,gap:8},{label:'PRICING CHECKED '+(tool.checkedAt||''),value:tool.pricingUrl,href:tool.pricingUrl,size:10,gap:30});});
+      report.tools.forEach(function(tool){tb.push({label:tool.name,logo:brand.tools?.[tool.id||String(tool.name).toLowerCase()],value:tool.fit||tool.description,kind:'bold',size:13,reserve:120},{value:tool.description,size:11},{label:'EXAMPLE BUDGET / USD BEFORE TAX',value:tool.pricing,size:10.5},{label:'WEBSITE',value:tool.url,href:tool.url,size:10,gap:8},{label:'PRICING CHECKED '+(tool.checkedAt||''),value:tool.pricingUrl,href:tool.pricingUrl,size:10,gap:30});});
+      for(var ti=0;ti<tb.length;ti+=5){
+        tb[ti].reserve=tb.slice(ti,ti+5).reduce(function(sum,b){return sum+(b.label?(b.logo?36:19):0)+lines(b.value,708,b.size||11,b.kind).length*(b.size||11)*1.4+(b.gap===undefined?16:b.gap);},0);
+      }
       flow(tb,M,708,tr,toolRecord);
     }
     footer();return pdf;
