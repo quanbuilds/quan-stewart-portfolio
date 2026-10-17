@@ -106,7 +106,7 @@ test('completed audits support objections, trusted tools, revisions, and restore
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
  assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes(report.pilot)));
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}};};
- const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(lastArgs.response_format.json_schema.properties.ready.enum[0],true);
+ const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(lastArgs.response_format.json_schema.properties.ready.enum[0],true);assert.ok(!lastArgs.messages.some(m=>m.content.startsWith('Earlier provisional audit:')));assert.ok(lastArgs.messages.some(m=>m.content.includes('Withdraw every recommendation')));
  const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
 });
 
