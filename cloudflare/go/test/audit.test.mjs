@@ -105,13 +105,13 @@ test('completed audits support objections, trusted tools, revisions, and restore
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
  assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes(report.pilot)));
- ctx.env.AI.run=async()=>({response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}});
- const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);
+ ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}};};
+ const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(lastArgs.response_format.json_schema.properties.ready.enum[0],true);
  const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
 });
 
 test('topic suffixes disappear without damaging normal questions or original estimates',async()=>{
- const ctx=setup(()=>({...question,reply:'Got it. [topic: intake]',question:"How does a schedule change reach the office?', handoff"}));
+ const ctx=setup(()=>({...question,reply:'Got it. [topic: intake]',question:"How does a schedule change reach the office?', afternoon coverage"}));
  const start=await handleAudit(request('/api/audit/start',{business:'We get about 15–20 inquiries a week'}),ctx.env,new URL(origin+'/api/audit/start'));
  const body=await start.json();assert.equal(body.message.reply,'Got it.');assert.equal(body.message.question,'How does a schedule change reach the office?');
  ctx.env.AI.run=async()=>({response:{...question,reply:'That estimate is enough to start.',question:'Which tools do you use?'}});
