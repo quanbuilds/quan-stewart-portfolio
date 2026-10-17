@@ -38,7 +38,7 @@ try:
     for item in message['opportunities']:
         assert item['takeaway'] and item['owner'] and item['timing']
         assert len(item['steps'])==3 and item['doneWhen'] and item['fallback']
-        assert item['aiHelp'] and item['aiPrompt'] and item['humanCheck']
+        assert len(item['firstStep'])>=65 and len(item['aiHelp'])>=90 and len(item['aiPrompt'])>=120 and len(item['humanCheck'])>=50
     evidence['synthesis_and_execution']='diagnosis, causal explanation, ranked actions, owners, steps, acceptance checks, recovery actions'
     follow=post('turn',{**session,'answer':'We already use group texts, and Calendly will not know crew travel or job skills. I do not want more daily chasing put back on me. What is the one easiest change using our existing tools, and who handles requests after 1?'})['message']
     assert follow['reply']
