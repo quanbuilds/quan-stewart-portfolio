@@ -81,7 +81,7 @@
 <div class="audit-conversation"><div aria-live="polite" class="audit-transcript" id="auditTranscript"></div><form class="audit-answer" id="auditAnswerForm"><label class="sr-only" for="auditAnswer">Your answer to Loki</label><textarea id="auditAnswer" maxlength="1000" placeholder="Tell Loki what happens…" required rows="2"></textarea><button class="cta-primary" type="submit">Send</button></form><button class="audit-finish" hidden id="auditFinish" type="button">I’m ready for my audit</button><p aria-live="polite" class="audit-status" id="auditStatus" role="status"></p></div>
 <ul hidden id="auditInsights"></ul>
 </div>
-<div class="audit-result" hidden id="auditResult"><div class="eyebrow">Your working audit</div><h2 id="auditDiagnosis">Your next moves, in order</h2><p class="audit-connection" id="auditConnection"></p><div class="audit-first-move" id="auditFirstMove"></div><nav class="audit-overview" id="auditOverview" aria-label="Audit priorities"></nav><div id="auditOpportunities"></div><details class="audit-pilot"><summary><span class="audit-label">Keep it small · Measure before expanding</span><h3>Your two-week pilot</h3><span class="audit-expand">Open the plan +</span></summary><p id="auditPilot"></p><p>Ask Loki to adapt the pilot if an owner, tool, or assumption is wrong.</p></details><section id="auditToolsSection" hidden><h3>Tools worth a look</h3><p>Start with what you already have. These are optional, with example budgets in USD before tax; confirm seats, usage, and billing before choosing a plan.</p><div id="auditTools"></div></section><button class="audit-print" id="auditPrint" type="button">Print or save this plan</button><button class="audit-delete" id="auditDelete" type="button">Delete this audit</button>
+<div class="audit-result" hidden id="auditResult"><div class="eyebrow">Your working audit</div><h2 id="auditDiagnosis">Your next moves, in order</h2><p class="audit-connection" id="auditConnection"></p><div class="audit-first-move" id="auditFirstMove"></div><nav class="audit-overview" id="auditOverview" aria-label="Audit priorities"></nav><div id="auditOpportunities"></div><section class="audit-pilot"><span class="audit-label">One small change · A clear check</span><h3>Your two-week pilot</h3><div class="audit-plan-links"><a class="audit-plan-open" id="auditPlanOpen" target="_blank" rel="noopener" aria-disabled="true">Open the plan (PDF) ↗</a><a id="auditPlanSave" download="loki-business-plan.pdf" aria-disabled="true">Download PDF</a></div><p class="audit-pdf-status" id="auditPDFStatus" role="status"></p><details><summary>Read the pilot here</summary><p id="auditPilot"></p></details><p>Ask Loki to adapt the plan if something doesn’t fit.</p></section><section id="auditToolsSection" hidden><h3>Tools worth a look</h3><p>Start with what you already have. These are optional, with example budgets in USD before tax; confirm seats, usage, and billing before choosing a plan.</p><div id="auditTools"></div></section><button class="audit-print" id="auditPrint" type="button">Print or save this plan</button><button class="audit-delete" id="auditDelete" type="button">Delete this audit</button>
 <p>Ask me about any part of this plan, challenge a recommendation, or explain what I misunderstood.</p>
 </div>
 </div>
@@ -451,6 +451,10 @@
 </form></div>
 </section>
 <script src="site.js" defer></script>
+<script src="vendor/jspdf-4.2.1.umd.min.js" defer></script>
+<script src="loki-pdf-brand.js" defer></script>
+<script src="loki-plan-pdf.js" defer></script>
+<script src="loki-text.js" defer></script>
 <script src="loki-audit.js" defer></script>
 
 <script src="/analytics.js" defer></script>

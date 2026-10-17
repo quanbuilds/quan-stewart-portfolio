@@ -17,17 +17,21 @@
   var session = null;
   var count = 0;
   var hasReport = false;
+  var businessContext = '';
+  var pdfUrl = null;
+  var thinkingIndex = 0;
 
   function el(tag, className, value){ var node = document.createElement(tag); if(className) node.className = className; if(value) node.textContent = value; return node; }
   function bubble(who, value){
     var item = el('div', 'audit-bubble audit-bubble-' + who);
     item.append(el('div', 'audit-bubble-who', who === 'loki' ? 'Loki' : 'You'));
-    item.append(el('p', '', value));
+    item.append(el('p', '', who === 'loki' ? window.LokiText.clean(value) : value));
     transcript.append(item);
     transcript.scrollTop = transcript.scrollHeight;
+    return item;
   }
   function showMessage(message){
-    if(message.reply || message.question) bubble('loki', [message.reply, message.question].filter(Boolean).join(' '));
+    if(message.reply || message.question) bubble('loki', [window.LokiText.clean(message.reply), window.LokiText.clean(message.question)].filter(Boolean).join(' '));
     insightsList.replaceChildren();
     var list = Array.isArray(message.insights) && message.insights.length ? message.insights : ['Loki is tracing your workflow.'];
     list.forEach(function(value){ insightsList.append(el('li', '', value)); });
@@ -35,6 +39,7 @@
   }
   function showResult(message){
     hasReport = true;
+    updatePDF(message);
     answerForm.hidden = false;
     answerInput.placeholder = 'Ask a question, push back, or tell me what I missed…';
     finishButton.hidden = true;
@@ -65,11 +70,12 @@
       body.append(el('div', 'audit-label', 'Why this matters'), el('p', '', item.evidence));
       if(item.steps?.length){ var steps = el('ol', 'audit-execution'); item.steps.forEach(function(step){steps.append(el('li', '', step));}); body.append(el('h4', '', 'How to execute'), steps); }
       else { body.append(el('h4', '', 'How to begin'), el('p', '', item.firstStep)); }
-      [['You’re done when', item.doneWhen], ['If it stalls', item.fallback], ['Check the result', item.metric], ['Automate later', item.automation]].forEach(function(pair){
+      [['You’re done when', item.doneWhen], ['If it stalls', item.fallback], ['Check the result', item.metric], ['Let AI help', item.aiHelp], ['Check before using', item.humanCheck], ['Connect later, if useful', item.automation]].forEach(function(pair){
         if(!pair[1]) return;
         var block = el('div', pair[0] === 'If it stalls' ? 'audit-check audit-recovery' : 'audit-check');
         block.append(el('h4', '', pair[0]), el('p', '', pair[1])); body.append(block);
       });
+      if(item.aiPrompt) body.append(askButton('Use this AI prompt', item.aiPrompt));
       body.append(askButton('Walk me through this', 'Walk me through “' + item.title + '” step by step. Help me choose an owner, verify the first sample, and handle the likeliest snag.'));
       body.append(askButton('Correct this', 'I’d like to correct the assumption behind “' + item.title + '”: '));
       card.append(body); opportunities.append(card);
@@ -98,6 +104,22 @@
     status.textContent = 'What feels useful — and what did I miss?';
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+  function updatePDF(message){
+    var open = document.getElementById('auditPlanOpen');
+    var save = document.getElementById('auditPlanSave');
+    try {
+      var pdf = window.LokiPlanPDF.create(window.jspdf.jsPDF, message, businessContext);
+      var nextUrl = URL.createObjectURL(pdf.output('blob'));
+      var previousUrl = pdfUrl; pdfUrl = nextUrl;
+      [open,save].forEach(function(link){link.href=pdfUrl;link.removeAttribute('aria-disabled');});
+      if(previousUrl) URL.revokeObjectURL(previousUrl);
+      document.getElementById('auditPDFStatus').textContent = 'PDF ready to save or share with your team.';
+    } catch(error){
+      if(pdfUrl) URL.revokeObjectURL(pdfUrl);pdfUrl=null;
+      [open,save].forEach(function(link){link.removeAttribute('href');link.setAttribute('aria-disabled','true');});
+      document.getElementById('auditPDFStatus').textContent = 'The PDF could not be created. You can still read the plan below or print it.';
+    }
+  }
   function askButton(label, prompt){
     var button = el('button', 'audit-discuss', label); button.type = 'button';
     button.addEventListener('click', function(){ answerInput.value = prompt; answerInput.focus(); });
@@ -123,7 +145,7 @@
     startStatus.textContent = 'Loki is preparing your first question…';
     try {
       var data = await post('/api/audit/start', {business:business});
-      session = {id:data.id, token:data.token};
+      session = {id:data.id, token:data.token}; businessContext = business;
       try { sessionStorage.setItem('tideline-loki-audit', JSON.stringify(session)); } catch (_) {}
       onboard.hidden = true; workspace.hidden = false;
       bubble('you', business); showMessage(data.message);
@@ -135,14 +157,20 @@
     event.preventDefault(); if(!session || answerForm.getAttribute('aria-busy') === 'true') return;
     var answer = answerInput.value.trim(); if(!answer) return;
     var sendButton = answerForm.querySelector('button[type="submit"]'); setBusy(sendButton, true); answerForm.setAttribute('aria-busy', 'true'); answerInput.readOnly = true;
-    status.textContent = 'Loki is thinking through that…';
+    var userBubble = bubble('you', answer);
+    var pending = null;
+    var preparingPlan = !hasReport && count >= 3;
+    var thinking = preparingPlan ? ["Give me a moment to look over what you've shared.", "One minute - I'm putting the pieces together.", "Let me pull this into a plan you can use."] : ["Let me think that through.", "One moment - I'm looking at that."];
+    var timer = setTimeout(function(){pending=bubble('loki',thinking[thinkingIndex++ % thinking.length]);pending.classList.add('audit-thinking');pending.setAttribute('aria-busy','true');},800);
+    status.textContent = '';
     try {
       var data = await post('/api/audit/turn', {id:session.id, token:session.token, answer:answer});
-      bubble('you', answer); answerInput.value = ''; count += 1;
-      status.textContent = ''; showMessage(data.message);
+      clearTimeout(timer); if(pending) pending.remove();
+      answerInput.value = ''; count += 1;
+      showMessage(data.message);
       if(count >= 4 && !data.message.ready && !hasReport){ answerInput.placeholder = 'Answer Loki, or ask for your audit now…'; finishButton.hidden = false; }
-    } catch(error){ status.textContent = errorText(error); }
-    finally { setBusy(sendButton, false); answerForm.setAttribute('aria-busy', 'false'); answerInput.readOnly = false; answerInput.focus(); }
+    } catch(error){ clearTimeout(timer); if(pending) pending.remove(); userBubble.remove(); status.textContent = errorText(error); }
+    finally { clearTimeout(timer); setBusy(sendButton, false); answerForm.setAttribute('aria-busy', 'false'); answerInput.readOnly = false; answerInput.focus(); }
   });
   finishButton.addEventListener('click', function(){ answerInput.value = 'Please finish the audit with your best current diagnosis. Mark any assumptions.'; answerForm.requestSubmit(); });
   document.getElementById('auditPrint').addEventListener('click', function(){ window.print(); });
@@ -151,7 +179,7 @@
     try {
       await post('/api/audit/delete', session);
       try { sessionStorage.removeItem('tideline-loki-audit'); } catch (_) {}
-      session = null; hasReport = false; result.remove(); transcript.replaceChildren(); opportunities.replaceChildren();
+      session = null; hasReport = false; businessContext = ''; if(pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl=null; result.remove(); transcript.replaceChildren(); opportunities.replaceChildren();
       workspace.hidden = true; result.hidden = true; document.querySelector(".audit-wrap").append(result); onboard.hidden = false; businessInput.value = '';
       startStatus.textContent = 'Your audit was deleted.';
       businessInput.focus();
@@ -160,9 +188,9 @@
   try {
     var saved = JSON.parse(sessionStorage.getItem('tideline-loki-audit') || 'null');
     if(saved?.id && saved?.token) post('/api/audit/state', saved).then(function(data){
-      session = saved; onboard.hidden = true; workspace.hidden = false;
+      session = saved; businessContext = data.business || ''; onboard.hidden = true; workspace.hidden = false;
       bubble('you', data.business);
-      (data.turns || []).forEach(function(turn){ if(turn.reply || turn.question) bubble('loki', [turn.reply,turn.question].filter(Boolean).join(' ')); bubble('you', turn.answer); });
+      (data.turns || []).forEach(function(turn){ if(turn.reply || turn.question) bubble('loki', [window.LokiText.clean(turn.reply),window.LokiText.clean(turn.question)].filter(Boolean).join(' ')); bubble('you', turn.answer); });
       if(data.report && !data.message.ready) showResult(data.report);
       count = (data.turns || []).length; showMessage(data.message);
       if(count >= 4 && !data.message.ready && !hasReport) finishButton.hidden = false;

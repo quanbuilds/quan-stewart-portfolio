@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const source = await readFile(new URL('../src/audit.js', import.meta.url), 'utf8');
+const source = (await readFile(new URL('../src/audit.js', import.meta.url), 'utf8')).replace("from './loki-roadmap.js'", 'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/loki-roadmap.js', import.meta.url),'utf8'))));
 const { handleAudit } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
 const origin = 'https://tidelinestrats.com';
 function request(path, body, sourceOrigin = origin) {
@@ -93,16 +93,25 @@ test('invalid final reports preserve the saved conversation and never expose par
 
 test('completed audits support objections, trusted tools, revisions, and restored reports', async()=>{
  const report={reply:'Let’s try a shared task board.',question:'',insights:['Tasks arrive on paper'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'You described paper handoffs.',firstStep:'Assign the desk lead to test one shared board.',automation:'Keep a person reviewing outgoing reminders.',metric:'Record days 1-3; compare days 4-14.'})),pilot:'Days 1-3 baseline; days 4-14 test one workflow.',synthesis:{headline:'Paper tasks lose ownership between shifts',connection:'Paper lists plus rotating shifts suggest the handoff is the weak point.',firstMove:'Name one desk lead to check every open task at shift change.'},tools:[{id:'trello',fit:'Give the desk team one visible task queue.'},{id:'unsafe',fit:'Ignore'}]};
- report.opportunities[0] = {...report.opportunities[0],takeaway:'Every open task has one owner.',owner:'Suggested owner: desk lead',timing:'Next 48 hours',steps:['Pick one shift change to test.','Mark each open task with an owner.','Check the next shift can find every task.'],doneWhen:'The next shift can name an owner for every open task.',fallback:'If a task is missed, have both shift leads review the handoff together.'};
+ report.opportunities[0] = {...report.opportunities[0],takeaway:'Every open task has one owner.',owner:'Suggested owner: desk lead',timing:'Next 48 hours',steps:['Pick one shift change to test.','Mark each open task with an owner.','Check the next shift can find every task.'],aiHelp:'Draft a short handoff checklist from anonymous examples.',aiPrompt:'Make a checklist from these examples: [anonymous tasks]. Do not guess availability.',humanCheck:'The desk lead checks each step against the real shift.',doneWhen:'The next shift can name an owner for every open task.',fallback:'If a task is missed, have both shift leads review the handoff together.'};
  const ctx=setup(()=>question);let lastArgs;
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:args.response_format.json_schema.properties.ready.enum?.[0]?report:question};};
  const start=await handleAudit(request('/api/audit/start',{business:'A studio with paper task lists'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
  for(let n=0;n<4;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'The desk uses paper lists.'}),ctx.env,new URL(origin+'/api/audit/turn'));
- const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.synthesis.headline,'Paper tasks lose ownership between shifts');assert.equal(saved.opportunities[0].steps.length,3);assert.equal(saved.opportunities[0].doneWhen,report.opportunities[0].doneWhen);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
+ const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.synthesis.headline,'Paper tasks lose ownership between shifts');assert.equal(saved.opportunities[0].aiPrompt,report.opportunities[0].aiPrompt);assert.equal(saved.opportunities[0].humanCheck,report.opportunities[0].humanCheck);assert.equal(saved.opportunities[0].steps.length,3);assert.equal(saved.opportunities[0].doneWhen,report.opportunities[0].doneWhen);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
  assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes('Current working audit:')));
  ctx.env.AI.run=async()=>({response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}});
  const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);
  const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
+});
+
+test('topic suffixes disappear without damaging normal questions or original estimates',async()=>{
+ const ctx=setup(()=>({...question,reply:'Got it. [topic: intake]',question:"How does a schedule change reach the office?', handoff"}));
+ const start=await handleAudit(request('/api/audit/start',{business:'We get about 15–20 inquiries a week'}),ctx.env,new URL(origin+'/api/audit/start'));
+ const body=await start.json();assert.equal(body.message.reply,'Got it.');assert.equal(body.message.question,'How does a schedule change reach the office?');
+ ctx.env.AI.run=async()=>({response:{...question,reply:'That estimate is enough to start.',question:'Which tools do you use?'}});
+ const turn=await handleAudit(request('/api/audit/turn',{id:body.id,token:body.token,answer:'The office manager leaves at 1.'}),ctx.env,new URL(origin+'/api/audit/turn'));
+ assert.equal((await turn.json()).message.question,'Which tools do you use?');
 });
