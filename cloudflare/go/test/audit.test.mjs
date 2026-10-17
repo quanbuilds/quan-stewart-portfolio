@@ -130,3 +130,11 @@ test('vague AI help is retried and never replaces the saved conversation with a 
  const result=await handleAudit(request('/api/audit/turn',{id,token,answer:'What should we do on Monday?'}),ctx.env,new URL(origin+'/api/audit/turn'));
  assert.equal(result.status,503);assert.equal(attempts,2);assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,3);assert.equal(ctx.rows.get(id).result_json,'');
 });
+
+
+test('Workers AI dialogue result safely ignores an empty model thinking wrapper',async()=>{
+ const ctx=setup(()=>'<think></think>\n'+JSON.stringify(question));let modelName;
+ const run=ctx.env.AI.run;ctx.env.AI.run=async(model,args)=>{modelName=model;assert.match(args.messages[0].content,/no_think/);return run(model,args);};
+ const res=await handleAudit(request('/api/audit/start',{business:'A cleaning company with seven cleaners'}),ctx.env,new URL(origin+'/api/audit/start'));
+ assert.equal(res.status,200);assert.equal((await res.json()).message.reply,question.reply);assert.equal(modelName,'@cf/qwen/qwen3-30b-a3b-fp8');
+});
