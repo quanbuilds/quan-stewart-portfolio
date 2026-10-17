@@ -8,6 +8,7 @@ const {create}=require('../../../signallabs/loki-plan-pdf.js');
 const {clean}=require('../../../signallabs/loki-text.js');
 
 test('old session labels are cleaned without deleting ordinary business language',()=>{
+ assert.equal(clean('Who can cover that? afternoon coverage'),'Who can cover that?');
  assert.equal(clean('What happens next? arrival'),'What happens next?');
  assert.equal(clean("How does that work?', handoff"),'How does that work?');
  assert.equal(clean('Which tools do you use?'),'Which tools do you use?');
