@@ -86,11 +86,20 @@ async function generate(env, hint, turns, report = null) {
   for (const turn of turns) { messages.push({ role: 'assistant', content: JSON.stringify({reply:cleanMessageText(turn.reply,1200),question:cleanMessageText(turn.question,320)}) }); messages.push({ role: 'user', content: turn.answer }); }
   if (!report && turns.length >= MAX_TURNS) messages.push({ role: 'user', content: 'Finish the audit now. State any remaining assumptions and return three practical opportunities.' });
   const finish = !report && turns.length >= 4;
-  if (report) messages.push({role:"system",content:"Current working audit: " + JSON.stringify(report) + ". Discuss the latest user message naturally. Revise the report only if needed; otherwise ready=false and no report fields."});
+  if (report) messages.push({role:'system',content:'Earlier provisional audit: '+JSON.stringify(report)+'. The owner’s latest correction outranks this draft. If the draft repeats their existing routine, adds owner chasing, or suggests an unsuitable tool, change that recommendation. Address why it failed in their actual workflow before explaining ONE easier action. If afternoon coverage is unknown, ask who can own one afternoon check; do not simply assign all the work back to the owner. Do not guess calendar availability. For an ordinary answer use ready=false; for a changed plan return a complete revised report.'});
   const schema = structuredClone(replySchema);
   schema.properties.ready = report ? {type:'boolean'} : { type: 'boolean', enum: [finish] };
   schema.properties.reply.minLength = 1;
   schema.properties.reply.maxLength = finish ? 260 : 1200;
+  schema.properties.reply.description = finish ? 'One or two warm complete sentences, spoken directly to the owner. Introduce the first concrete action, not a summary or labels.' : 'Answer like an experienced colleague. Explain a correction and one easy action in short complete sentences.';
+  schema.properties.synthesis.properties.connection.minLength = finish ? 120 : 0;
+  schema.properties.synthesis.properties.connection.description = 'Connect at least two facts the owner actually supplied. Explain the cause and why this first change helps, in 2-3 plain sentences.';
+  var fields = schema.properties.opportunities.items.properties;
+  [['firstStep',75],['evidence',65],['metric',80],['aiHelp',100],['aiPrompt',140],['humanCheck',60],['fallback',75]].forEach(([key,min])=>{fields[key].minLength=min;});
+  fields.aiHelp.description='Name the actual input (such as five anonymous request examples), the AI task (sort/draft/compare), and the concrete output (such as a table with named columns). Never write only "AI can help set up the list".';
+  fields.aiPrompt.description='A useful prompt the owner can copy: include placeholders for anonymous examples, explicit output columns or format, and what the AI must not guess.';
+  fields.firstStep.description='A person, a time, a current tool, and a concrete action. Explain the exact change to the existing process; do not just name a new list.';
+  fields.steps.items.minLength=45;
   schema.properties.question = report ? {type:'string'} : finish ? { type: 'string', enum: [''] } : { type: 'string', minLength: 1 };
   schema.properties.opportunities.minItems = finish ? 3 : 0;
   schema.properties.opportunities.maxItems = report || finish ? 3 : 0;
@@ -99,14 +108,18 @@ async function generate(env, hint, turns, report = null) {
     messages.push({role:'user',content:'Four answers are available. Give a warm 1-2 sentence chat introduction, then ready=true with three complete priorities, one change to start now, a small two-week pilot, and useful AI help with copy-ready prompts. Use short plain sentences. Do not repeat routines the owner already uses. Do not invent facts.'});
   }
   for (let attempt = 0; attempt < 2; attempt++) {
-    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish || report ? 4500 : 1000, temperature: 0.25 });
+    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish || report ? 6500 : 1000, temperature: 0.25 });
     try {
       const message = normalize(output, turns.length);
       if (!message.reply || (finish ? !message.ready || !message.pilot : !report && !message.question)) throw new Error('invalid_ai_response');
+      if (message.ready) {
+        var weak = message.synthesis.connection.length < 100 || message.opportunities.some(item => item.firstStep.length < 65 || item.aiHelp.length < 90 || item.aiPrompt.length < 120 || item.humanCheck.length < 50);
+        if(weak) throw new Error('advice_too_vague');
+      }
       return message;
     } catch {
       if (attempt) throw new Error('invalid_ai_response');
-      messages.push({role:'user',content:'The previous response did not validate. Return complete JSON matching every required schema field; do not omit or truncate fields.'});
+      messages.push({role:'user',content:'The previous response was incomplete or too vague. Rewrite all required fields as usable instructions. Explain the real input, action and output of each AI task, include a ready-to-copy prompt and a concrete human check. Give an owner, time and actual action, not headings such as "Create shared list". The connection must link two supplied facts in complete sentences. Return complete JSON; do not truncate.'});
     }
   }
   throw new Error('invalid_ai_response');
