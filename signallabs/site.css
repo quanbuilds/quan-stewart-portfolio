@@ -438,3 +438,14 @@
 @media print{.audit-overview,.audit-expand{display:none!important;}.audit-opportunity>* , .audit-pilot>*,.audit-tool-details>*{display:block!important;}#auditTools{display:block;}.audit-action-summary,.audit-action-body{break-inside:avoid;}}
 
 .audit-price-badge{font-size:12px;color:var(--navy);font-weight:600;background:var(--tint);border-radius:8px;padding:8px 10px;line-height:1.5;}
+.audit-thinking{opacity:.75;}
+.audit-thinking p::after{content:' …';}
+.audit-plan-links{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:16px 0 8px;}
+.audit-plan-links a{font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;}
+.audit-plan-links .audit-plan-open{background:var(--navy);color:var(--paper);padding:12px 16px;border-radius:10px;text-decoration:none;transition:box-shadow .18s,transform .18s;}
+.audit-plan-open:hover,.audit-plan-open:focus-visible{box-shadow:0 4px 16px #142c4230;transform:translateY(-1px);}
+.audit-plan-links [aria-disabled=true]{opacity:.55;cursor:default;}
+.audit-pdf-status{font-size:12px;color:var(--steel);}
+.audit-pilot>details>summary{font-size:13px;color:var(--navy);padding:10px 0;cursor:pointer;}
+@media print{.audit-plan-links,.audit-pdf-status,.audit-thinking{display:none!important;}}
+@media(prefers-reduced-motion:reduce){.audit-plan-open{transition:none!important;transform:none!important;}}
