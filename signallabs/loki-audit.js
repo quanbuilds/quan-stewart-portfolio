@@ -87,8 +87,16 @@
     pilot.textContent = message.pilot || 'Select the first opportunity, test it with your team, and compare the outcome after two weeks.';
     (message.tools || []).forEach(function(tool){
       var card = el('article', 'audit-tool');
-      var logo = el('img'); logo.src = tool.logo; logo.alt = ''; logo.width = 32; logo.height = 32;
-      logo.addEventListener('error', function(){ logo.hidden = true; });
+      // Resolve branding locally, including reports saved with expired external logo URLs.
+      var knownLogos = {trello:'/assets/tools/trello.ico',calendly:'/assets/tools/calendly.ico',zapier:'/assets/tools/zapier.ico'};
+      var toolKey = String(tool.id || tool.name || '').trim().toLowerCase();
+      var logo = el('img'); logo.src = knownLogos[toolKey] || tool.logo; logo.alt = ''; logo.width = 32; logo.height = 32;
+      logo.style.flexShrink = '0';
+      logo.addEventListener('error', function(){
+        var embedded = window.LokiPDFBrand && window.LokiPDFBrand.tools && window.LokiPDFBrand.tools[toolKey];
+        if(embedded && !logo.dataset.usedFallback){logo.dataset.usedFallback='true';logo.src='data:image/png;base64,'+embedded;}
+        else logo.hidden = true;
+      });
       var heading = el('div', 'audit-tool-heading'); heading.append(logo, el('h3', '', tool.name));
       card.append(heading, el('p', 'audit-tool-fit', tool.fit || tool.description));
       if(tool.priceLabel) card.append(el('p', 'audit-price-badge', tool.priceLabel));
