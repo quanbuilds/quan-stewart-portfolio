@@ -2,7 +2,8 @@
   function clean(value){
     return String(value || '')
       .replace(/([.!?])["'’”\s,;:|—-]*(?:(?:topic|label|category)\s*:\s*)?(?:arrival|handoff|tools|confirmation|scheduling|frequency|ownership|intake|follow[- ]?up)["'’”\s.]*$/i,'$1')
-      .replace(/\s*[\[({](?:topic|label|category)\s*:[^\])}]+[\])}]\s*$/i,'').trim();
+      .replace(/(\?)["'’”\s,;:|—-]*[a-z][a-z-]*(?:\s+[a-z][a-z-]*){0,3}["'’”\s]*$/, '$1')
+    .replace(/\s*[\[({](?:topic|label|category)\s*:[^\])}]+[\])}]\s*$/i,'').trim();
   }
   root.LokiText={clean:clean};
   if(typeof module==='object' && module.exports) module.exports=root.LokiText;

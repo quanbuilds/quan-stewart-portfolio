@@ -45,11 +45,13 @@ try:
     import re
     for reply in (start['message'],message,follow):
         assert not re.search(r'[.!?][\s,\"\']*(arrival|handoff|tools|confirmation)$',reply.get('reply','')+' '+reply.get('question',''),re.I)
+    revision=post('turn',{**session,'answer':'Revise the plan around one 12:45 handoff to our lead cleaner using Google Calendar and a shared sheet. Include a useful AI prompt, and regenerate the plan I can download for Monday.'})['message']
+    assert revision['ready'] and revision['opportunities'][0]['aiPrompt']
     state=post('state',session)
-    assert state['report']['pilot'] and len(state['turns'])==5
+    assert state['report']['pilot'] and len(state['turns'])==6
     pdf_check = subprocess.check_output(['node','-e', '''const {jsPDF}=require('./signallabs/vendor/jspdf-4.2.1.umd.min.js');globalThis.LokiPDFBrand=require('./signallabs/loki-pdf-brand.js');const {create}=require('./signallabs/loki-plan-pdf.js');let raw='';process.stdin.on('data',chunk=>raw+=chunk);process.stdin.on('end',()=>{const pdf=create(jsPDF,JSON.parse(raw),'Residential cleaning business');const bytes=Buffer.from(pdf.output('arraybuffer'));if(bytes.subarray(0,5).toString()!=='%PDF-')throw Error('invalid PDF');console.log(JSON.stringify({pages:pdf.getNumberOfPages(),bytes:bytes.length}));});'''],input=json.dumps(state['report']).encode())
     evidence['pdf']=json.loads(pdf_check)
-    evidence['consultation_sample']={'introduction':message['reply'],'diagnosis':message['synthesis'],'first_action':message['opportunities'][0]['firstStep'],'ai_help':message['opportunities'][0]['aiHelp'],'objection_reply':follow['reply']}
+    evidence['consultation_sample']={'introduction':message['reply'],'diagnosis':message['synthesis'],'first_action':message['opportunities'][0]['firstStep'],'ai_help':message['opportunities'][0]['aiHelp'],'objection_reply':follow['reply'],'revised_introduction':revision['reply']}
     evidence['live_audit']='started, completed, accepted objection, and restored report'
 finally:
     if session: post('delete',session)
