@@ -1,5 +1,6 @@
 import { ROADMAP_CONTEXT } from './loki-roadmap.js';
-const MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+// Same Workers AI binding; Qwen's dialogue/structured-output path handles longer revisions.
+const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
 const MAX_TURNS = 40;
 // Provider list prices checked 2026-10-16. Estimates are examples, not invented market averages.
 const tools = {
@@ -66,7 +67,7 @@ async function hash(value) { const bytes = new TextEncoder().encode(value); cons
 function token() { return [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function normalize(output, count) {
   let raw;
-  try { raw = typeof output?.response === 'string' ? JSON.parse(output.response.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')) : output?.response; }
+  try { raw = typeof output?.response === 'string' ? JSON.parse(output.response.replace(/<think>[\s\S]*?<\/think>/gi, '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')) : output?.response; }
   catch { throw new Error('invalid_ai_response'); }
   if (!raw || typeof raw !== 'object') throw new Error('invalid_ai_response');
   const requestedReady = count >= 4 && raw.ready === true;
@@ -83,7 +84,7 @@ function normalize(output, count) {
 }
 async function generate(env, hint, turns, report = null) {
   if (!env.AI) throw new Error('ai_unavailable');
-  const messages = [{ role: 'system', content: systemPrompt }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
+  const messages = [{ role: 'system', content: systemPrompt + '\nAnswer directly in the requested JSON, without a thinking section. /no_think' }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
   for (const turn of turns) { messages.push({ role: 'assistant', content: JSON.stringify({reply:cleanMessageText(turn.reply,1200),question:cleanMessageText(turn.question,320)}) }); messages.push({ role: 'user', content: turn.answer }); }
   if (!report && turns.length >= MAX_TURNS) messages.push({ role: 'user', content: 'Finish the audit now. State any remaining assumptions and return three practical opportunities.' });
   const revisionRequested = Boolean(report) && /\b(revise|update|rewrite|rework)\b.{0,60}\b(plan|audit|report)\b|\b(new|updated|revised) (plan|audit|report)\b/i.test(turns.at(-1)?.answer || '');
@@ -92,8 +93,8 @@ async function generate(env, hint, turns, report = null) {
   const schema = structuredClone(replySchema);
   schema.properties.ready = report && !revisionRequested ? {type:'boolean'} : { type: 'boolean', enum: [finish] };
   schema.properties.reply.minLength = 1;
-  schema.properties.reply.maxLength = finish ? 260 : 1200;
-  schema.properties.reply.description = finish ? 'One or two warm complete sentences, spoken directly to the owner. Introduce the first concrete action, not a summary or labels.' : 'Answer like an experienced colleague. Explain a correction and one easy action in short complete sentences.';
+  schema.properties.reply.maxLength = finish ? 260 : 650;
+  schema.properties.reply.description = finish ? 'One or two warm complete sentences, spoken directly to the owner. Introduce the first concrete action, not a summary or labels.' : 'Answer like an experienced colleague in 2-5 short sentences. Explain a correction and one easy action; do not repeat your point or recite the whole plan.';
   schema.properties.synthesis.properties.connection.minLength = finish ? 120 : 0;
   schema.properties.synthesis.properties.connection.description = 'Connect at least two facts the owner actually supplied. Explain the cause and why this first change helps, in 2-3 plain sentences.';
   var fields = schema.properties.opportunities.items.properties;
@@ -110,7 +111,7 @@ async function generate(env, hint, turns, report = null) {
     messages.push({role:'user',content:(revisionRequested ? 'The owner explicitly requested a revised plan. Regenerate the complete report now so the application can update their PDF. ' : 'Four answers are available. ') + ' Give a warm 1-2 sentence chat introduction, then ready=true with three complete priorities, one change to start now, a small two-week pilot, and useful AI help with copy-ready prompts. Use short plain sentences. Do not repeat routines the owner already uses. Do not invent facts.'});
   }
   for (let attempt = 0; attempt < 2; attempt++) {
-    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish || report ? 6500 : 1000, temperature: 0.25 });
+    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish || report ? 6500 : 1000, temperature: 0.7, top_p: 0.8, top_k: 20 });
     try {
       const message = normalize(output, turns.length);
       if (!message.reply || (finish ? !message.ready || !message.pilot : !report && !message.question)) throw new Error('invalid_ai_response');
