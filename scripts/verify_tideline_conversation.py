@@ -35,9 +35,13 @@ try:
         text=(sample.get('reply','')+' '+sample.get('question','')).lower()
         assert not any(phrase in text for phrase in ['after lunch','office manager','cleaner','monday']),text
         q=re.sub(r'[^a-z0-9]+',' ',sample.get('question','').lower()).strip()
+        q=re.sub(r'\b(what|which|is|are|the|a|an|your|you|could|can|please|share|tell|me|do|does|for|with|including|any)\b','',q)
+        q=re.sub(r'\s+',' ',q).strip()
         assert q and q not in seen,text
         seen.add(q)
         assert sample.get('reply','').strip()!=sample.get('question','').strip()
+    cost_text=json.dumps(samples[-1]).replace(',','')
+    assert not re.search(r'\$\s*(16200|21600|1620)(?:\D|$)',cost_text),cost_text
     evidence['rentec_dialogue']=[{'reply':m['reply'],'question':m['question']} for m in samples]
 finally:
     if rentec_session: post('delete',rentec_session)
