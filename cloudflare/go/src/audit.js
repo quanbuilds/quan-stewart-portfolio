@@ -128,6 +128,10 @@ async function generate(env, hint, turns, report = null) {
   fields.aiPrompt.description='A useful prompt the owner can copy: include placeholders for anonymous examples, explicit output columns or format, and what the AI must not guess.';
   fields.firstStep.description='A person, a time, a current tool, and a concrete action. Explain the exact change to the existing process; do not just name a new list.';
   fields.steps.items.minLength=45;
+  for (const [key,max] of Object.entries({title:60,takeaway:100,evidence:170,firstStep:180,automation:160,metric:160,owner:70,timing:50,doneWhen:110,fallback:150,aiHelp:190,aiPrompt:280,humanCheck:150})) fields[key].maxLength=max;
+  fields.steps.items.maxLength=110;
+  schema.properties.pilot.maxLength=400;
+  schema.properties.synthesis.properties.connection.maxLength=300;
   schema.properties.question = finish ? { type: 'string', enum: [''] } : report ? {type:'string'} : { type: 'string', minLength: 1 };
   schema.properties.opportunities.minItems = finish ? 3 : 0;
   schema.properties.opportunities.maxItems = report || finish ? 3 : 0;
@@ -141,7 +145,7 @@ async function generate(env, hint, turns, report = null) {
   if (!finish && turns.length) messages.push({role:'system',content:'Respond to the latest owner message. Do not ask any of these previous questions again: '+JSON.stringify(turns.map(t=>t.question).filter(Boolean))+'. Do not turn a request for advice into another volume or time questionnaire when the owner has already supplied useful estimates.'});
   for (let attempt = 0; attempt < 2; attempt++) {
     let rejected;
-    const output = await env.AI.run(MODEL, { input:[...messages,{role:'system',content:'Return only JSON matching this schema: '+JSON.stringify(schema)}], reasoning:{effort:'medium'}, max_output_tokens:finish || report ? 10000 : 4000 });
+    const output = await env.AI.run(MODEL, { input:[...messages,{role:'system',content:'Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: '+JSON.stringify(schema)}], reasoning:{effort:finish || report ? 'low' : 'medium'}, max_output_tokens:finish || report ? 6000 : 4000 });
     try {
       const message = normalize(output, turns.length);
       rejected = message;
