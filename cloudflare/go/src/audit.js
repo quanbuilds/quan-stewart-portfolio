@@ -48,7 +48,7 @@ const dialoguePrompt = `You are Loki, TideLine's business consultant. Help this 
 Use only facts from this conversation. Never invent competitor prices, potential savings, market averages or claim the current price is objectively high. Without checked provider evidence, explain what to compare and ask about requirements rather than naming a cheaper price. Preserve estimates as estimates. Preserve units: a monthly total is not a per-unit price. Never multiply a stated total by unit count. Ask if the basis is unclear. Do not invent people, hours, tools, problems or promises. Do not suggest a new process when the owner is asking about software costs or replacement options.
 Ask at most ONE useful next question, in question only. reply is a brief relevant acknowledgment or answer, never a second copy of the question. If the question alone is enough, reply may be empty. Never repeat a question already asked; if they did not answer it, move to another relevant unknown or explain why the missing detail matters. Treat facts in owner messages as authoritative; your own earlier guesses are not facts. Use their latest answer to narrow the next unknown. Do not repeat earlier advice when the owner rejects it: explain the change or ask for the one missing constraint. Do not rephrase their entire message back to them.
 During the interview, learn enough to make useful recommendations. Do not prescribe tools or workflow changes before understanding why the current approach fails. Do not promise a change will fix the problem; describe it as a test. When acknowledging cost concerns say the owner finds it expensive, not that the market price is high. For a software cost concern, establish current cost and scale, required features and migration constraints before recommending a replacement. Follow the actual topic; these are considerations, not a fixed script.
-After a saved audit, answer follow-up questions directly without restarting the interview. The saved report is provisional; corrections outrank it. For an ordinary answer use ready=false. If a correction changes the plan, return ready=true with a complete revised report.
+After a saved audit, answer follow-up questions directly without restarting the interview. The saved report is provisional; corrections outrank it. For this discussion return ready=false. Answer objections directly in the chat. The application regenerates the full report only when the owner explicitly asks to revise or update the plan.
 Do not ask for passwords or private customer records. Never claim to see systems you cannot access. Return only the requested JSON.`;
 
 function questionKey(text) { return comparable(text).replace(/\b(what|which|is|are|the|a|an|your|you|could|can|please|share|tell|me|do|does|for|with|including|any)\b/g, '').replace(/\s+/g, ' ').trim(); }
@@ -113,10 +113,10 @@ async function generate(env, hint, turns, report = null) {
   const messages = [{ role: 'system', content: (finish ? systemPrompt : dialoguePrompt) + '\nKeep the final answer in the requested JSON format.' }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
   for (const turn of turns) { messages.push({ role: 'assistant', content: [cleanMessageText(turn.reply,1200),cleanMessageText(turn.question,320)].filter(Boolean).join(' ') }); messages.push({ role: 'user', content: turn.answer }); }
   if (!report && turns.length >= MAX_TURNS) messages.push({ role: 'user', content: 'Finish the audit now. State any remaining assumptions and return three practical opportunities.' });
-  if (report && !revisionRequested) messages.push({role:'system',content:'Earlier provisional audit: '+JSON.stringify(report)+'. The owner’s latest correction outranks this draft. If the draft repeats their existing routine, adds owner chasing, or suggests an unsuitable tool, change that recommendation. Address why it failed in their actual workflow before explaining ONE easier action. If afternoon coverage is unknown, ask who can own one afternoon check; do not simply assign all the work back to the owner. Do not guess calendar availability. For an ordinary answer use ready=false; for a changed plan return a complete revised report.'});
+  if (report && !revisionRequested) messages.push({role:'system',content:'Earlier provisional audit: '+JSON.stringify({synthesis:report.synthesis,opportunities:report.opportunities,pilot:report.pilot})+'. The owner’s latest correction outranks this draft. If the draft repeats their existing routine, adds owner chasing, or suggests an unsuitable tool, change that recommendation. Address why it failed in their actual workflow before explaining ONE easier action. If afternoon coverage is unknown, ask who can own one afternoon check; do not simply assign all the work back to the owner. Do not guess calendar availability. This is a discussion turn: return ready=false and do not generate a report. Answer the question or correction in chat; a separate explicit revision request will rebuild the full plan.'});
   if (revisionRequested) messages.push({role:'system',content:'Rebuild the COMPLETE plan from the business description and owner messages above. The earlier report is intentionally omitted because the owner has corrected it. Keep valid facts from the owner; do not copy earlier priority titles, tools, or routines by default. Withdraw every recommendation that conflicts with the stated constraints. A rejected scheduling tool must not reappear as a later step unless the owner explicitly changes that constraint. A routine the team already uses is not a new action: explain the specific change or choose a better action. Start one change; make later priorities conditional on it working. State the real person, time, existing tool, and capacity check for the revised workflow.'});
   const schema = structuredClone(replySchema);
-  schema.properties.ready = report && !revisionRequested ? {type:'boolean'} : { type: 'boolean', enum: [finish] };
+  schema.properties.ready = { type: 'boolean', enum: [finish] };
   schema.properties.reply.minLength = finish ? 1 : 0;
   schema.properties.reply.maxLength = finish ? 260 : 650;
   schema.properties.reply.description = finish ? 'One or two warm complete sentences, spoken directly to the owner. Introduce the first concrete action, not a summary or labels.' : 'Answer like an experienced colleague in 2-5 short sentences. Explain a correction and one easy action; do not repeat your point or recite the whole plan.';
@@ -139,13 +139,13 @@ async function generate(env, hint, turns, report = null) {
     schema.properties.pilot.minLength = 1;
     messages.push({role:'user',content:(revisionRequested ? 'The owner explicitly requested a revised plan. Regenerate the complete report now so the application can update their PDF. ' : 'Four answers are available. ') + ' Give a warm 1-2 sentence chat introduction, then ready=true with three complete priorities, one change to start now, a small two-week pilot, and useful AI help with copy-ready prompts. Use short plain sentences. Do not repeat routines the owner already uses. Do not invent facts.'});
   }
-  if (!finish && !report) {
+  if (!finish) {
     for (const key of ['synthesis','opportunities','tools','pilot']) { delete schema.properties[key]; schema.required = schema.required.filter(field => field !== key); }
   }
   if (!finish && turns.length) messages.push({role:'system',content:'Respond to the latest owner message. Do not ask any of these previous questions again: '+JSON.stringify(turns.map(t=>t.question).filter(Boolean))+'. Do not turn a request for advice into another volume or time questionnaire when the owner has already supplied useful estimates.'});
   for (let attempt = 0; attempt < 2; attempt++) {
     let rejected;
-    const output = await env.AI.run(MODEL, { input:[...messages,{role:'system',content:'Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: '+JSON.stringify(schema)}], reasoning:{effort:finish || report ? 'low' : 'medium'}, max_output_tokens:finish || report ? 6000 : 4000 });
+    const output = await env.AI.run(MODEL, { input:[...messages,{role:'system',content:'Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: '+JSON.stringify(schema)}], reasoning:{effort:finish ? 'low' : 'medium'}, max_output_tokens:finish ? 6000 : 4000 });
     try {
       const message = normalize(output, turns.length);
       rejected = message;
@@ -164,7 +164,7 @@ async function generate(env, hint, turns, report = null) {
         messages.push({role:'system',content:'Rejected question: '+JSON.stringify(rejected.question)+'. Choose a DIFFERENT missing fact. Your last attempt repeated an earlier reply or question. It was not shown. Answer the latest owner message and ask about a genuinely missing fact. Do not ask again about a fact already answered.'});
         continue;
       }
-      if (!finish && !report) {
+      if (!finish) {
         messages.push({role:'system',content:'Return valid JSON with reply, question, insights and ready=false. Answer the latest message directly, then ask one relevant unanswered question. No report is needed yet.'});
         continue;
       }
