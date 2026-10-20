@@ -21,6 +21,27 @@ def post(path,body):
     data=json.loads(subprocess.check_output(['curl','--fail-with-body','--silent','--show-error','--max-time','90',origin+'/api/audit/'+path,'-H','Origin: '+origin,'-H','Content-Type: application/json','--data-binary','@-'],input=json.dumps(body).encode()))
     assert data['ok']
     return data
+# Regression: the newest real failure concerned Rentec, not cleaning handoffs.
+rentec_session=None
+try:
+    rentec=post('start',{'business':'Hypothetical acceptance test: we manage properties using Rentec, but the per-unit price is high and the technology feels dated.'})
+    rentec_session={k:rentec[k] for k in ('id','token')}
+    samples=[rentec['message']]
+    for answer in ['The price is too high, and the technology is dated.', 'Assume 90 units and $180 per month. We need rent collection and owner statements.']:
+        samples.append(post('turn',{**rentec_session,'answer':answer})['message'])
+    import re
+    seen=set()
+    for sample in samples:
+        text=(sample.get('reply','')+' '+sample.get('question','')).lower()
+        assert not any(phrase in text for phrase in ['after lunch','office manager','cleaner','monday']),text
+        q=re.sub(r'[^a-z0-9]+',' ',sample.get('question','').lower()).strip()
+        assert q and q not in seen,text
+        seen.add(q)
+        assert sample.get('reply','').strip()!=sample.get('question','').strip()
+    evidence['rentec_dialogue']=[{'reply':m['reply'],'question':m['question']} for m in samples]
+finally:
+    if rentec_session: post('delete',rentec_session)
+
 session=None
 try:
     start=post('start',{'business':'I run a residential cleaning business with seven cleaners and a part-time office manager. Quotes slip through, and I spend evenings checking the next day’s schedule.'})
