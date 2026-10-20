@@ -150,6 +150,7 @@ test('Rentec interview excludes report priming and retries repetition without sa
  const {id,token}=await start.json();let calls=0;
  ctx.env.AI.run=async(_model,args)=>{
   calls++;
+  if(calls===2) assert.ok(args.messages.some(m=>m.role==='system'&&m.content.includes('Rejected question:')));
   assert.ok(!args.messages[0].content.includes('after lunch'));
   assert.ok(!args.messages[0].content.includes('AUDIT TRANSITION'));
   assert.ok(!args.response_format.json_schema.properties.opportunities);
@@ -169,4 +170,21 @@ test('a question is displayed once when the model puts it in both fields',async(
  const ctx=setup(()=>({...question,reply:question.question}));
  const res=await handleAudit(request('/api/audit/start',{business:'We manage properties using Rentec.'}),ctx.env,new URL(origin+'/api/audit/start'));
  const body=await res.json();assert.equal(res.status,200);assert.equal(body.message.reply,'');assert.equal(body.message.question,question.question);
+});
+
+
+test('brief acknowledgments may recur when the question makes progress',async()=>{
+ const ctx=setup(()=>({...question,reply:'Got it.'}));
+ const start=await handleAudit(request('/api/audit/start',{business:'We manage properties using Rentec.'}),ctx.env,new URL(origin+'/api/audit/start'));
+ const {id,token}=await start.json();
+ ctx.env.AI.run=async()=>({response:{...question,reply:'Got it.',question:'What does Rentec cost per month in total?'}});
+ const res=await handleAudit(request('/api/audit/turn',{id,token,answer:'Rentec handles the inquiries.'}),ctx.env,new URL(origin+'/api/audit/turn'));
+ assert.equal(res.status,200);assert.equal((await res.json()).message.reply,'Got it.');
+});
+
+
+test('internal ready flags cannot leak into a chat reply',async()=>{
+ const ctx=setup(()=>({...question,reply:'Let us look at the cost. ready=false'}));
+ const res=await handleAudit(request('/api/audit/start',{business:'We manage properties using Rentec.'}),ctx.env,new URL(origin+'/api/audit/start'));
+ assert.equal((await res.json()).message.reply,'Let us look at the cost.');
 });
