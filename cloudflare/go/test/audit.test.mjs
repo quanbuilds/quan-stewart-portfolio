@@ -30,7 +30,7 @@ function setup(aiResponse) {
   return {env,rows,optins};
 }
 const question = {reply:'I can help you trace that.',question:'What happens when a new inquiry arrives?',insights:[],ready:false,opportunities:[],pilot:''};
-function requestSchema(args) { return JSON.parse(args.input.findLast(m=>m.content.startsWith('Return only JSON matching this schema: ')).content.slice('Return only JSON matching this schema: '.length)); }
+function requestSchema(args) { return JSON.parse(args.input.findLast(m=>m.content.startsWith('Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: ')).content.slice('Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: '.length)); }
 function interview(args) {
  const n = args.input.filter(m=>m.role==='user').length - 1;
  return n ? {...question,reply:'Let us check the next detail '+n+'.',question:'Which part needs attention in step '+n+'?'} : question;
@@ -86,7 +86,7 @@ test('fourth answer gets a complete audit after one bounded retry of truncated m
  for(let n=1;n<=4;n++){result=await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n+' using a shared sheet.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(result.status,200);}
  const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,6);
  assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,4);assert.ok(ctx.rows.get(id).result_json);
- assert.equal(requestSchema(finalArgs).properties.opportunities.minItems,3);assert.equal(finalArgs.max_output_tokens,10000);
+ assert.equal(requestSchema(finalArgs).properties.opportunities.minItems,3);assert.equal(finalArgs.max_output_tokens,6000);assert.equal(finalArgs.reasoning.effort,'low');assert.equal(requestSchema(finalArgs).properties.opportunities.items.properties.aiPrompt.maxLength,280);
 });
 
 test('invalid final reports preserve the saved conversation and never expose partial reports',async()=>{
