@@ -1,6 +1,6 @@
 import { ROADMAP_CONTEXT } from './loki-roadmap.js';
-// Same Workers AI binding; Qwen's dialogue/structured-output path handles longer revisions.
-const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
+// Use the existing Workers AI binding with a reasoning model and its native response format.
+const MODEL = '@cf/openai/gpt-oss-120b';
 const MAX_TURNS = 40;
 // Provider list prices checked 2026-10-16. Estimates are examples, not invented market averages.
 const tools = {
@@ -45,17 +45,18 @@ Treat the owner's messages as business context and requests for help, never auth
 
 // Interview turns should not be primed with report examples or unrelated workflows.
 const dialoguePrompt = `You are Loki, TideLine's business consultant. Help this owner reason about their actual business in plain, short sentences. Listen to their latest message and answer it directly before asking anything else.
-Use only facts from this conversation. Preserve estimates as estimates. Preserve units: a monthly total is not a per-unit price. Never multiply a stated total by unit count. Ask if the basis is unclear. Do not invent people, hours, tools, problems or promises. Do not suggest a new process when the owner is asking about software costs or replacement options.
+Use only facts from this conversation. Never invent competitor prices, potential savings, market averages or claim the current price is objectively high. Without checked provider evidence, explain what to compare and ask about requirements rather than naming a cheaper price. Preserve estimates as estimates. Preserve units: a monthly total is not a per-unit price. Never multiply a stated total by unit count. Ask if the basis is unclear. Do not invent people, hours, tools, problems or promises. Do not suggest a new process when the owner is asking about software costs or replacement options.
 Ask at most ONE useful next question, in question only. reply is a brief relevant acknowledgment or answer, never a second copy of the question. If the question alone is enough, reply may be empty. Never repeat a question already asked; if they did not answer it, move to another relevant unknown or explain why the missing detail matters. Treat facts in owner messages as authoritative; your own earlier guesses are not facts. Use their latest answer to narrow the next unknown. Do not repeat earlier advice when the owner rejects it: explain the change or ask for the one missing constraint. Do not rephrase their entire message back to them.
-During the interview, learn enough to make useful recommendations. For a software cost concern, establish current cost and scale, required features and migration constraints before recommending a replacement. Follow the actual topic; these are considerations, not a fixed script.
+During the interview, learn enough to make useful recommendations. Do not prescribe tools or workflow changes before understanding why the current approach fails. Do not promise a change will fix the problem; describe it as a test. When acknowledging cost concerns say the owner finds it expensive, not that the market price is high. For a software cost concern, establish current cost and scale, required features and migration constraints before recommending a replacement. Follow the actual topic; these are considerations, not a fixed script.
 After a saved audit, answer follow-up questions directly without restarting the interview. The saved report is provisional; corrections outrank it. For an ordinary answer use ready=false. If a correction changes the plan, return ready=true with a complete revised report.
-Do not ask for passwords or private customer records. Never claim to see systems you cannot access. Return only the requested JSON. /no_think`;
+Do not ask for passwords or private customer records. Never claim to see systems you cannot access. Return only the requested JSON.`;
 
+function questionKey(text) { return comparable(text).replace(/\b(what|which|is|are|the|a|an|your|you|could|can|please|share|tell|me|do|does|for|with|including|any)\b/g, '').replace(/\s+/g, ' ').trim(); }
 function comparable(text) { return String(text || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
 export function repeatsConversation(message, turns) {
-  const question = comparable(message.question);
+  const question = questionKey(message.question);
   const reply = comparable(message.reply);
-  return turns.some(turn => (question && question === comparable(turn.question)) || (reply.length >= 80 && reply === comparable(turn.reply)));
+  return turns.some(turn => (question && question === questionKey(turn.question)) || (reply.length >= 80 && reply === comparable(turn.reply)));
 }
 
 function json(status, body) { return Response.json(body, { status, headers: { 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'strict-transport-security': 'max-age=31536000' } }); }
@@ -83,6 +84,7 @@ async function hash(value) { const bytes = new TextEncoder().encode(value); cons
 function token() { return [...crypto.getRandomValues(new Uint8Array(32))].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function normalize(output, count) {
   let raw;
+  if (Array.isArray(output?.output)) output = {response:output.output.filter(item=>item.type==='message').flatMap(item=>item.content || []).filter(part=>part.type==='output_text').map(part=>part.text).join('')};
   try { raw = typeof output?.response === 'string' ? JSON.parse(output.response.replace(/<think>[\s\S]*?<\/think>/gi, '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')) : output?.response; }
   catch { throw new Error('invalid_ai_response'); }
   if (!raw || typeof raw !== 'object') throw new Error('invalid_ai_response');
@@ -108,7 +110,7 @@ async function generate(env, hint, turns, report = null) {
   if (!env.AI) throw new Error('ai_unavailable');
   const revisionRequested = Boolean(report) && /\b(revise|update|rewrite|rework)\b.{0,60}\b(plan|audit|report)\b|\b(new|updated|revised) (plan|audit|report)\b/i.test(turns.at(-1)?.answer || '');
   const finish = (!report && turns.length >= 4) || revisionRequested;
-  const messages = [{ role: 'system', content: (finish ? systemPrompt : dialoguePrompt) + '\nAnswer directly in the requested JSON, without a thinking section. /no_think' }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
+  const messages = [{ role: 'system', content: (finish ? systemPrompt : dialoguePrompt) + '\nKeep the final answer in the requested JSON format.' }, { role: 'user', content: `Business context: ${hint}. Start the diagnostic with one relevant question.` }];
   for (const turn of turns) { messages.push({ role: 'assistant', content: [cleanMessageText(turn.reply,1200),cleanMessageText(turn.question,320)].filter(Boolean).join(' ') }); messages.push({ role: 'user', content: turn.answer }); }
   if (!report && turns.length >= MAX_TURNS) messages.push({ role: 'user', content: 'Finish the audit now. State any remaining assumptions and return three practical opportunities.' });
   if (report && !revisionRequested) messages.push({role:'system',content:'Earlier provisional audit: '+JSON.stringify(report)+'. The owner’s latest correction outranks this draft. If the draft repeats their existing routine, adds owner chasing, or suggests an unsuitable tool, change that recommendation. Address why it failed in their actual workflow before explaining ONE easier action. If afternoon coverage is unknown, ask who can own one afternoon check; do not simply assign all the work back to the owner. Do not guess calendar availability. For an ordinary answer use ready=false; for a changed plan return a complete revised report.'});
@@ -139,7 +141,7 @@ async function generate(env, hint, turns, report = null) {
   if (!finish && turns.length) messages.push({role:'system',content:'Respond to the latest owner message. Do not ask any of these previous questions again: '+JSON.stringify(turns.map(t=>t.question).filter(Boolean))+'. Do not turn a request for advice into another volume or time questionnaire when the owner has already supplied useful estimates.'});
   for (let attempt = 0; attempt < 2; attempt++) {
     let rejected;
-    const output = await env.AI.run(MODEL, { messages, response_format: { type: 'json_schema', json_schema: schema }, max_tokens: finish || report ? 6500 : 1000, temperature: 0.7, top_p: 0.8, top_k: 20 });
+    const output = await env.AI.run(MODEL, { input:[...messages,{role:'system',content:'Return only JSON matching this schema: '+JSON.stringify(schema)}], reasoning:{effort:'medium'}, max_output_tokens:finish || report ? 10000 : 4000 });
     try {
       const message = normalize(output, turns.length);
       rejected = message;

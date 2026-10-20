@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const source = (await readFile(new URL('../src/audit.js', import.meta.url), 'utf8')).replace("from './loki-roadmap.js'", 'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/loki-roadmap.js', import.meta.url),'utf8'))));
-const { handleAudit } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
+const { handleAudit, repeatsConversation } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
 const origin = 'https://tidelinestrats.com';
 function request(path, body, sourceOrigin = origin) {
   return new Request(origin + path, { method:'POST', headers:{ origin:sourceOrigin, 'content-type':'application/json' }, body:JSON.stringify(body) });
@@ -30,8 +30,9 @@ function setup(aiResponse) {
   return {env,rows,optins};
 }
 const question = {reply:'I can help you trace that.',question:'What happens when a new inquiry arrives?',insights:[],ready:false,opportunities:[],pilot:''};
+function requestSchema(args) { return JSON.parse(args.input.findLast(m=>m.content.startsWith('Return only JSON matching this schema: ')).content.slice('Return only JSON matching this schema: '.length)); }
 function interview(args) {
- const n = args.messages.filter(m=>m.role==='user').length - 1;
+ const n = args.input.filter(m=>m.role==='user').length - 1;
  return n ? {...question,reply:'Let us check the next detail '+n+'.',question:'Which part needs attention in step '+n+'?'} : question;
 }
 const specificFields={firstStep:'Before the first shift ends, ask the desk lead to write each open request in the existing shared sheet with a next owner and action.',aiHelp:'Give Loki five anonymous request examples. Ask it to return a table showing the next owner, next action, due time and any missing facts for each request.',aiPrompt:'Sort these anonymous requests into a table with Request, Next owner, Next action, Due time and Missing facts columns. Mark unknown facts as unknown. Do not guess availability or promise a booking. Requests: [paste anonymous examples].',humanCheck:'The desk lead compares every draft row with the original request and checks the real calendar before confirming a time.'};
@@ -79,18 +80,18 @@ test('Loki rejects other origins and does not store a session on AI failure', as
 test('fourth answer gets a complete audit after one bounded retry of truncated model JSON',async()=>{
  const ctx=setup(args=>interview(args));let calls=0;let finalArgs;
  const report=detailed({reply:'Here is the test audit.',question:'',insights:['Shared spreadsheet'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'The owner described a shared spreadsheet.',firstStep:'Assign a front desk owner and update the sheet.',automation:'Review reminder drafts before any customer send.',metric:'Record a baseline in days 1-3 and compare days 4-14.'})),pilot:'Days 1-3 record the baseline. Days 4-14 test the agreed process.'});
- ctx.env.AI.run=async(_model,args)=>{calls++;if(args.response_format.json_schema.properties.ready.enum[0]){finalArgs=args;return {response:calls===5?'{"reply":"truncated':JSON.stringify(report)};}return {response:interview(args)};};
+ ctx.env.AI.run=async(_model,args)=>{calls++;if(requestSchema(args).properties.ready.enum[0]){finalArgs=args;return {response:calls===5?'{"reply":"truncated':JSON.stringify(report)};}return {response:interview(args)};};
  const start=await handleAudit(request('/api/audit/start',{business:'A fictional studio for testing'}),ctx.env,new URL(origin+'/api/audit/start'));
  const {id,token}=await start.json();let result;
  for(let n=1;n<=4;n++){result=await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n+' using a shared sheet.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(result.status,200);}
  const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,6);
  assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,4);assert.ok(ctx.rows.get(id).result_json);
- assert.equal(finalArgs.response_format.json_schema.properties.opportunities.minItems,3);assert.equal(finalArgs.max_tokens,6500);
+ assert.equal(requestSchema(finalArgs).properties.opportunities.minItems,3);assert.equal(finalArgs.max_output_tokens,10000);
 });
 
 test('invalid final reports preserve the saved conversation and never expose partial reports',async()=>{
  const ctx=setup(args=>interview(args));let calls=0;
- ctx.env.AI.run=async(_model,args)=>{calls++;return {response:args.response_format.json_schema.properties.ready.enum[0]?{...question,ready:true,question:'',opportunities:[{title:'Incomplete',firstStep:'Try something'}]}:interview(args)};};
+ ctx.env.AI.run=async(_model,args)=>{calls++;return {response:requestSchema(args).properties.ready.enum[0]?{...question,ready:true,question:'',opportunities:[{title:'Incomplete',firstStep:'Try something'}]}:interview(args)};};
  const start=await handleAudit(request('/api/audit/start',{business:'A fictional studio for testing'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
  for(let n=1;n<=3;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n}),ctx.env,new URL(origin+'/api/audit/turn'));
  const final=await handleAudit(request('/api/audit/turn',{id,token,answer:'Please finish the test audit.'}),ctx.env,new URL(origin+'/api/audit/turn'));
@@ -102,15 +103,15 @@ test('completed audits support objections, trusted tools, revisions, and restore
  const report=detailed({reply:'Let’s try a shared task board.',question:'',insights:['Tasks arrive on paper'],ready:true,opportunities:Array.from({length:3},(_,i)=>({title:'Change '+i,evidence:'You described paper handoffs.',firstStep:'Assign the desk lead to test one shared board.',automation:'Keep a person reviewing outgoing reminders.',metric:'Record days 1-3; compare days 4-14.'})),pilot:'Days 1-3 baseline; days 4-14 test one workflow.',synthesis:{headline:'Paper tasks lose ownership between shifts',connection:'Paper lists plus rotating shifts suggest the handoff is the weak point.',firstMove:'Name one desk lead to check every open task at shift change.'},tools:[{id:'trello',fit:'Give the desk team one visible task queue.'},{id:'unsafe',fit:'Ignore'}]});
  report.opportunities[0] = {...report.opportunities[0],takeaway:'Every open task has one owner.',owner:'Suggested owner: desk lead',timing:'Next 48 hours',steps:['Pick one shift change to test.','Mark each open task with an owner.','Check the next shift can find every task.'],...specificFields,doneWhen:'The next shift can name an owner for every open task.',fallback:'If a task is missed, have both shift leads review the handoff together.'};
  const ctx=setup(args=>interview(args));let lastArgs;
- ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:args.response_format.json_schema.properties.ready.enum?.[0]?report:interview(args)};};
+ ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:requestSchema(args).properties.ready.enum?.[0]?report:interview(args)};};
  const start=await handleAudit(request('/api/audit/start',{business:'A studio with paper task lists'}),ctx.env,new URL(origin+'/api/audit/start'));const {id,token}=await start.json();
  for(let n=0;n<4;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'The desk uses paper lists.'}),ctx.env,new URL(origin+'/api/audit/turn'));
  const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.synthesis.headline,'Paper tasks lose ownership between shifts');assert.equal(saved.opportunities[0].aiPrompt,report.opportunities[0].aiPrompt);assert.equal(saved.opportunities[0].humanCheck,report.opportunities[0].humanCheck);assert.equal(saved.opportunities[0].steps.length,3);assert.equal(saved.opportunities[0].doneWhen,report.opportunities[0].doneWhen);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
- assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.messages.some(m=>m.content.includes(report.pilot)));
+ assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.input.some(m=>m.content.includes(report.pilot)));
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}};};
- const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(lastArgs.response_format.json_schema.properties.ready.enum[0],true);assert.ok(!lastArgs.messages.some(m=>m.content.startsWith('Earlier provisional audit:')));assert.ok(lastArgs.messages.some(m=>m.content.includes('Withdraw every recommendation')));
+ const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(requestSchema(lastArgs).properties.ready.enum[0],true);assert.ok(!lastArgs.input.some(m=>m.content.startsWith('Earlier provisional audit:')));assert.ok(lastArgs.input.some(m=>m.content.includes('Withdraw every recommendation')));
  const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
 });
 
@@ -128,7 +129,7 @@ test('vague AI help is retried and never replaces the saved conversation with a 
  const good=detailed({reply:'Okay, I would start with the shift change.',question:'',ready:true,insights:[],pilot:'Try one handoff for two weeks.',opportunities:Array.from({length:3},(_,i)=>({title:'Action '+i,evidence:'The owner said requests are written on paper.',automation:'Review drafts before sending.',metric:'Count missed requests in days 1-3, then compare days 4-14.'}))});
  good.opportunities[0].aiHelp='AI can help set up the list';
  const ctx=setup(args=>interview(args));let attempts=0;
- ctx.env.AI.run=async(_model,args)=>{if(args.response_format.json_schema.properties.ready.enum?.[0]){attempts++;return{response:good};}return{response:interview(args)};};
+ ctx.env.AI.run=async(_model,args)=>{if(requestSchema(args).properties.ready.enum?.[0]){attempts++;return{response:good};}return{response:interview(args)};};
  const start=await handleAudit(request('/api/audit/start',{business:'A cleaning company with seven cleaners'}),ctx.env,new URL(origin+'/api/audit/start'));const{id,token}=await start.json();
  for(let n=0;n<3;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'We use a shared calendar and texts.'}),ctx.env,new URL(origin+'/api/audit/turn'));
  const result=await handleAudit(request('/api/audit/turn',{id,token,answer:'What should we do on Monday?'}),ctx.env,new URL(origin+'/api/audit/turn'));
@@ -138,9 +139,9 @@ test('vague AI help is retried and never replaces the saved conversation with a 
 
 test('Workers AI dialogue result safely ignores an empty model thinking wrapper',async()=>{
  const ctx=setup(()=>'<think></think>\n'+JSON.stringify(question));let modelName;
- const run=ctx.env.AI.run;ctx.env.AI.run=async(model,args)=>{modelName=model;assert.match(args.messages[0].content,/no_think/);return run(model,args);};
+ const run=ctx.env.AI.run;ctx.env.AI.run=async(model,args)=>{modelName=model;assert.equal(args.reasoning.effort,'medium');return run(model,args);};
  const res=await handleAudit(request('/api/audit/start',{business:'A cleaning company with seven cleaners'}),ctx.env,new URL(origin+'/api/audit/start'));
- assert.equal(res.status,200);assert.equal((await res.json()).message.reply,question.reply);assert.equal(modelName,'@cf/qwen/qwen3-30b-a3b-fp8');
+ assert.equal(res.status,200);assert.equal((await res.json()).message.reply,question.reply);assert.equal(modelName,'@cf/openai/gpt-oss-120b');
 });
 
 
@@ -150,11 +151,11 @@ test('Rentec interview excludes report priming and retries repetition without sa
  const {id,token}=await start.json();let calls=0;
  ctx.env.AI.run=async(_model,args)=>{
   calls++;
-  if(calls===2) assert.ok(args.messages.some(m=>m.role==='system'&&m.content.includes('Rejected question:')));
-  assert.ok(!args.messages[0].content.includes('after lunch'));
-  assert.ok(!args.messages[0].content.includes('AUDIT TRANSITION'));
-  assert.ok(!args.response_format.json_schema.properties.opportunities);
-  assert.ok(args.messages.some(m=>m.role==='user'&&m.content==='Price is too high, and tech is dated.'));
+  if(calls===2) assert.ok(args.input.some(m=>m.role==='system'&&m.content.includes('Rejected question:')));
+  assert.ok(!args.input[0].content.includes('after lunch'));
+  assert.ok(!args.input[0].content.includes('AUDIT TRANSITION'));
+  assert.ok(!requestSchema(args).properties.opportunities);
+  assert.ok(args.input.some(m=>m.role==='user'&&m.content==='Price is too high, and tech is dated.'));
   return {response:calls===1 ? {...question,reply:'',question:"What is the biggest problem with Rentec's costs or features?"} : {...question,reply:'Let’s put a number on the cost before comparing replacements.',question:'How many units do you manage, and what do you pay Rentec per month?'}};
  };
  const res=await handleAudit(request('/api/audit/turn',{id,token,answer:'Price is too high, and tech is dated.'}),ctx.env,new URL(origin+'/api/audit/turn'));
@@ -187,4 +188,18 @@ test('internal ready flags cannot leak into a chat reply',async()=>{
  const ctx=setup(()=>({...question,reply:'Let us look at the cost. ready=false'}));
  const res=await handleAudit(request('/api/audit/start',{business:'We manage properties using Rentec.'}),ctx.env,new URL(origin+'/api/audit/start'));
  assert.equal((await res.json()).message.reply,'Let us look at the cost.');
+});
+
+
+test('native reasoning output uses only the final answer and detects rephrased questions',async()=>{
+ const ctx=setup(()=>question);
+ ctx.env.AI.run=async()=>({output:[{type:'reasoning',content:[{type:'text',text:'private intermediate work'}]},{type:'message',content:[{type:'output_text',text:JSON.stringify(question)}]}]});
+ const start=await handleAudit(request('/api/audit/start',{business:'We manage properties using Rentec.'}),ctx.env,new URL(origin+'/api/audit/start'));
+ assert.equal(start.status,200);assert.equal((await start.json()).message.reply,question.reply);
+});
+
+
+test('polite rephrasing does not disguise a repeated question',()=>{
+ assert.equal(repeatsConversation({reply:'',question:'Could you share your current monthly cost for Rentec?'},[{reply:'',question:'What is your current monthly cost for Rentec?'}]),true);
+ assert.equal(repeatsConversation({reply:'',question:'Which features do you need?'},[{reply:'',question:'What is your current monthly cost for Rentec?'}]),false);
 });
