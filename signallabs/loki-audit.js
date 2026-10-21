@@ -21,7 +21,7 @@
   // Retire the old anonymous refresh credential; only explicit email saves may resume.
   try { sessionStorage.removeItem('tideline-loki-audit'); } catch (_) {}
   function forgetSaved(){try {localStorage.removeItem(savedKey);} catch (_) {}}
-  function showSaved(email){document.getElementById('auditEmail').value=email;saveStatus.textContent='Saved for '+email+'. Your Loki will remember this conversation when you refresh this browser.';}
+  function showSaved(email){document.getElementById('auditEmail').value=email;document.getElementById('auditSaveLabel').textContent='Saved';document.getElementById('auditSaveMenu').open=false;saveStatus.textContent='Saved for '+email+'. Your Loki will remember this conversation when you refresh this browser.';}
   var count = 0;
   var hasReport = false;
   var businessContext = '';
@@ -42,7 +42,7 @@
     insightsList.replaceChildren();
     var list = Array.isArray(message.insights) && message.insights.length ? message.insights : ['Loki is tracing your workflow.'];
     list.forEach(function(value){ insightsList.append(el('li', '', value)); });
-    if(message.ready){ showResult(message); } else { answerInput.focus(); }
+    if(message.ready){ showResult(message); } else { answerInput.focus({preventScroll:true}); }
   }
   function showResult(message){
     hasReport = true;
@@ -137,7 +137,7 @@
   }
   function askButton(label, prompt){
     var button = el('button', 'audit-discuss', label); button.type = 'button';
-    button.addEventListener('click', function(){ answerInput.value = prompt; answerInput.focus(); });
+    button.addEventListener('click', function(){ answerInput.value = prompt; answerInput.focus({preventScroll:true}); });
     return button;
   }
   async function post(path, body){
@@ -162,6 +162,8 @@
       var data = await post('/api/audit/start', {business:business});
       session = {id:data.id, token:data.token}; count=0; hasReport=false; businessContext = business;
       saveStatus.textContent = '';
+      document.getElementById('auditSaveLabel').textContent='Save conversation';
+      document.getElementById('auditSaveMenu').open=false;
       onboard.hidden = true; workspace.hidden = false;
       bubble('you', business); showMessage(data.message);
     } catch (error) { startStatus.textContent = errorText(error); }
@@ -185,7 +187,7 @@
       showMessage(data.message);
       if(count >= 4 && !data.message.ready && !hasReport){ answerInput.placeholder = 'Answer Loki, or ask for your audit now…'; finishButton.hidden = false; }
     } catch(error){ clearTimeout(timer); if(pending) pending.remove(); userBubble.remove(); status.textContent = errorText(error); }
-    finally { clearTimeout(timer); setBusy(sendButton, false); answerForm.setAttribute('aria-busy', 'false'); answerInput.readOnly = false; answerInput.focus(); }
+    finally { clearTimeout(timer); setBusy(sendButton, false); answerForm.setAttribute('aria-busy', 'false'); answerInput.readOnly = false; answerInput.focus({preventScroll:true}); }
   });
   finishButton.addEventListener('click', function(){ answerInput.value = 'Please finish the audit with your best current diagnosis. Mark any assumptions.'; answerForm.requestSubmit(); });
   document.getElementById('auditPrint').addEventListener('click', function(){ window.print(); });
@@ -206,7 +208,7 @@
     saveStatus.textContent='Saving your Loki…';
     try {
       var data=await post('/api/audit/save',{id:session.id,token:session.token,email:document.getElementById('auditEmail').value.trim(),consent:true});
-      try {localStorage.setItem(savedKey,JSON.stringify(session));showSaved(data.email);}
+      try {localStorage.setItem(savedKey,JSON.stringify(session));showSaved(data.email);document.getElementById('auditSaveToggle').focus({preventScroll:true});}
       catch (_) {saveStatus.textContent='Saved to your private workspace. This browser blocks storage, so it cannot resume automatically after refresh.';}
     } catch(error){saveStatus.textContent=error.code==='audit_already_saved'?'This conversation is already saved with another email.':errorText(error);}
     finally {setBusy(button,false);saveForm.setAttribute('aria-busy','false');}

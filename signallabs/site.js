@@ -47,15 +47,38 @@ window.addEventListener('scroll', function(){ requestAnimationFrame(updateShip);
 window.addEventListener('resize', updateShip);
 updateShip();
 
-document.querySelectorAll('.tab').forEach(function(btn){
+var currentPage = 'home';
+var pageTransition;
+document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
   btn.addEventListener('click', function(){
-    document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
-    document.querySelectorAll('.tabpanel').forEach(function(p){ p.classList.remove('active'); });
-    btn.classList.add('active');
-    var panel = document.getElementById('tab-' + btn.dataset.tab);
-    if(panel){ panel.classList.add('active'); }
-    window.scrollTo({top:0, behavior:'auto'});
-    requestAnimationFrame(updateShip);
+    var page = btn.dataset.tab;
+    if (page === currentPage) return;
+    var previous = currentPage;
+    currentPage = page;
+    function switchPage(){
+      if (page !== currentPage) return;
+      document.body.classList.toggle('audit-page', page === 'audit');
+      document.getElementById('lokiNav').open = page === 'audit';
+      document.querySelector('#lokiNav>summary').tabIndex = page === 'audit' ? -1 : 0;
+      document.querySelectorAll('.tab[data-tab]').forEach(function(b){
+        b.classList.toggle('active', b.dataset.tab === page);
+        if (b.dataset.tab === page) b.setAttribute('aria-current','page');
+        else b.removeAttribute('aria-current');
+      });
+      document.querySelectorAll('.tabpanel').forEach(function(p){p.classList.toggle('active',p.id === 'tab-'+page);});
+      window.scrollTo({top:0,behavior:'auto'});
+      requestAnimationFrame(updateShip);
+    }
+    if (pageTransition) pageTransition.skipTransition();
+    if (!reduceMotion && document.startViewTransition) {
+      document.documentElement.dataset.pageDirection = page === 'audit' ? 'in' : previous === 'audit' ? 'out' : 'across';
+      pageTransition = document.startViewTransition(switchPage);
+      pageTransition.finished.catch(function(){});
+    } else {
+      switchPage();
+      var panel=document.getElementById('tab-'+page);
+      if (!reduceMotion && panel?.animate) panel.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:320,easing:'cubic-bezier(.22,1,.36,1)'});
+    }
   });
 });
 
@@ -167,7 +190,13 @@ initKadenceDemo();
 
 (function(){
   var menu=document.getElementById('lokiNav');
-  menu.querySelectorAll('.tab').forEach(function(link){link.addEventListener('click',function(){menu.open=false;});});
-  document.addEventListener('click',function(event){if(!menu.contains(event.target))menu.open=false;});
-  document.addEventListener('keydown',function(event){if(event.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
+  menu.querySelectorAll('.tab').forEach(function(link){link.addEventListener('click',function(){if(!document.body.classList.contains('audit-page')) menu.open=false;});});
+  document.addEventListener('click',function(event){if(!document.body.classList.contains('audit-page')&&!menu.contains(event.target))menu.open=false;});
+  document.addEventListener('keydown',function(event){
+    if(event.key!=='Escape') return;
+    var save=document.getElementById('auditSaveMenu');
+    if(save.open){save.open=false;document.getElementById('auditSaveToggle').focus();}
+    if(!document.body.classList.contains('audit-page')&&menu.open){menu.open=false;menu.querySelector('summary').focus();}
+  });
+  document.addEventListener('click',function(event){var save=document.getElementById('auditSaveMenu');if(save.open&&!save.contains(event.target))save.open=false;});
 })();
