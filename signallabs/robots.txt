@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /loki/
+Sitemap: https://tidelinestrats.com/sitemap.xml
