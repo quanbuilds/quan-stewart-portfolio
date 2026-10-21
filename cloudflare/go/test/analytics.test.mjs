@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
-const auditUrl='data:text/javascript,'+encodeURIComponent(readFileSync(new URL('../src/audit.js',import.meta.url),'utf8').replace("from './loki-roadmap.js'",'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(readFileSync(new URL('../src/loki-roadmap.js',import.meta.url),'utf8')))));
+const auditUrl='data:text/javascript,'+encodeURIComponent(readFileSync(new URL('../src/audit.js',import.meta.url),'utf8').replace("from './audit-memory.js'",'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(readFileSync(new URL('../src/audit-memory.js',import.meta.url),'utf8')))).replace("from './loki-roadmap.js'",'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(readFileSync(new URL('../src/loki-roadmap.js',import.meta.url),'utf8')))));
 const source=readFileSync(new URL('../src/analytics.js',import.meta.url),'utf8').replace("from './audit.js'",`from ${JSON.stringify(auditUrl)}`);
 const {collectAnalytics,expireAnalytics}=await import('data:text/javascript,'+encodeURIComponent(source));
 function fixture(){

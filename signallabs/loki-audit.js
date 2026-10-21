@@ -15,6 +15,13 @@
   var pilot = document.getElementById('auditPilot');
   if (!startButton) return;
   var session = null;
+  var savedKey = 'tideline-loki-saved-audit-v1';
+  var saveForm = document.getElementById('auditSaveForm');
+  var saveStatus = document.getElementById('auditSaveStatus');
+  // Retire the old anonymous refresh credential; only explicit email saves may resume.
+  try { sessionStorage.removeItem('tideline-loki-audit'); } catch (_) {}
+  function forgetSaved(){try {localStorage.removeItem(savedKey);} catch (_) {}}
+  function showSaved(email){document.getElementById('auditEmail').value=email;saveStatus.textContent='Saved for '+email+'. Your Loki will remember this conversation when you refresh this browser.';}
   var count = 0;
   var hasReport = false;
   var businessContext = '';
@@ -153,8 +160,8 @@
     startStatus.textContent = 'Loki is preparing your first question…';
     try {
       var data = await post('/api/audit/start', {business:business});
-      session = {id:data.id, token:data.token}; businessContext = business;
-      try { sessionStorage.setItem('tideline-loki-audit', JSON.stringify(session)); } catch (_) {}
+      session = {id:data.id, token:data.token}; count=0; hasReport=false; businessContext = business;
+      saveStatus.textContent = '';
       onboard.hidden = true; workspace.hidden = false;
       bubble('you', business); showMessage(data.message);
     } catch (error) { startStatus.textContent = errorText(error); }
@@ -183,25 +190,44 @@
   finishButton.addEventListener('click', function(){ answerInput.value = 'Please finish the audit with your best current diagnosis. Mark any assumptions.'; answerForm.requestSubmit(); });
   document.getElementById('auditPrint').addEventListener('click', function(){ window.print(); });
   document.getElementById('auditDelete').addEventListener('click', async function(){
-    if(!session || !window.confirm('Delete this audit and its conversation?')) return;
+    if(!session || !window.confirm('Delete this audit and its saved Loki memory? Your CRM contact record, if created, will remain with TideLine.')) return;
     try {
       await post('/api/audit/delete', session);
-      try { sessionStorage.removeItem('tideline-loki-audit'); } catch (_) {}
-      session = null; hasReport = false; businessContext = ''; if(pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl=null; result.remove(); transcript.replaceChildren(); opportunities.replaceChildren();
+      forgetSaved();
+      session = null; count=0; hasReport = false; businessContext = ''; if(pdfUrl) URL.revokeObjectURL(pdfUrl); pdfUrl=null; result.remove(); transcript.replaceChildren(); opportunities.replaceChildren();
       workspace.hidden = true; result.hidden = true; document.querySelector(".audit-wrap").append(result); onboard.hidden = false; businessInput.value = '';
       startStatus.textContent = 'Your audit was deleted.';
       businessInput.focus();
     } catch(error){ status.textContent = error.code === 'text_enrollment_active' ? 'This audit is linked to earlier text enrollment. Contact TideLine to remove that record.' : errorText(error); }
   });
+  saveForm.addEventListener('submit', async function(event){
+    event.preventDefault(); if(!session || saveForm.getAttribute('aria-busy')==='true') return;
+    var button=saveForm.querySelector('button');setBusy(button,true);saveForm.setAttribute('aria-busy','true');
+    saveStatus.textContent='Saving your Loki…';
+    try {
+      var data=await post('/api/audit/save',{id:session.id,token:session.token,email:document.getElementById('auditEmail').value.trim(),consent:true});
+      try {localStorage.setItem(savedKey,JSON.stringify(session));showSaved(data.email);}
+      catch (_) {saveStatus.textContent='Saved to your private workspace. This browser blocks storage, so it cannot resume automatically after refresh.';}
+    } catch(error){saveStatus.textContent=error.code==='audit_already_saved'?'This conversation is already saved with another email.':errorText(error);}
+    finally {setBusy(button,false);saveForm.setAttribute('aria-busy','false');}
+  });
   try {
-    var saved = JSON.parse(sessionStorage.getItem('tideline-loki-audit') || 'null');
-    if(saved?.id && saved?.token) post('/api/audit/state', saved).then(function(data){
-      session = saved; businessContext = data.business || ''; onboard.hidden = true; workspace.hidden = false;
-      bubble('you', data.business);
-      (data.turns || []).forEach(function(turn){ if(turn.reply || turn.question) bubble('loki', [window.LokiText.clean(turn.reply),window.LokiText.clean(turn.question)].filter(Boolean).join(' ')); bubble('you', turn.answer); });
-      if(data.report && !data.message.ready) showResult(data.report);
-      count = (data.turns || []).length; showMessage(data.message);
-      if(count >= 4 && !data.message.ready && !hasReport) finishButton.hidden = false;
-    }).catch(function(){ sessionStorage.removeItem('tideline-loki-audit'); });
-  } catch (_) {}
+    var saved = JSON.parse(localStorage.getItem(savedKey) || 'null');
+    if(saved?.id && saved?.token) {
+      setBusy(startButton,true);
+      post('/api/audit/state', saved).then(function(data){
+        if(!data.saved){forgetSaved();return;}
+        session = saved; businessContext = data.business || ''; onboard.hidden = true; workspace.hidden = false;
+        showSaved(data.email);
+        bubble('you', data.business);
+        (data.turns || []).forEach(function(turn){ if(turn.reply || turn.question) bubble('loki', [window.LokiText.clean(turn.reply),window.LokiText.clean(turn.question)].filter(Boolean).join(' ')); bubble('you', turn.answer); });
+        if(data.report && !data.message.ready) showResult(data.report);
+        count = (data.turns || []).length; showMessage(data.message);
+        if(count >= 4 && !data.message.ready && !hasReport) finishButton.hidden = false;
+      }).catch(function(error){
+        if(error.code==='audit_not_found') forgetSaved();
+        startStatus.textContent='Your saved Loki could not be loaded. Refresh to retry, or start a new conversation.';
+      }).finally(function(){setBusy(startButton,false);});
+    }
+  } catch (_) {forgetSaved();}
 })();

@@ -449,3 +449,5 @@
 .audit-pilot>details>summary{font-size:13px;color:var(--navy);padding:10px 0;cursor:pointer;}
 @media print{.audit-plan-links,.audit-pdf-status,.audit-thinking{display:none!important;}}
 @media(prefers-reduced-motion:reduce){.audit-plan-open{transition:none!important;transform:none!important;}}
+
+.audit-save {padding:1rem;border-bottom:1px solid var(--line,#ddd);margin-bottom:1rem}.audit-save p {font-size:.85rem;margin:.5rem 0}.audit-save label {display:block;font-weight:600;margin-bottom:.5rem}

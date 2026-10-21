@@ -121,3 +121,28 @@ that allowance. A new deployment does not reset the daily quota. Alias-domain
 redirect code still runs for API requests/missing assets; matched static pages
 carry the canonical URL rather than invoking middleware solely for redirects.
 No account, domain, billing or database settings are changed.
+
+
+## Email-saved Ask Loki workspaces
+
+Anonymous credentials live only in page memory: refresh starts a new conversation.
+The legacy anonymous `sessionStorage` key is discarded. Only explicit email save
+writes a browser resume credential, and state restoration requires both the audit
+capability and a server-side `loki_audit_saves` receipt. An email address is not a
+login: entering an existing address never loads another conversation or its memory.
+Cross-device recovery requires a separately verified identity flow.
+
+`CRM_DB` points to the existing Voyage D1 database. Save links exact matching
+contact emails, preserves staff edits, or creates a prospect and contact, plus an
+idempotent audit note. This grants no marketing or sequence enrollment consent.
+The email is marked unverified. CRM write failure is reported as a failed save.
+
+Each saved audit owns a private virtual cloud directory at
+`customers/<crm-contact-id>/loki/<audit-id>/`. Its `profile.json`, `owner-facts.json`,
+`conversation.json` and `working-plan.json` files are D1 rows, not public assets or
+local Mac files. Owner facts are kept separate from generated advice. Each accepted
+turn refreshes these files; the authenticated conversation row is authoritative if
+a memory refresh is interrupted. Saved audits are excluded from anonymous expiry.
+Deleting an audit removes its saved receipt and memory files; CRM contact/note
+records remain. No other audit can retrieve that directory by supplying its email.
+Apply `0005_audit_memory.sql` before deployment. No R2 bucket is required.
