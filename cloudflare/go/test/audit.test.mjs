@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const source = (await readFile(new URL('../src/audit.js', import.meta.url), 'utf8')).replace("from './loki-roadmap.js'", 'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/loki-roadmap.js', import.meta.url),'utf8'))));
+const source = (await readFile(new URL('../src/audit.js', import.meta.url), 'utf8')).replace("from './loki-roadmap.js'", 'from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/loki-roadmap.js', import.meta.url),'utf8')))).replace("from './audit-memory.js'", "from "+JSON.stringify("data:text/javascript,"+encodeURIComponent(await readFile(new URL("../src/audit-memory.js",import.meta.url),"utf8"))));
 const { handleAudit, repeatsConversation } = await import(`data:text/javascript,${encodeURIComponent(source)}`);
 const origin = 'https://tidelinestrats.com';
 function request(path, body, sourceOrigin = origin) {
@@ -11,15 +11,17 @@ function request(path, body, sourceOrigin = origin) {
 function setup(aiResponse) {
   const rows = new Map();
   const optins = new Map();
-  const db = { prepare(sql) { return { bind(...args) { return {
+  const db = { async batch(statements){return Promise.all(statements.map(stmt=>stmt.run()));}, prepare(sql) { return { bind(...args) { return {
     async first(){
       if(sql.includes('FROM loki_audits')) return rows.get(args[0]) || null;
+      if(sql.includes('FROM loki_audit_saves')) return null;
       if(sql.includes('FROM loki_text_optins')) return optins.get(args[0]) || null;
       throw new Error(sql);
     },
     async run(){
       if(sql.startsWith('INSERT INTO loki_audits')) { rows.set(args[0], { id:args[0], token_hash:args[1], created_at:args[2], updated_at:args[3], business_hint:args[4], last_message_json:args[5], turns_json:args[6], insights_json:args[7], result_json:'', revision:0 }); return {meta:{changes:1}}; }
       if(sql.startsWith('UPDATE loki_audits')) { const row=rows.get(args[5]); if(row.revision !== args[6]) return {meta:{changes:0}}; Object.assign(row,{turns_json:args[0],last_message_json:args[1],insights_json:args[2],result_json:args[3],updated_at:args[4],revision:row.revision+1}); return {meta:{changes:1}}; }
+      if(sql.startsWith('DELETE FROM loki_memory_files') || sql.startsWith('DELETE FROM loki_audit_saves')) return {meta:{changes:0}};
       if(sql.startsWith('DELETE FROM loki_audits')) { if(sql.includes('WHERE id = ?')) rows.delete(args[0]); return {meta:{changes:1}}; }
       if(sql.startsWith('INSERT INTO loki_text_optins')) { optins.set(args[1], {status:args[5]}); return {meta:{changes:1}}; }
       throw new Error(sql);
