@@ -1,9 +1,9 @@
-const CACHE = 'loki-shell-v1';
-const SHELL = ['/loki/', '/loki/app.css', '/loki/app.js', '/loki/manifest.webmanifest', '/assets/loki/loki-avatar.png'];
-self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL))); self.skipWaiting(); });
-self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))); self.clients.claim(); });
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  if (event.request.method !== 'GET' || url.origin !== self.location.origin || url.pathname.startsWith('/api/')) return;
-  event.respondWith(fetch(event.request).then(res => { if (res.ok && SHELL.includes(url.pathname)) { const copy = res.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); } return res; }).catch(() => caches.match(event.request)));
-});
+// Retire the former private-test shell so installed copies reach the waitlist.
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', event => event.waitUntil((async () => {
+  await Promise.all((await caches.keys()).filter(key => key.startsWith('loki-shell-')).map(key => caches.delete(key)));
+  await self.registration.unregister();
+  for (const client of await self.clients.matchAll({type:'window'})) {
+    if (new URL(client.url).pathname.startsWith('/loki/')) await client.navigate('/loki/');
+  }
+})()));
