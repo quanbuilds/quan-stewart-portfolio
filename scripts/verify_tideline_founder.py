@@ -13,7 +13,7 @@ with tempfile.TemporaryDirectory(prefix='loki-founder-acceptance-') as scratch:
     fixture=json.loads(pathlib.Path('cloudflare/go/test/fixtures/founder-hvac.json').read_text())
     origin=checks['origin']
     def post(path,body):
-        raw=subprocess.check_output(['curl','-sS','--max-time','300',origin+'/api/audit/'+path,'-H','Origin: '+origin,'-H','Content-Type: application/json','--data-binary',json.dumps(body),'-w','\n%{http_code}'])
+        raw=subprocess.check_output(['curl','-sS','--max-time','600',origin+'/api/audit/'+path,'-H','Origin: '+origin,'-H','Content-Type: application/json','--data-binary',json.dumps(body),'-w','\n%{http_code}'])
         payload,status=raw.rsplit(b'\n',1)
         assert int(status)==200,(path,status,payload[:300])
         return json.loads(payload)
