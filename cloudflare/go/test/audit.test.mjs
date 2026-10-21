@@ -32,13 +32,19 @@ function setup(aiResponse) {
   return {env,rows,optins};
 }
 const question = {reply:'I can help you trace that.',question:'What happens when a new inquiry arrives?',insights:[],ready:false,opportunities:[],pilot:''};
-function requestSchema(args) { return JSON.parse(args.input.findLast(m=>m.content.startsWith('Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: ')).content.slice('Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: '.length)); }
+function requestSchema(args) {
+ const prefix='Return only JSON matching this schema. Keep the complete JSON under 2800 tokens, using compact but complete instructions within each field limit: ';
+ assert.equal(args.input.length,1,'native model requests must have one data input');
+ assert.equal(args.input[0].role,'user');
+ const instructions=args.instructions;
+ return JSON.parse(instructions.slice(instructions.lastIndexOf(prefix)+prefix.length));
+}
 function interview(args) {
- const n = args.input.filter(m=>m.role==='user').length - 1;
+ const n = JSON.parse(args.input[0].content).conversation.filter(m=>m.role==='user').length - 1;
  return n ? {...question,reply:'Let us check the next detail '+n+'.',question:'Which part needs attention in step '+n+'?'} : question;
 }
 const specificFields={firstStep:'Before the first shift ends, ask the desk lead to write each open request in the existing shared sheet with a next owner and action.',aiHelp:'Give Loki five anonymous request examples. Ask it to return a table showing the next owner, next action, due time and any missing facts for each request.',aiPrompt:'Sort these anonymous requests into a table with Request, Next owner, Next action, Due time and Missing facts columns. Mark unknown facts as unknown. Do not guess availability or promise a booking. Requests: [paste anonymous examples].',humanCheck:'The desk lead compares every draft row with the original request and checks the real calendar before confirming a time.'};
-function detailed(report){report.synthesis={headline:'Paper tasks lose ownership between shifts',connection:'Paper lists and rotating shifts leave requests without a clear next owner. This suggests the shift change is where the work goes missing, so we should check that handoff first.',firstMove:'Name the next owner for every open task before the shift changes.'};report.opportunities.forEach(item=>Object.assign(item,specificFields));return report;}
+function detailed(report){report.synthesis={headline:'Paper tasks lose ownership between shifts',connection:'Paper lists and rotating shifts leave requests without a clear next owner. This suggests the shift change is where the work goes missing, so we should check that handoff first.',firstMove:'Name the next owner for every open task before the shift changes.'};report.opportunities.forEach(item=>Object.assign(item,{owner:'Desk lead',timing:'Next shift',steps:['Name the owner before the shift changes.','Record the next action on the existing sheet.','Ask the incoming lead to verify the open requests.'],doneWhen:'Each open request has an owner and next action.',fallback:'If requests are missed, review the handoff with both leads.'},specificFields));return report;}
 
 
 test('Loki starts a real AI session and rejects unauthenticated follow-up', async()=>{
@@ -86,9 +92,9 @@ test('fourth answer gets a complete audit after one bounded retry of truncated m
  const start=await handleAudit(request('/api/audit/start',{business:'A fictional studio for testing'}),ctx.env,new URL(origin+'/api/audit/start'));
  const {id,token}=await start.json();let result;
  for(let n=1;n<=4;n++){result=await handleAudit(request('/api/audit/turn',{id,token,answer:'Test answer '+n+' using a shared sheet.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(result.status,200);}
- const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,6);
+ const body=await result.json();assert.equal(body.message.ready,true);assert.equal(body.message.opportunities.length,3);assert.equal(calls,7);
  assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,4);assert.ok(ctx.rows.get(id).result_json);
- assert.equal(requestSchema(finalArgs).properties.opportunities.minItems,3);assert.equal(finalArgs.max_output_tokens,6000);assert.equal(finalArgs.reasoning.effort,'low');assert.equal(requestSchema(finalArgs).properties.opportunities.items.properties.aiPrompt.maxLength,280);
+ assert.equal(requestSchema(finalArgs).properties.opportunities.minItems,1);assert.equal(finalArgs.max_output_tokens,7000);assert.equal(finalArgs.reasoning.effort,'medium');assert.equal(requestSchema(finalArgs).properties.opportunities.items.properties.aiPrompt.maxLength,280);
 });
 
 test('invalid final reports preserve the saved conversation and never expose partial reports',async()=>{
@@ -111,9 +117,9 @@ test('completed audits support objections, trusted tools, revisions, and restore
  const saved=JSON.parse(ctx.rows.get(id).result_json);assert.equal(saved.synthesis.headline,'Paper tasks lose ownership between shifts');assert.equal(saved.opportunities[0].aiPrompt,report.opportunities[0].aiPrompt);assert.equal(saved.opportunities[0].humanCheck,report.opportunities[0].humanCheck);assert.equal(saved.opportunities[0].steps.length,3);assert.equal(saved.opportunities[0].doneWhen,report.opportunities[0].doneWhen);assert.equal(saved.tools.length,1);assert.equal(saved.tools[0].pricingUrl,'https://trello.com/pricing');
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...question,reply:'Fair point. We can keep the paper list and assign one owner.',question:''}};};
  const follow=await handleAudit(request('/api/audit/turn',{id,token,answer:'We don’t want another app. Can we keep paper?'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(follow.status,200);assert.equal((await follow.json()).message.ready,false);
- assert.equal(requestSchema(lastArgs).properties.ready.enum[0],false);assert.ok(!requestSchema(lastArgs).properties.opportunities);assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.input.some(m=>m.content.includes(report.pilot)));
+ assert.equal(requestSchema(lastArgs).properties.ready.enum[0],false);assert.ok(!requestSchema(lastArgs).properties.opportunities);assert.equal(JSON.parse(ctx.rows.get(id).result_json).pilot,report.pilot);assert.ok(lastArgs.input[0].content.includes(report.pilot));
  ctx.env.AI.run=async(_model,args)=>{lastArgs=args;return {response:{...report,reply:'You’re right — here’s a revised pilot.',pilot:'Keep paper; give the desk lead daily review ownership.'}};};
- const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(requestSchema(lastArgs).properties.ready.enum[0],true);assert.ok(!lastArgs.input.some(m=>m.content.startsWith('Earlier provisional audit:')));assert.ok(lastArgs.input.some(m=>m.content.includes('Withdraw every recommendation')));
+ const revised=await handleAudit(request('/api/audit/turn',{id,token,answer:'Revise the plan around paper.'}),ctx.env,new URL(origin+'/api/audit/turn'));assert.equal(revised.status,200);assert.equal(requestSchema(lastArgs).properties.ready.enum[0],true);assert.ok(!lastArgs.input.some(m=>m.content.startsWith('Earlier provisional audit:')));assert.ok(lastArgs.instructions.includes('Withdraw every recommendation'));
  const state=await handleAudit(request('/api/audit/state',{id,token}),ctx.env,new URL(origin+'/api/audit/state'));const restored=await state.json();assert.equal(restored.report.pilot,'Keep paper; give the desk lead daily review ownership.');assert.equal(restored.turns.length,6);
 });
 
@@ -127,15 +133,15 @@ test('topic suffixes disappear without damaging normal questions or original est
 });
 
 
-test('vague AI help is retried and never replaces the saved conversation with a weak plan',async()=>{
+test('incomplete execution instructions are retried and never replace the saved plan',async()=>{
  const good=detailed({reply:'Okay, I would start with the shift change.',question:'',ready:true,insights:[],pilot:'Try one handoff for two weeks.',opportunities:Array.from({length:3},(_,i)=>({title:'Action '+i,evidence:'The owner said requests are written on paper.',automation:'Review drafts before sending.',metric:'Count missed requests in days 1-3, then compare days 4-14.'}))});
- good.opportunities[0].aiHelp='AI can help set up the list';
+ good.opportunities[0].steps=[];
  const ctx=setup(args=>interview(args));let attempts=0;
  ctx.env.AI.run=async(_model,args)=>{if(requestSchema(args).properties.ready.enum?.[0]){attempts++;return{response:good};}return{response:interview(args)};};
  const start=await handleAudit(request('/api/audit/start',{business:'A cleaning company with seven cleaners'}),ctx.env,new URL(origin+'/api/audit/start'));const{id,token}=await start.json();
  for(let n=0;n<3;n++)await handleAudit(request('/api/audit/turn',{id,token,answer:'We use a shared calendar and texts.'}),ctx.env,new URL(origin+'/api/audit/turn'));
  const result=await handleAudit(request('/api/audit/turn',{id,token,answer:'What should we do on Monday?'}),ctx.env,new URL(origin+'/api/audit/turn'));
- assert.equal(result.status,503);assert.equal(attempts,2);assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,3);assert.equal(ctx.rows.get(id).result_json,'');
+ assert.equal(result.status,503);assert.equal(attempts,4);assert.equal(JSON.parse(ctx.rows.get(id).turns_json).length,3);assert.equal(ctx.rows.get(id).result_json,'');
 });
 
 
@@ -153,11 +159,11 @@ test('Rentec interview excludes report priming and retries repetition without sa
  const {id,token}=await start.json();let calls=0;
  ctx.env.AI.run=async(_model,args)=>{
   calls++;
-  if(calls===2) assert.ok(args.input.some(m=>m.role==='system'&&m.content.includes('Rejected question:')));
-  assert.ok(!args.input[0].content.includes('after lunch'));
-  assert.ok(!args.input[0].content.includes('AUDIT TRANSITION'));
+  if(calls===2) assert.ok(args.instructions.includes('Rejected question:'));
+  assert.ok(!args.instructions.includes('after lunch'));
+  assert.ok(!args.instructions.includes('AUDIT TRANSITION'));
   assert.ok(!requestSchema(args).properties.opportunities);
-  assert.ok(args.input.some(m=>m.role==='user'&&m.content==='Price is too high, and tech is dated.'));
+  assert.ok(JSON.parse(args.input[0].content).conversation.some(m=>m.role==='user'&&m.content==='Price is too high, and tech is dated.'));
   return {response:calls===1 ? {...question,reply:'',question:"What is the biggest problem with Rentec's costs or features?"} : {...question,reply:'Let’s put a number on the cost before comparing replacements.',question:'How many units do you manage, and what do you pay Rentec per month?'}};
  };
  const res=await handleAudit(request('/api/audit/turn',{id,token,answer:'Price is too high, and tech is dated.'}),ctx.env,new URL(origin+'/api/audit/turn'));
@@ -204,4 +210,41 @@ test('native reasoning output uses only the final answer and detects rephrased q
 test('polite rephrasing does not disguise a repeated question',()=>{
  assert.equal(repeatsConversation({reply:'',question:'Could you share your current monthly cost for Rentec?'},[{reply:'',question:'What is your current monthly cost for Rentec?'}]),true);
  assert.equal(repeatsConversation({reply:'',question:'Which features do you need?'},[{reply:'',question:'What is your current monthly cost for Rentec?'}]),false);
+});
+
+test('saved founder follow-ups are edited against owner evidence without replaying rejected advice',async()=>{
+ const ctx=setup(()=>question);
+ const start=await handleAudit(request('/api/audit/start',{business:'A fictional HVAC company with 18 open estimates'}),ctx.env,new URL(origin+'/api/audit/start'));
+ const {id,token}=await start.json();const row=ctx.rows.get(id);
+ row.result_json=JSON.stringify({pilot:'Old draft, not evidence.'});
+ row.turns_json=JSON.stringify([{reply:'Create eighteen Outlook reminders and a Trello board.',question:'Who owns the calls?',answer:'Melissa owns the 20-minute Monday, Wednesday and Friday blocks. No extra reminders or new tools. I review pricing and technical questions Tuesday and Friday.'}]);
+ const answer='The revised plan still adds reminders. Give Melissa an opening she can actually say, and a dated next step in the estimate notes.';
+ let draftCalls=0,editorCalls=0;
+ const corrected={...question,question:'',reply:'Withdraw the individual reminders. Melissa can say: “Hi, it’s Melissa. What is still holding up your decision?” In the estimate note, record the outcome, next action, owner and due date. Pricing and technical questions go to your Tuesday or Friday review.'};
+ ctx.env.AI.run=async(_model,args)=>{
+  assert.equal(requestSchema(args).properties.ready.enum[0],false,'mentioning a revised plan is not a revision request');
+  if(args.instructions.startsWith('You edit business advice')){
+   editorCalls++;const evidence=JSON.parse(JSON.parse(args.input[0].content).conversation[0].content);
+   assert.equal(evidence.latestRequest,answer);
+   assert.ok(evidence.ownerStatements[0].includes('No extra reminders'));
+   assert.ok(!evidence.ownerStatements.some(s=>s.includes('Trello')));
+   assert.equal(evidence.untrustedDraft.reply,'Create eighteen Outlook reminders.');
+   return{response:corrected};
+  }
+  draftCalls++;assert.ok(!args.input.some(m=>m.content.includes('Create eighteen Outlook reminders and a Trello board.')));
+  return{response:{...question,reply:'Create eighteen Outlook reminders.',question:''}};
+ };
+ const response=await handleAudit(request('/api/audit/turn',{id,token,answer}),ctx.env,new URL(origin+'/api/audit/turn'));
+ assert.equal(response.status,200);assert.equal((await response.json()).message.reply,corrected.reply);
+ assert.equal(draftCalls,1);assert.equal(editorCalls,1);assert.equal(JSON.parse(row.result_json).pilot,'Old draft, not evidence.');
+});
+
+test('a model cannot silently replace a report during ordinary follow-up, even after editing',async()=>{
+ const ctx=setup(()=>question);const start=await handleAudit(request('/api/audit/start',{business:'A fictional HVAC company'}),ctx.env,new URL(origin+'/api/audit/start'));
+ const{id,token}=await start.json();const row=ctx.rows.get(id);const saved={pilot:'Keep the agreed routine.'};row.result_json=JSON.stringify(saved);
+ row.turns_json=JSON.stringify(Array.from({length:4},()=>({answer:'Use existing estimate notes.',reply:'',question:'Who owns it?'})));
+ const bad=detailed({reply:'Here is another report.',question:'',ready:true,insights:[],tools:[],pilot:'Unrequested replacement.',opportunities:Array.from({length:3},()=>({title:'Action',evidence:'An owner described missed work.',automation:'None needed.',metric:'Compare measured missed requests.'}))});
+ ctx.env.AI.run=async()=>({response:bad});
+ const response=await handleAudit(request('/api/audit/turn',{id,token,answer:'What should Melissa say on the phone?'}),ctx.env,new URL(origin+'/api/audit/turn'));
+ assert.equal(response.status,503);assert.equal(row.result_json,JSON.stringify(saved));assert.equal(JSON.parse(row.turns_json).length,4);
 });

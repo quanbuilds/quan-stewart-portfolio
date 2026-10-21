@@ -16,7 +16,7 @@ def post(path,body,expected=200):
 commit=os.environ['AGENT_RELEASE_COMMIT']
 assert command(['git','rev-parse','HEAD']).decode().strip()==commit
 evidence={}
-for asset in ['index.html','loki-audit.js','site.css']:
+for asset in ['index.html','site.js','loki-audit.js','site.css']:
     actual=command(['curl','--compressed','-fsS',origin+('/' if asset=='index.html' else '/'+asset)])
     assert hashlib.sha256(actual).digest()==hashlib.sha256((root/'signallabs'/asset).read_bytes()).digest()
     evidence[asset]='matches committed asset'
