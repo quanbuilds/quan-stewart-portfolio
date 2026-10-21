@@ -66,6 +66,7 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
         else b.removeAttribute('aria-current');
       });
       document.querySelectorAll('.tabpanel').forEach(function(p){p.classList.toggle('active',p.id === 'tab-'+page);});
+      history.replaceState(null, '', page === 'home' ? location.pathname + location.search : '#' + page);
       window.scrollTo({top:0,behavior:'auto'});
       requestAnimationFrame(updateShip);
     }
@@ -81,6 +82,14 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
     }
   });
 });
+
+// Deep links from crawlable service pages open the intended existing workspace.
+function openLinkedSection(){
+  var page=location.hash.slice(1);
+  if (['home','audit','services','about','contact'].includes(page)) document.querySelector('.tab[data-tab="'+page+'"]')?.click();
+}
+openLinkedSection();
+window.addEventListener('hashchange',openLinkedSection);
 
 var partnershipCta = document.querySelector('.cta-secondary');
 if(partnershipCta){partnershipCta.addEventListener('click',function(e){e.preventDefault();document.querySelector('.tab[data-tab="services"]')?.click();});}
@@ -195,8 +204,8 @@ initKadenceDemo();
   document.addEventListener('keydown',function(event){
     if(event.key!=='Escape') return;
     var save=document.getElementById('auditSaveMenu');
-    if(save.open){save.open=false;document.getElementById('auditSaveToggle').focus();}
+    if(save?.open){save.open=false;document.getElementById('auditSaveToggle').focus();}
     if(!document.body.classList.contains('audit-page')&&menu.open){menu.open=false;menu.querySelector('summary').focus();}
   });
-  document.addEventListener('click',function(event){var save=document.getElementById('auditSaveMenu');if(save.open&&!save.contains(event.target))save.open=false;});
+  document.addEventListener('click',function(event){var save=document.getElementById('auditSaveMenu');if(save?.open&&!save.contains(event.target))save.open=false;});
 })();

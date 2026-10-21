@@ -1,8 +1,17 @@
 # TideLine Strategies
 
-> Business operations consulting, workflow automation and custom software for owner-led service businesses.
+> Business operations consulting, workflow automation, and custom software for owner-led service businesses. Start with the people and workflow, then build where it helps.
 
-- [TideLine](https://tidelinestrats.com/): Services, team and contact information.
-- [WonPlace](https://wonplace.tidelinestrats.com/): Class operations software for gymnastics gyms.
+## Services and company information
+- [TideLine Strategies](https://tidelinestrats.com/): Company, founders, approach, and contact information.
+- [Services](https://tidelinestrats.com/services/): The diagnostic-first approach and available services.
+- [Business operations consulting](https://tidelinestrats.com/services/operations-consulting/): Workflow mapping, clear ownership, dependable records, and a practical first fix.
+- [Workflow automation](https://tidelinestrats.com/services/workflow-automation/): Repeated admin work, review rules, existing integrations, and exception handling.
+- [Custom software development](https://tidelinestrats.com/services/custom-software/): Purpose-built tools, project scope, ownership, and handoff.
+- [Questions and answers](https://tidelinestrats.com/faq/): Services, project scope, Ask Loki privacy and restoration, and app availability.
 
-Loki is an interactive business operations assistant. Its private conversations and app are not public reference material.
+## Products
+- [Loki app waitlist](https://tidelinestrats.com/loki/): Coming soon; phone-number signup for a launch notification. No text is sent at signup.
+- [WonPlace](https://wonplace.tidelinestrats.com/): Class operations software featured by TideLine.
+
+Ask Loki is a public interactive audit on the homepage, not the forthcoming Loki app. Private conversations, customer memory, access tokens, and API responses are not public reference material. Workshop previews are concepts, not customer results or available products. Pricing and integrations are scoped to the actual project; no guaranteed savings or implementation timeline is published.
