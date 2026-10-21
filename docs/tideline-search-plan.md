@@ -39,7 +39,9 @@ Directional SERP review used live results for operations consulting, workflow au
 
 Google Search Console has an existing signed-in `q.stewart@tidelinestrats.com` session and verified domain property `sc-domain:tidelinestrats.com`. Submit/reconcile the root sitemap after deployment and record the provider result separately from code verification. The WonPlace sitemap must remain untouched. A successful sitemap submission is not proof that all URLs are indexed or ranking.
 
-Bing Webmaster access and indexing must be verified separately; never invent a successful submission or create duplicate properties. Record the actual browser result in the task evidence.
+Google accepted a fresh submission of the seven-page root sitemap on 2026-10-21. Its report still showed one discovered page immediately afterward; new-page discovery and indexing remain pending Google crawling.
+
+Bing Webmaster Tools signed in with the existing TideLine Google account (profile/email only). The exact root site was added manually and the public `msvalidate.01` tag was added to the homepage for ownership verification. No DNS changes or GSC-data import permission was needed. Record the final provider verification and sitemap response separately in the task evidence; the presence of the meta tag alone is not proof of verification or indexing.
 
 After crawl data arrives, use Search Console impressions, queries, indexed-page reports, and conversions to refine this map. Indexing, rankings, AI citations, and traffic changes are external outcomes, not release assertions.
 
