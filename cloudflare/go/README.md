@@ -146,3 +146,14 @@ a memory refresh is interrupted. Saved audits are excluded from anonymous expiry
 Deleting an audit removes its saved receipt and memory files; CRM contact/note
 records remain. No other audit can retrieve that directory by supplying its email.
 Apply `0005_audit_memory.sql` before deployment. No R2 bucket is required.
+
+
+Release identity verification (2026-10-21): Wrangler's `default` profile is signed
+in as q.stewart@tidelinestrats.com and can read both the TideLine D1 database and
+the deployed go Worker in account 58008ae4816f34f96786f0f52834dce5. The older
+`tideline` profile currently receives API error 7403. Use the verified identity
+with `TIDELINE_WRANGLER_PROFILE=default` for this release; never switch the target
+account to make an authorization error disappear. Live email-memory verification
+uses that same profile (overridable by the environment). The rejected migration
+attempt applied no schema changes and uploaded no Worker version, as confirmed
+by schema readback and the unchanged deployed Worker version.
