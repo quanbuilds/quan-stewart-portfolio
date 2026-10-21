@@ -11,7 +11,7 @@ def post(phone):
 commit=os.environ['AGENT_RELEASE_COMMIT'];assert command(['git','rev-parse','HEAD']).decode().strip()==commit
 evidence={}
 for asset in ['site.css','loki/index.html','loki/waitlist.js','loki/waitlist.css','loki/sw.js']:
- actual=command(['curl','--compressed','-fsS',origin+'/'+asset]);assert hashlib.sha256(actual).digest()==hashlib.sha256((root/'signallabs'/asset).read_bytes()).digest(),asset
+ actual=command(['curl','-L','--compressed','-fsS',origin+'/'+asset]);assert hashlib.sha256(actual).digest()==hashlib.sha256((root/'signallabs'/asset).read_bytes()).digest(),asset
  evidence[asset]='matches committed asset'
 # Reserve a fictional NANP 555-01xx number only when it has no existing record.
 phone=None
