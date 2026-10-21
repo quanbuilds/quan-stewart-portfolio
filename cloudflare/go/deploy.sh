@@ -27,9 +27,13 @@ if [ "${1:-}" = "--dry-run" ]; then
   exit 0
 fi
 
+if [ -n "${AGENT_RELEASE_COMMIT:-}" ]; then
+  printf '{"commit":"%s","product":"tideline"}' "$AGENT_RELEASE_COMMIT" > "$BUILD_DIR/go/site/__release.json"
+fi
 UPLOAD_LOG="$BUILD_DIR/upload.log"
 wrangler_cli versions upload --profile "$TIDELINE_WRANGLER_PROFILE" --cwd "$BUILD_DIR/go" --message "Deploy TideLine Loki owner app free test" > "$UPLOAD_LOG" 2>&1
 cat "$UPLOAD_LOG"
+cp "$UPLOAD_LOG" "$ROOT/.tideline-release.log"
 VERSION_ID=$(sed -n 's/.*Version ID:[[:space:]]*\([0-9a-f-]*\).*/\1/p' "$UPLOAD_LOG" | tail -n 1)
 if [ -z "$VERSION_ID" ]; then
   echo "Unable to read uploaded Worker version ID" >&2
