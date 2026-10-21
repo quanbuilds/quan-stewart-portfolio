@@ -228,7 +228,7 @@ test('saved founder follow-ups are edited against owner evidence without replayi
  ctx.env.AI.run=async(_model,args)=>{
   assert.equal(requestSchema(args).properties.ready.enum[0],false,'mentioning a revised plan is not a revision request');
   draftCalls++;assert.ok(!args.messages.some(m=>m.content.includes('Create eighteen Outlook reminders and a Trello board.')));
-  if(draftCalls===2) assert.ok(args.messages[0].content.includes('draft FAILED'));
+  if(draftCalls===2) assert.ok(args.messages[0].content.includes('constrained correction'));
   return{response:draftCalls===1?{...question,reply:'Create eighteen Outlook reminders.',question:''}:corrected};
  };
  const response=await handleAudit(request('/api/audit/turn',{id,token,answer}),ctx.env,new URL(origin+'/api/audit/turn'));
