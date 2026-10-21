@@ -7,6 +7,7 @@ def get(path):
 def verify():
  urls=inspect();commit=os.environ['AGENT_RELEASE_COMMIT']
  assert json.loads(get('/__release.json'))['commit']==commit
+ assert Page(get('/').decode()).meta.get('msvalidate.01') == Page((SITE/'index.html').read_text()).meta['msvalidate.01']
  files=['index.html','site.js','site.css','analytics.js','sitemap.xml','robots.txt','llms.txt','loki/index.html']
  files += [urllib.parse.urlsplit(url).path.lstrip('/')+'index.html' for url in urls if urllib.parse.urlsplit(url).path not in ['/','/loki/']]
  for asset in files:
