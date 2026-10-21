@@ -1,0 +1,13 @@
+# TideLine intake and anonymous conversions
+
+Contact inquiries and phone waitlist records remain in `tideline-contact`. Website intake synchronizes them into the existing Voyage `documents` account/contact/note schema, with a `tideline_links` source reference. `crm_intake_receipts` reports linked, pending, or needs-review state. Original records form the durable retry queue; a bounded ten-minute scheduled pass retries pending records. Ambiguous identity and missing-account matches require editor review instead of a merge. Existing staff record fields are never replaced by another signup.
+
+Contact matching uses exact normalized email, plus an exact already-normalized CRM phone where present. New email contacts share the same canonical IDs as Ask Loki saves to avoid duplicate email identities. Unknown or formatted legacy phone records may need manual reconciliation. Waitlist consent permits only the eventual Loki launch text. There is no SMS provider, launch number, or automatic send in this change. Contact notification behavior is unchanged; a pending email receipt does not prevent the lead reaching CRM.
+
+`conversion_events` records successful audit start, audit save, contact submission, and waitlist signup once per source. It stores an opaque receipt hash, time, event kind, anonymous tab-session UUID and device category. It stores no email, phone, form text, raw URL, access token or CRM ID. Context is omitted for privacy opt-outs; server DNT/GPC headers override supplied context. These are observed anonymous event/session counts, not unique people, a linear funnel or automatic identity attribution. CRM source records remain separate. Traffic/conversions expire after 90 days.
+
+Migration: `0008_intake_conversions.sql`. Reconciliation does not run the existing daily Loki AI work every ten minutes; that work remains on its daily schedule. Cron Triggers are reconciled after the intended Worker version activates.
+
+Tests: real SQLite intake/retry/duplicate/edit-preservation/privacy and public-handler integration; existing audit and contact tests; browser request-context and privacy checks. `scripts/verify_tideline_intake.py` seeds one synthetic inquiry and exercises its duplicate path to avoid sending test emails, exercises a reserved phone signup and saved Loki conversation, verifies all four conversion receipts and CRM records, then removes only its synthetic records. It does not resend the historical pending inquiry notification.
+
+The repaired Voyage PR adds an editor-only Admin → TideLine leads page, source status/retry controls, observed conversion counts and linked pipeline totals. Its independent review and CRM deployment are separate from the website-side release.

@@ -182,7 +182,7 @@ initKadenceDemo();
     button.disabled = true;
     status.textContent = 'Sending…';
     try {
-      var response = await fetch('/api/contact', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({...Object.fromEntries(new FormData(form)), requestId: form.dataset.requestId || (form.dataset.requestId = crypto.randomUUID())})});
+      var response = await fetch('/api/contact', {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({...Object.fromEntries(new FormData(form)), analytics:window.TideLineAnalytics?.context(), requestId: form.dataset.requestId || (form.dataset.requestId = crypto.randomUUID())})});
       var result = await response.json();
       if (response.status === 429) throw new Error('rate_limited');
       if (!response.ok || !result.ok) throw new Error('contact_failed');
