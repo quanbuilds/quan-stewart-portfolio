@@ -35,6 +35,11 @@
       "database_name": "tideline-contact",
       "database_id": "0d9ef612-2f04-4754-8ab0-54e2b5888e21",
       "migrations_dir": "migrations"
+    },
+    {
+      "binding": "CRM_DB",
+      "database_name": "the-voyage",
+      "database_id": "9369a2a5-318c-4178-98df-a79de8d1d6ec"
     }
   ],
   "ratelimits": [

@@ -1,3 +1,4 @@
+import { savedAudit, saveAudit, memoryStatements } from './audit-memory.js';
 import { ROADMAP_CONTEXT } from './loki-roadmap.js';
 // Use the existing Workers AI binding with a reasoning model and its native response format.
 const MODEL = '@cf/openai/gpt-oss-120b';
@@ -197,17 +198,26 @@ export async function handleAudit(request, env, url) {
     try { await env.CONTACT_DB.prepare('INSERT INTO loki_audits (id, token_hash, created_at, updated_at, business_hint, last_message_json, turns_json, insights_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(id, await hash(access), now, now, hint, JSON.stringify(message), '[]', JSON.stringify(message.insights)).run(); }
     catch (error) { console.error('Loki audit start storage failed', error); return json(503, { ok: false, error: 'storage_unavailable' }); }
     const cutoff = new Date(Date.now() - 30*24*60*60*1000).toISOString();
-    await env.CONTACT_DB.prepare('DELETE FROM loki_audits WHERE id IN (SELECT id FROM loki_audits WHERE created_at < ? AND id NOT IN (SELECT audit_id FROM loki_text_optins) LIMIT 20)').bind(cutoff).run().catch(() => {});
+    await env.CONTACT_DB.prepare('DELETE FROM loki_audits WHERE id IN (SELECT id FROM loki_audits WHERE created_at < ? AND id NOT IN (SELECT audit_id FROM loki_text_optins) AND id NOT IN (SELECT audit_id FROM loki_audit_saves) LIMIT 20)').bind(cutoff).run().catch(() => {});
     return json(200, { ok: true, id, token: access, message });
   }
   const row = await auditRow(env, input); if (!row) return json(404, { ok: false, error: 'audit_not_found' });
+  if (url.pathname === '/api/audit/save') {
+    try { const result=await saveAudit(env,row,input); return json(result.status,{ok:result.status===200,...result}); }
+    catch { return json(503,{ok:false,error:'save_unavailable'}); }
+  }
   if (url.pathname === '/api/audit/state') {
-    return json(200, { ok: true, business: row.business_hint, message: JSON.parse(row.last_message_json || '{}'), turns: JSON.parse(row.turns_json || '[]'), report: row.result_json ? JSON.parse(row.result_json) : null });
+    const save=await savedAudit(env,row.id);
+    return json(200, { ok: true, saved:Boolean(save), email:save?.email || '', workspacePath:save?.workspace_path || '', business: row.business_hint, message: JSON.parse(row.last_message_json || '{}'), turns: JSON.parse(row.turns_json || '[]'), report: row.result_json ? JSON.parse(row.result_json) : null });
   }
   if (url.pathname === '/api/audit/delete') {
     const enrolled = await env.CONTACT_DB.prepare('SELECT id FROM loki_text_optins WHERE audit_id = ?').bind(row.id).first();
     if (enrolled) return json(409, { ok: false, error: 'text_enrollment_active' });
-    await env.CONTACT_DB.prepare('DELETE FROM loki_audits WHERE id = ?').bind(row.id).run();
+    await env.CONTACT_DB.batch([
+      env.CONTACT_DB.prepare('DELETE FROM loki_memory_files WHERE audit_id = ?').bind(row.id),
+      env.CONTACT_DB.prepare('DELETE FROM loki_audit_saves WHERE audit_id = ?').bind(row.id),
+      env.CONTACT_DB.prepare('DELETE FROM loki_audits WHERE id = ?').bind(row.id)
+    ]);
     return json(200, { ok: true });
   }
   if (url.pathname === '/api/audit/turn') {
@@ -228,6 +238,12 @@ export async function handleAudit(request, env, url) {
       const updated = await env.CONTACT_DB.prepare('UPDATE loki_audits SET turns_json = ?, last_message_json = ?, insights_json = ?, result_json = ?, updated_at = ?, revision = revision + 1 WHERE id = ? AND revision = ?').bind(JSON.stringify(next), JSON.stringify(message), JSON.stringify(message.insights), message.ready ? JSON.stringify(message) : row.result_json || '', new Date().toISOString(), row.id, row.revision).run();
       if (updated.meta?.changes !== 1) return json(409, { ok: false, error: 'retry_latest_turn' });
     } catch (error) { console.error('Loki audit turn storage failed', error); return json(503, { ok: false, error: 'storage_unavailable' }); }
+    const save=await savedAudit(env,row.id);
+    if(save){
+      const latest=await env.CONTACT_DB.prepare('SELECT * FROM loki_audits WHERE id = ?').bind(row.id).first();
+      // The conversation is authoritative; memory can be rebuilt from it after a transient failure.
+      try { await env.CONTACT_DB.batch(memoryStatements(env.CONTACT_DB,latest,save)); } catch { console.warn('Loki memory refresh pending'); }
+    }
     return json(200, { ok: true, message });
   }
   return json(404, { ok: false, error: 'not_found' });
