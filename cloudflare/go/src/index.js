@@ -6,6 +6,7 @@ const CONTACT_PRIMARY = "c.knudsen@tidelinestrats.com";
 const CONTACT_COPY = "q.stewart@tidelinestrats.com";
 const CONTACT_SENDER = "contact@tidelinestrats.com";
 import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from "./analytics.js";
+import { receiveWaitlist } from "./waitlist.js";
 import { handleAudit } from "./audit.js";
 import { handleOperator, refreshOperatorMoves } from "./operator.js";
 
@@ -174,6 +175,7 @@ export default {
     }
     if (url.pathname === "/api/wonplace/events") return collectWonplaceAnalytics(request, env);
     if (url.pathname === "/api/analytics/events") return collectAnalytics(request, env);
+    if (url.pathname === "/api/loki/waitlist") return receiveWaitlist(request, env, url);
     if (url.pathname === CONTACT_PATH) return receiveContact(request, env, url);
     if (url.pathname.startsWith("/api/audit/")) return handleAudit(request, env, url);
     if (url.pathname.startsWith("/api/operator/")) return handleOperator(request, env, url);

@@ -453,7 +453,7 @@
 .audit-save {padding:1rem;border-bottom:1px solid var(--line,#ddd);margin-bottom:1rem}.audit-save p {font-size:.85rem;margin:.5rem 0}.audit-save label {display:block;font-weight:600;margin-bottom:.5rem}
 
 /* Ask Loki is a conversation workspace; the same site navigation becomes its sidebar. */
-.site-navigation{view-transition-name:site-navigation}
+.site-navigation{position:relative;z-index:40;view-transition-name:site-navigation}
 body.audit-page{overflow:hidden}
 .audit-page .site-navigation{position:fixed;inset:0 auto 0 0;width:208px;display:flex;flex-direction:column;background:var(--paper,#fff);border-right:1px solid var(--line,#dbe4eb);z-index:10;padding:24px 12px;box-sizing:border-box}
 .audit-page header{padding:0 8px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:24px}

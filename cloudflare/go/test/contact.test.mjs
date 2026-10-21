@@ -11,6 +11,7 @@ const analyticsSource = (await readFile(new URL('../src/analytics.js', import.me
 const analyticsUrl = `data:text/javascript,${encodeURIComponent(analyticsSource)}`;
 const source = (await readFile(new URL('../src/index.js', import.meta.url), 'utf8'))
   .replace('import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from "./analytics.js";', `import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from ${JSON.stringify(analyticsUrl)};`)
+  .replace('import { receiveWaitlist } from "./waitlist.js";', 'import { receiveWaitlist } from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/waitlist.js', import.meta.url),'utf8')))+';')
   .replace('import { handleAudit } from "./audit.js";', `import { handleAudit } from "${auditUrl}";`)
   .replace('import { handleOperator, refreshOperatorMoves } from "./operator.js";', `import { handleOperator, refreshOperatorMoves } from "${operatorUrl}";`);
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;
