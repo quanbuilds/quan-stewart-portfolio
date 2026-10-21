@@ -42,4 +42,7 @@ fi
 wrangler_cli versions deploy "$VERSION_ID@100%" --profile "$TIDELINE_WRANGLER_PROFILE" --cwd "$BUILD_DIR/go" --yes --message "Deploy TideLine Loki owner app free test"
 
 # Cron Triggers are not versioned; reconcile them only after the intended version is active.
-wrangler_cli triggers deploy --profile "$TIDELINE_WRANGLER_PROFILE" --cwd "$BUILD_DIR/go"
+# Wrangler only publishes route/domain entries when this list is nonempty.
+# Reconcile schedules independently; the existing DNS-backed domains stay intact.
+node -e 'const fs=require("fs");const c=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));fs.writeFileSync(process.argv[2],JSON.stringify({name:c.name,compatibility_date:c.compatibility_date,workers_dev:c.workers_dev,routes:[],triggers:c.triggers}));' "$BUILD_DIR/go/wrangler.jsonc" "$BUILD_DIR/go/cron-only.jsonc"
+wrangler_cli triggers deploy --profile "$TIDELINE_WRANGLER_PROFILE" --config "$BUILD_DIR/go/cron-only.jsonc"
