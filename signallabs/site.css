@@ -360,7 +360,7 @@
 /* Ask Loki is one continuous message workspace. */
 #tab-audit .audit-wrap{max-width:960px;padding-top:24px;padding-bottom:0;}
 #tab-audit .audit-heading{margin-bottom:20px;}
-#tab-audit .audit-heading h1{font-size:clamp(26px,4vw,40px);}
+#tab-audit .audit-heading h2{font-size:clamp(26px,4vw,40px);}
 #tab-audit .audit-workspace{display:block;}
 #tab-audit .audit-workspace[hidden]{display:none;}
 #tab-audit .audit-conversation{display:flex;flex-direction:column;height:calc(100dvh - 260px);min-height:420px;}
@@ -466,7 +466,7 @@ body.audit-page{overflow:hidden}
 .audit-page #tab-audit .audit-wrap{height:100%;max-width:none;padding:0;display:flex;flex-direction:column;box-sizing:border-box}
 .audit-page #tab-audit .audit-heading{flex-shrink:0;padding:14px 28px;margin:0;border-bottom:1px solid var(--line,#dbe4eb);gap:12px;align-items:center}
 .audit-page #tab-audit .audit-heading img{width:32px;height:32px}
-.audit-page #tab-audit .audit-heading h1{font-size:20px;margin:0}
+.audit-page #tab-audit .audit-heading h2{font-size:20px;margin:0}
 .audit-page #tab-audit .audit-heading .eyebrow,.audit-page #tab-audit .audit-heading p{display:none}
 .audit-page #tab-audit .audit-workspace{flex:1;min-height:0;position:relative}
 .audit-page #tab-audit .audit-workspace[hidden]{display:none}
@@ -501,7 +501,7 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
  .audit-page .loki-toggle{justify-content:center}.audit-page .loki-toggle img{display:none}
  .audit-page .loki-links{padding:0}
  .audit-page #tab-audit{left:76px}
- .audit-page #tab-audit .audit-heading{padding:12px}.audit-page #tab-audit .audit-heading h1{font-size:17px}
+ .audit-page #tab-audit .audit-heading{padding:12px}.audit-page #tab-audit .audit-heading h2{font-size:17px}
  .audit-page #tab-audit .audit-conversation{padding:0 12px}.audit-page #tab-audit .audit-bubble{max-width:96%;padding:14px}
  .audit-page #tab-audit .audit-answer{gap:6px;padding:8px}.audit-page #tab-audit .audit-answer textarea{min-width:0}
  .audit-page #tab-audit .audit-answer button{padding:10px}
@@ -519,7 +519,7 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
 @media print{.audit-page .site-navigation,.audit-save-menu{display:none!important}.audit-page #tab-audit{position:static;height:auto}.audit-page #tab-audit .audit-wrap{height:auto}.audit-page{overflow:visible}}
 
 .audit-page #tab-audit .audit-heading{max-width:none;padding-right:200px}
-.audit-page #tab-audit .audit-heading h1{max-width:none;white-space:nowrap}
+.audit-page #tab-audit .audit-heading h2{max-width:none;white-space:nowrap}
 .audit-page #tab-audit .audit-save-menu{position:absolute;right:28px;top:-48px;margin:0}
 .audit-page #tab-audit .audit-transcript>*{flex-shrink:0}
 .audit-page #tab-audit .audit-status:empty{display:none}
@@ -531,3 +531,23 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
 }
 
 .audit-page .loki-links .tab.active{background:var(--tint);border-radius:6px}
+
+/* Crawlable service content follows the existing TideLine typography and navigation. */
+.skip-link{position:fixed;left:16px;top:-100px;z-index:100;background:var(--paper);color:var(--ink);padding:12px;border:2px solid var(--navy)}
+.skip-link:focus{top:12px}
+.content-page .logo{text-decoration:none}.content-page .tabs>a{text-decoration:none}
+.search-content{max-width:900px;margin:0 auto;padding:32px 24px 64px;line-height:1.75}
+.search-content h1{max-width:24ch;margin-top:20px;font-size:clamp(34px,4.6vw,52px)}
+.search-content h2{font-family:var(--font-display);line-height:1.25;font-size:28px;color:var(--navy-deep);margin:0 0 16px}
+.search-content h3{line-height:1.35}.search-content section{margin-top:42px}.search-content p,.search-content li{max-width:74ch}
+.search-content li+li{margin-top:10px}.search-lead{font-size:20px;color:var(--steel);line-height:1.65}
+.search-content a,.search-home-links a,.search-footer a{color:var(--navy-deep);text-underline-offset:3px}
+.search-content .cta-primary{color:#fff}.search-content .service-grid{align-items:start}.search-content .service-card{min-width:0}
+.breadcrumbs{font-size:13px;color:var(--steel);margin-bottom:32px}.search-related,.search-next{border-top:1px solid var(--line);padding-top:28px;margin-top:40px}
+.search-faq article+article{border-top:1px solid var(--line);padding-top:28px;margin-top:28px}
+.search-faq h2{font-size:25px}.search-home-links{max-width:1100px;margin:0 auto;padding:0 24px 56px;color:var(--steel);line-height:1.65}
+.search-home-links nav,.search-footer nav{display:flex;flex-wrap:wrap;gap:12px 24px}.search-footer{max-width:1100px;margin:0 auto;padding:28px 24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:24px;line-height:1.5;font-size:14px}
+.audit-page .search-footer{display:none}
+@media(max-width:600px){.search-content{padding-top:24px}.search-content h2{font-size:25px}.search-footer{flex-direction:column}.search-content .ctas{gap:18px}.content-page .tabs{padding-left:12px;padding-right:12px}.content-page .tab{padding:12px}}
+
+@media(max-width:800px){.search-content .service-grid{grid-template-columns:1fr}}

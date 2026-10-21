@@ -13,7 +13,8 @@
       fetch('/api/analytics/events',{method:'POST',headers:{'content-type':'application/json'},body,keepalive:true}).catch(()=>{});
     }catch{}
   };
-  track('page_view',app?'app':'home');if(app)track('app_open','app');
+  const landing=app?'app':location.pathname.startsWith('/services/')?'services':location.pathname.startsWith('/faq/')?'about':'home';
+  track('page_view',landing);if(app)track('app_open','app');
   document.addEventListener('click',event=>{
     const button=event.target.closest('[data-tab],#heroStartCta');if(!button)return;
     const page=button.id==='heroStartCta'?'audit':button.dataset.tab;
