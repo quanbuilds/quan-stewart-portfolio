@@ -36,6 +36,7 @@ export async function saveAudit(env,row,input) {
     writes.push(insert('opps',accountId,{name:row.business_hint.slice(0,120),stage:0,source:source.source,sourceNote:source.sourceNote,createdTs:now,stageTs:now,notes:'Business description supplied in Ask Loki. Contact name not provided.'}));
     writes.push(insert('contacts',contactId,{oppId:accountId,name:email,email,role:'Other',primary:true,title:'',phone:'',notes:source.sourceNote+' Business: '+row.business_hint,createdTs:now,...source}));
   }
+  writes.push(insert('tideline_links','audit:'+row.id,{kind:'audit_save',oppId:accountId,contactId,submittedAt:row.created_at,importedAt:now}));
   writes.push(insert('notes','loki-audit-'+row.id,{oppId:accountId,contactId,title:'Saved Ask Loki conversation',type:'Discovery',oppName:row.business_hint.slice(0,120),date:new Date(now).toISOString().slice(0,10),text:'Saved Ask Loki conversation. '+source.sourceNote+'\nBusiness: '+row.business_hint+'\nPrivate workspace: '+source.lokiWorkspace+row.id+'/',createdTs:now,updatedTs:now,by:'Loki',lokiAuditId:row.id,lokiWorkspace:source.lokiWorkspace+row.id+'/'}));
   await env.CRM_DB.batch(writes);
   const save={audit_id:row.id,email,workspace_path:source.lokiWorkspace+row.id+'/',crm_contact_id:contactId,crm_account_id:accountId,saved_at:new Date().toISOString()};
