@@ -3,10 +3,11 @@ import hashlib,json,os,pathlib,subprocess
 root=pathlib.Path.cwd()
 origin='https://tidelinestrats.com'
 cli=['npx','--yes','--package=wrangler@4.148.0','wrangler']
+profile=os.environ.get('TIDELINE_WRANGLER_PROFILE','default')
 env={**os.environ,'CLOUDFLARE_ACCOUNT_ID':'58008ae4816f34f96786f0f52834dce5'}
 def command(args): return subprocess.check_output(args,env=env)
 def query(database,sql):
-    return json.loads(command(cli+['d1','execute',database,'--remote','--profile','tideline','--config',str(root/'cloudflare/go/wrangler.jsonc'),'--command',sql,'--json']))[0]['results']
+    return json.loads(command(cli+['d1','execute',database,'--remote','--profile',profile,'--config',str(root/'cloudflare/go/wrangler.jsonc'),'--command',sql,'--json']))[0]['results']
 def post(path,body,expected=200):
     raw=command(['curl','-sS','--max-time','90',origin+'/api/audit/'+path,'-H','Origin: '+origin,'-H','Content-Type: application/json','--data-binary',json.dumps(body),'-w','\n%{http_code}'])
     payload,status=raw.rsplit(b'\n',1)
@@ -19,7 +20,7 @@ for asset in ['index.html','loki-audit.js','site.css']:
     actual=command(['curl','--compressed','-fsS',origin+('/' if asset=='index.html' else '/'+asset)])
     assert hashlib.sha256(actual).digest()==hashlib.sha256((root/'signallabs'/asset).read_bytes()).digest()
     evidence[asset]='matches committed asset'
-active=max(json.loads(command(cli+['deployments','list','--name','go','--profile','tideline','--json'])),key=lambda row:row['created_on'])
+active=max(json.loads(command(cli+['deployments','list','--name','go','--profile',profile,'--json'])),key=lambda row:row['created_on'])
 version=next(v['version_id'] for v in active['versions'] if v['percentage']==100)
 assert version in (pathlib.Path.home()/'.agent-workspaces/coordinator/logs'/f"{os.environ['AGENT_RELEASE_TASK']}.log").read_text()
 email='loki-memory-'+os.environ['AGENT_RELEASE_TASK']+'@example.invalid'
