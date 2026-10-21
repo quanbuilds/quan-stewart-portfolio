@@ -159,7 +159,7 @@
     setBusy(startButton, true);
     startStatus.textContent = 'Loki is preparing your first question…';
     try {
-      var data = await post('/api/audit/start', {business:business});
+      var data = await post('/api/audit/start', {business:business,analytics:window.TideLineAnalytics?.context()});
       session = {id:data.id, token:data.token}; count=0; hasReport=false; businessContext = business;
       saveStatus.textContent = '';
       document.getElementById('auditSaveLabel').textContent='Save conversation';
@@ -207,7 +207,7 @@
     var button=saveForm.querySelector('button');setBusy(button,true);saveForm.setAttribute('aria-busy','true');
     saveStatus.textContent='Saving your Loki…';
     try {
-      var data=await post('/api/audit/save',{id:session.id,token:session.token,email:document.getElementById('auditEmail').value.trim(),consent:true});
+      var data=await post('/api/audit/save',{id:session.id,token:session.token,email:document.getElementById('auditEmail').value.trim(),consent:true,analytics:window.TideLineAnalytics?.context()});
       try {localStorage.setItem(savedKey,JSON.stringify(session));showSaved(data.email);document.getElementById('auditSaveToggle').focus({preventScroll:true});}
       catch (_) {saveStatus.textContent='Saved to your private workspace. This browser blocks storage, so it cannot resume automatically after refresh.';}
     } catch(error){saveStatus.textContent=error.code==='audit_already_saved'?'This conversation is already saved with another email.':errorText(error);}

@@ -6,7 +6,8 @@ const CONTACT_PRIMARY = "c.knudsen@tidelinestrats.com";
 const CONTACT_COPY = "q.stewart@tidelinestrats.com";
 const CONTACT_SENDER = "contact@tidelinestrats.com";
 import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from "./analytics.js";
-import { receiveWaitlist } from "./waitlist.js";
+import { syncIntake, reconcileIntakes, recordConversion } from "./intake.js";
+import { receiveWaitlist, normalizePhone } from "./waitlist.js";
 import { handleAudit } from "./audit.js";
 import { handleOperator, refreshOperatorMoves } from "./operator.js";
 
@@ -109,6 +110,8 @@ async function receiveContact(request, env, url) {
     const inserted = await env.CONTACT_DB.prepare(
       "INSERT OR IGNORE INTO contact_inquiries (id, submitted_at, name, business, email, phone, message, notification_detail) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     ).bind(id, new Date().toISOString(), name, business, email, phone, message, `awaiting Cloudflare email setup for ${CONTACT_PRIMARY} and ${CONTACT_COPY}`).run();
+    await syncIntake(env,'contact',id);
+    await recordConversion(env,request,input.analytics,'contact_submitted',id);
     if (inserted.meta?.changes === 0) {
       const prior = await env.CONTACT_DB.prepare(
         "SELECT notification_status FROM contact_inquiries WHERE id = ?"
@@ -175,14 +178,30 @@ export default {
     }
     if (url.pathname === "/api/wonplace/events") return collectWonplaceAnalytics(request, env);
     if (url.pathname === "/api/analytics/events") return collectAnalytics(request, env);
-    if (url.pathname === "/api/loki/waitlist") return receiveWaitlist(request, env, url);
+    if (url.pathname === "/api/loki/waitlist") {
+      const copy=request.clone(),response=await receiveWaitlist(request,env,url);
+      if(response.ok){const input=await copy.json().catch(()=>null);if(input&&!input.website){const phone=normalizePhone(input.phone);if(phone){await syncIntake(env,'waitlist',phone);await recordConversion(env,request,input.analytics,'waitlist_joined',phone);}}}
+      return response;
+    }
     if (url.pathname === CONTACT_PATH) return receiveContact(request, env, url);
-    if (url.pathname.startsWith("/api/audit/")) return handleAudit(request, env, url);
+    if (url.pathname.startsWith("/api/audit/")) {
+      const copy=request.clone(),response=await handleAudit(request,env,url);
+      if(response.ok&&['/api/audit/start','/api/audit/save'].includes(url.pathname)){
+        // Successful handlers have already enforced the 6KB request bound.
+        const input=await copy.json(),result=await response.clone().json();
+        await recordConversion(env,request,input.analytics,url.pathname.endsWith('/start')?'audit_started':'audit_saved',result.id||input.id);
+      }
+      return response;
+    }
     if (url.pathname.startsWith("/api/operator/")) return handleOperator(request, env, url);
     return env.ASSETS.fetch(request);
   },
-  async scheduled(_event, env) {
-    await refreshOperatorMoves(env);
-    await expireAnalytics(env);
+  async scheduled(event, env) {
+    await reconcileIntakes(env);
+    if(event.cron === '0 14 * * *'){
+      await refreshOperatorMoves(env);
+      await expireAnalytics(env);
+      await env.CONTACT_DB.prepare('DELETE FROM conversion_events WHERE created_at < ?').bind(new Date(Date.now()-90*86400000).toISOString()).run();
+    }
   },
 };

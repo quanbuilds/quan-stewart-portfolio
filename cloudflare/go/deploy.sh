@@ -40,3 +40,6 @@ if [ -z "$VERSION_ID" ]; then
   exit 1
 fi
 wrangler_cli versions deploy "$VERSION_ID@100%" --profile "$TIDELINE_WRANGLER_PROFILE" --cwd "$BUILD_DIR/go" --yes --message "Deploy TideLine Loki owner app free test"
+
+# Cron Triggers are not versioned; reconcile them only after the intended version is active.
+wrangler_cli triggers deploy --profile "$TIDELINE_WRANGLER_PROFILE" --cwd "$BUILD_DIR/go"

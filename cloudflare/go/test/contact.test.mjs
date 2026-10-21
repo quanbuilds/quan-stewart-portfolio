@@ -9,9 +9,11 @@ const operatorSource = (await readFile(new URL('../src/operator.js', import.meta
 const operatorUrl = `data:text/javascript,${encodeURIComponent(operatorSource)}`;
 const analyticsSource = (await readFile(new URL('../src/analytics.js', import.meta.url), 'utf8')).replace("from './audit.js'", `from ${JSON.stringify(auditUrl)}`);
 const analyticsUrl = `data:text/javascript,${encodeURIComponent(analyticsSource)}`;
+const intakeUrl='data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/intake.js',import.meta.url),'utf8'));
 const source = (await readFile(new URL('../src/index.js', import.meta.url), 'utf8'))
   .replace('import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from "./analytics.js";', `import { collectAnalytics, collectWonplaceAnalytics, expireAnalytics } from ${JSON.stringify(analyticsUrl)};`)
-  .replace('import { receiveWaitlist } from "./waitlist.js";', 'import { receiveWaitlist } from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/waitlist.js', import.meta.url),'utf8')))+';')
+  .replace('import { syncIntake, reconcileIntakes, recordConversion } from "./intake.js";', 'import { syncIntake, reconcileIntakes, recordConversion } from '+JSON.stringify(intakeUrl)+';')
+  .replace('import { receiveWaitlist, normalizePhone } from "./waitlist.js";', 'import { receiveWaitlist, normalizePhone } from '+JSON.stringify('data:text/javascript,'+encodeURIComponent(await readFile(new URL('../src/waitlist.js', import.meta.url),'utf8')))+';')
   .replace('import { handleAudit } from "./audit.js";', `import { handleAudit } from "${auditUrl}";`)
   .replace('import { handleOperator, refreshOperatorMoves } from "./operator.js";', `import { handleOperator, refreshOperatorMoves } from "${operatorUrl}";`);
 const worker = (await import(`data:text/javascript,${encodeURIComponent(source)}`)).default;

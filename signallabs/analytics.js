@@ -5,6 +5,7 @@
   try{session=sessionStorage.getItem('tideline-visit-v1')||crypto.randomUUID();sessionStorage.setItem('tideline-visit-v1',session);}catch{return;}
   const app=location.pathname.startsWith('/loki/');
   const device=innerWidth<700?'phone':innerWidth<1050?'tablet':'desktop';
+  window.TideLineAnalytics={context:()=>({session,device})};
   const track=(kind,page)=>{
     let referrer='';try{referrer=new URL(document.referrer).origin;}catch{}
     const body=JSON.stringify({id:crypto.randomUUID(),session,kind,page,device,referrer});
