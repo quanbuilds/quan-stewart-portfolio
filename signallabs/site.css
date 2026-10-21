@@ -451,3 +451,83 @@
 @media(prefers-reduced-motion:reduce){.audit-plan-open{transition:none!important;transform:none!important;}}
 
 .audit-save {padding:1rem;border-bottom:1px solid var(--line,#ddd);margin-bottom:1rem}.audit-save p {font-size:.85rem;margin:.5rem 0}.audit-save label {display:block;font-weight:600;margin-bottom:.5rem}
+
+/* Ask Loki is a conversation workspace; the same site navigation becomes its sidebar. */
+.site-navigation{view-transition-name:site-navigation}
+body.audit-page{overflow:hidden}
+.audit-page .site-navigation{position:fixed;inset:0 auto 0 0;width:208px;display:flex;flex-direction:column;background:var(--paper,#fff);border-right:1px solid var(--line,#dbe4eb);z-index:10;padding:24px 12px;box-sizing:border-box}
+.audit-page header{padding:0 8px 28px;display:flex;flex-direction:column;align-items:flex-start;gap:24px}
+.audit-page .tabs{margin:0;padding:0;display:flex;flex-direction:column;align-items:stretch;gap:6px;width:100%;border:0}
+.audit-page .tabs>.tab,.audit-page .loki-toggle{width:100%;text-align:left;box-sizing:border-box}
+.audit-page .loki-links{position:static;box-shadow:none;border:0;padding:4px 0 4px 16px;background:transparent;min-width:0}
+.audit-page .loki-nav .loki-links{display:flex;flex-direction:column}
+.audit-page .loki-nav:not([open])>.loki-links{display:flex}
+.audit-page #tab-audit{position:fixed;inset:0 0 0 208px;height:100dvh;min-width:0}
+.audit-page #tab-audit .audit-wrap{height:100%;max-width:none;padding:0;display:flex;flex-direction:column;box-sizing:border-box}
+.audit-page #tab-audit .audit-heading{flex-shrink:0;padding:14px 28px;margin:0;border-bottom:1px solid var(--line,#dbe4eb);gap:12px;align-items:center}
+.audit-page #tab-audit .audit-heading img{width:32px;height:32px}
+.audit-page #tab-audit .audit-heading h1{font-size:20px;margin:0}
+.audit-page #tab-audit .audit-heading .eyebrow,.audit-page #tab-audit .audit-heading p{display:none}
+.audit-page #tab-audit .audit-workspace{flex:1;min-height:0;position:relative}
+.audit-page #tab-audit .audit-workspace[hidden]{display:none}
+.audit-page #tab-audit .audit-conversation{height:100%;min-height:0;padding:0 28px;box-sizing:border-box;max-width:1100px;margin:auto}
+.audit-page #tab-audit .audit-transcript{padding:24px 0;overscroll-behavior:contain;scrollbar-gutter:stable;flex:1;min-height:0}
+.audit-page #tab-audit .audit-bubble{max-width:88%;line-height:1.65}
+.audit-page #tab-audit .audit-answer{position:relative;bottom:auto;margin:0;flex-shrink:0}
+.audit-page #tab-audit .audit-status{margin:6px 0;min-height:18px;font-size:12px;flex-shrink:0}
+.audit-page #tab-audit .audit-onboard{width:min(680px,calc(100% - 48px));margin:auto;box-sizing:border-box}
+.audit-save-menu{position:relative;align-self:flex-end;flex-shrink:0;margin:8px 0 0;font-size:13px;z-index:5}
+.audit-save-menu>summary{cursor:pointer;padding:6px 8px;list-style:none;color:var(--muted,#536675)}
+.audit-save-menu>summary::-webkit-details-marker{display:none}
+.audit-save-menu[open]>summary>span:last-child{display:inline-block;transform:rotate(45deg)}
+.audit-save-menu .audit-save{position:absolute;top:100%;right:0;width:min(380px,calc(100vw - 48px));padding:18px;margin:4px 0 0;background:var(--paper,#fff);border:1px solid var(--line,#dbe4eb);border-radius:14px;box-shadow:0 12px 40px #10283d24;box-sizing:border-box}
+.audit-save-menu .audit-start-row{flex-wrap:wrap}
+.audit-save-menu .audit-start-row input{min-width:0;width:100%}
+::view-transition-group(*){animation-duration:380ms;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root){animation:page-away 300ms cubic-bezier(.22,1,.36,1) both}
+::view-transition-new(root){animation:page-arrive 380ms cubic-bezier(.22,1,.36,1) both}
+@keyframes page-away{to{opacity:0;transform:translateX(-18px)}}
+@keyframes page-arrive{from{opacity:0;transform:translateX(18px)}}
+html[data-page-direction="out"]::view-transition-old(root){animation-name:page-back-away}
+html[data-page-direction="out"]::view-transition-new(root){animation-name:page-back-arrive}
+@keyframes page-back-away{to{opacity:0;transform:translateX(18px)}}
+@keyframes page-back-arrive{from{opacity:0;transform:translateX(-18px)}}
+@media(max-width:700px){
+ .audit-page .site-navigation{width:76px;padding:14px 6px}
+ .audit-page header{padding:0 0 20px;align-items:center;gap:14px}
+ .audit-page .logo-wordmark,.audit-page .theme-label{display:none}
+ .audit-page .logo{gap:0}.audit-page .tideline-logo{width:48px}
+ .audit-page .tabs>.tab,.audit-page .loki-toggle,.audit-page .loki-links .tab{font-size:11px;padding:10px 4px;text-align:center;white-space:normal}
+ .audit-page .loki-toggle{justify-content:center}.audit-page .loki-toggle img{display:none}
+ .audit-page .loki-links{padding:0}
+ .audit-page #tab-audit{left:76px}
+ .audit-page #tab-audit .audit-heading{padding:12px}.audit-page #tab-audit .audit-heading h1{font-size:17px}
+ .audit-page #tab-audit .audit-conversation{padding:0 12px}.audit-page #tab-audit .audit-bubble{max-width:96%;padding:14px}
+ .audit-page #tab-audit .audit-answer{gap:6px;padding:8px}.audit-page #tab-audit .audit-answer textarea{min-width:0}
+ .audit-page #tab-audit .audit-answer button{padding:10px}
+ .audit-page #tab-audit .audit-onboard{width:calc(100% - 24px);padding:16px}
+ .audit-page #tab-audit .audit-result{padding:16px}
+ .audit-save-menu .audit-save{width:min(340px,calc(100vw - 104px))}
+}
+@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}.audit-page #tab-audit .audit-transcript{scroll-behavior:auto}}
+
+.audit-page .loki-toggle{pointer-events:none;cursor:default}
+.audit-page #tab-audit .audit-conversation{height:100%;min-height:0;border:0}
+.audit-page #tab-audit .audit-answer{position:relative}
+.audit-page #tab-audit .audit-bubble{max-width:88%}
+@media(max-width:700px){.audit-page #tab-audit .audit-bubble{max-width:96%}}
+@media print{.audit-page .site-navigation,.audit-save-menu{display:none!important}.audit-page #tab-audit{position:static;height:auto}.audit-page #tab-audit .audit-wrap{height:auto}.audit-page{overflow:visible}}
+
+.audit-page #tab-audit .audit-heading{max-width:none;padding-right:200px}
+.audit-page #tab-audit .audit-heading h1{max-width:none;white-space:nowrap}
+.audit-page #tab-audit .audit-save-menu{position:absolute;right:28px;top:-48px;margin:0}
+.audit-page #tab-audit .audit-transcript>*{flex-shrink:0}
+.audit-page #tab-audit .audit-status:empty{display:none}
+.audit-page #tab-audit .audit-answer textarea{resize:none;max-height:28dvh}
+@media(max-width:700px){
+ .audit-page #tab-audit .audit-heading{padding-right:140px;gap:6px}
+ .audit-page #tab-audit .audit-heading img{display:none}
+ .audit-page #tab-audit .audit-save-menu{right:8px;top:-41px;font-size:11px}
+}
+
+.audit-page .loki-links .tab.active{background:var(--tint);border-radius:6px}
