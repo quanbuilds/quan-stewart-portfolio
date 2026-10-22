@@ -11,3 +11,6 @@
 
 /__release.json
   X-Robots-Tag: noindex
+
+/preview/*
+  X-Robots-Tag: noindex
