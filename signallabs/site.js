@@ -186,7 +186,6 @@ initKadenceDemo();
       var result = await response.json();
       if (response.status === 429) throw new Error('rate_limited');
       if (!response.ok || !result.ok) throw new Error('contact_failed');
-      if(!result.duplicate&&!form.elements.website?.value)window.TideLineGA4?.conversion('contact');
       form.reset();
       delete form.dataset.requestId;
       if (result.notificationStatus === 'sent') { status.textContent = 'Received. We will review your message and follow up.'; } else { status.innerHTML = 'Your message was saved, but email delivery is pending. If urgent, <a href="mailto:c.knudsen@tidelinestrats.com?cc=q.stewart%40tidelinestrats.com">email Cody directly and copy Quan</a>.'; }
