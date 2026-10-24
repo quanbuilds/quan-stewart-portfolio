@@ -37,7 +37,7 @@ export async function receiveWaitlist(request, env, url) {
   const phone=normalizePhone(input.phone);
   if (!phone || input.consent !== true) return reply(400,{ok:false,error:"phone_and_consent_required"});
   try {
-    await env.CONTACT_DB.prepare("INSERT OR IGNORE INTO loki_waitlist (phone, submitted_at) VALUES (?, ?)").bind(phone,new Date().toISOString()).run();
-    return reply(200,{ok:true});
+    const inserted=await env.CONTACT_DB.prepare("INSERT OR IGNORE INTO loki_waitlist (phone, submitted_at) VALUES (?, ?)").bind(phone,new Date().toISOString()).run();
+    return reply(200,{ok:true,duplicate:inserted?.meta?.changes===0});
   } catch { return reply(503,{ok:false,error:"storage_unavailable"}); }
 }
