@@ -25,28 +25,6 @@ systemDark.addEventListener?.('change', function(event){
 });
 var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function updateShip(){
-  var voyage = document.querySelector('.voyage');
-  var stage = document.querySelector('.voyage-stage');
-  var shipEl = document.getElementById('voyageShip');
-  if(!voyage || !stage || !shipEl) return;
-  if(reduceMotion){
-    shipEl.style.transform = 'translateX(' + ((stage.clientWidth - shipEl.offsetWidth) / 2) + 'px)';
-    return;
-  }
-  var rect = voyage.getBoundingClientRect();
-  var vh = window.innerHeight;
-  var totalDist = vh + rect.height;
-  var scrolled = vh - rect.top;
-  var progress = totalDist > 0 ? scrolled / totalDist : 0;
-  progress = Math.max(0, Math.min(1, progress));
-  var maxX = Math.max(0, stage.clientWidth - shipEl.offsetWidth - 40);
-  shipEl.style.transform = 'translateX(' + (progress * maxX) + 'px)';
-}
-window.addEventListener('scroll', function(){ requestAnimationFrame(updateShip); }, {passive:true});
-window.addEventListener('resize', updateShip);
-updateShip();
-
 var currentPage = 'home';
 var pageTransition;
 document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
@@ -57,9 +35,6 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
     currentPage = page;
     function switchPage(){
       if (page !== currentPage) return;
-      document.body.classList.toggle('audit-page', page === 'audit');
-      document.getElementById('lokiNav').open = page === 'audit';
-      document.querySelector('#lokiNav>summary').tabIndex = page === 'audit' ? -1 : 0;
       document.querySelectorAll('.tab[data-tab]').forEach(function(b){
         b.classList.toggle('active', b.dataset.tab === page);
         if (b.dataset.tab === page) b.setAttribute('aria-current','page');
@@ -68,7 +43,6 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
       document.querySelectorAll('.tabpanel').forEach(function(p){p.classList.toggle('active',p.id === 'tab-'+page);});
       history.replaceState(null, '', page === 'home' ? location.pathname + location.search : '#' + page);
       window.scrollTo({top:0,behavior:'auto'});
-      requestAnimationFrame(updateShip);
     }
     if (pageTransition) pageTransition.skipTransition();
     if (!reduceMotion && document.startViewTransition) {
@@ -86,21 +60,20 @@ document.querySelectorAll('.tab[data-tab]').forEach(function(btn){
 // Deep links from crawlable service pages open the intended existing workspace.
 function openLinkedSection(){
   var page=location.hash.slice(1);
-  if (['home','audit','services','about','contact'].includes(page)) document.querySelector('.tab[data-tab="'+page+'"]')?.click();
+  if (page === 'audit') {
+    document.querySelectorAll('.tabpanel').forEach(panel => panel.classList.toggle('active', panel.id === 'tab-audit'));
+    document.querySelectorAll('.tab[data-tab]').forEach(button => {
+      button.classList.remove('active');
+      button.removeAttribute('aria-current');
+    });
+    currentPage = 'audit';
+    return;
+  }
+  if (['home','services','about','contact'].includes(page)) document.querySelector('.tab[data-tab="'+page+'"]')?.click();
 }
 openLinkedSection();
 window.addEventListener('hashchange',openLinkedSection);
 
-var partnershipCta = document.querySelector('.cta-secondary');
-if(partnershipCta){partnershipCta.addEventListener('click',function(e){e.preventDefault();document.querySelector('.tab[data-tab="services"]')?.click();});}
-var heroStartCta = document.getElementById('heroStartCta');
-if(heroStartCta){
-  heroStartCta.addEventListener('click', function(e){
-    e.preventDefault();
-    var auditTabBtn = document.querySelector('.tab[data-tab="audit"]');
-    if(auditTabBtn){ auditTabBtn.click(); }
-  });
-}
 function initOneplaceDemo(){
   var frame = document.getElementById('op2Frame');
   if(!frame) return;
@@ -194,19 +167,4 @@ initKadenceDemo();
       status.innerHTML = error.message === 'rate_limited' ? 'Too many attempts. Please wait a minute and try again.' : 'The form did not go through. Please <a href="mailto:c.knudsen@tidelinestrats.com?cc=q.stewart%40tidelinestrats.com">email Cody directly and copy Quan</a>.';
     } finally {button.disabled = false;}
   });
-})();
-
-// Loki navigation disclosure.
-
-(function(){
-  var menu=document.getElementById('lokiNav');
-  menu.querySelectorAll('.tab').forEach(function(link){link.addEventListener('click',function(){if(!document.body.classList.contains('audit-page')) menu.open=false;});});
-  document.addEventListener('click',function(event){if(!document.body.classList.contains('audit-page')&&!menu.contains(event.target))menu.open=false;});
-  document.addEventListener('keydown',function(event){
-    if(event.key!=='Escape') return;
-    var save=document.getElementById('auditSaveMenu');
-    if(save?.open){save.open=false;document.getElementById('auditSaveToggle').focus();}
-    if(!document.body.classList.contains('audit-page')&&menu.open){menu.open=false;menu.querySelector('summary').focus();}
-  });
-  document.addEventListener('click',function(event){var save=document.getElementById('auditSaveMenu');if(save?.open&&!save.contains(event.target))save.open=false;});
 })();
