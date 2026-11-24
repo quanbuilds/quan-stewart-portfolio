@@ -1,3 +1,12 @@
+var currentPath = location.pathname.replace(/\/$/, '') || '/';
+document.querySelectorAll('.site-navigation .tab[href]').forEach(function(tab) {
+  var tabPath = new URL(tab.href).pathname.replace(/\/$/, '') || '/';
+  var active = tabPath === currentPath;
+  tab.classList.toggle('active', active);
+  if (active) tab.setAttribute('aria-current', 'page');
+  else tab.removeAttribute('aria-current');
+});
+
 
 var themeToggle = document.getElementById('themeToggle');
 var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
