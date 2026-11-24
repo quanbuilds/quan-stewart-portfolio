@@ -564,3 +564,5 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
 .construction-status li{display:grid;gap:4px;padding:10px 16px;border:1px solid var(--line);background:var(--paper);color:var(--navy-deep)}
 .construction-status span{font-size:13px;color:var(--steel)}
 #contact .contact-wrap{padding-top:44px}
+
+.site-navigation .tabs > a.tab{text-decoration:none}

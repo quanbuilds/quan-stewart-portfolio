@@ -8,8 +8,8 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="site.css" rel="stylesheet"/>
-<link href="assets/brand/tideline-boat-transparent.png" rel="icon" type="image/png"/><title>TideLine Strategies</title>
+<link href="/site.css" rel="stylesheet"/>
+<link href="/assets/brand/tideline-boat-transparent.png" rel="icon" type="image/png"/><title>TideLine Strategies</title>
 <meta name="description" content="The TideLine Strategies site is under construction. Explore WonPlace or contact TideLine."><meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://tidelinestrats.com/">
 <meta property="og:type" content="website"><meta property="og:site_name" content="TideLine Strategies"><meta property="og:locale" content="en_US"><meta property="og:url" content="https://tidelinestrats.com/"><meta property="og:title" content="TideLine Strategies"><meta property="og:description" content="The TideLine Strategies site is under construction. Explore WonPlace or contact TideLine."><meta property="og:image" content="https://tidelinestrats.com/assets/illustrations/hero-bust.webp"><meta property="og:image:alt" content="TideLine Strategies illustration">
@@ -17,9 +17,17 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://tidelinestrats.com/#organization","name":"TideLine Strategies","url":"https://tidelinestrats.com/","description":"Business operations consulting, workflow automation and custom software for owner-led service businesses.","logo":"https://tidelinestrats.com/assets/brand/tideline-boat-transparent.png"},{"@type":"WebSite","@id":"https://tidelinestrats.com/#website","name":"TideLine Strategies","url":"https://tidelinestrats.com/","publisher":{"@id":"https://tidelinestrats.com/#organization"},"inLanguage":"en"},{"@type":"WebPage","@id":"https://tidelinestrats.com/#page","url":"https://tidelinestrats.com/","name":"TideLine Strategies","isPartOf":{"@id":"https://tidelinestrats.com/#website"},"about":{"@id":"https://tidelinestrats.com/#organization"},"inLanguage":"en"}]}</script></head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-navigation">
+<div class="site-navigation">
+<header>
 <div class="logo"><span aria-hidden="true" class="tideline-logo"></span><span class="logo-wordmark">TideLine</span></div>
 </header>
+<nav class="tabs" aria-label="Main navigation">
+<a class="tab active" href="/" aria-current="page">Home</a>
+<a class="tab" href="/#services">Services</a>
+<a class="tab" href="/#about">About</a>
+<a class="tab" href="/contact/">Contact</a>
+</nav>
+</div>
 <main id="main">
 <section class="hero construction" aria-labelledby="construction-title">
 <div class="hero-inner">
@@ -27,32 +35,16 @@
 <h1 id="construction-title">Under construction</h1>
 <p class="sub">We’re updating the TideLine website.</p>
 <ul class="construction-status" aria-label="Page status">
-<li><strong>About</strong> <span>Under construction</span></li>
-<li><strong>Services</strong> <span>Under construction</span></li>
+<li id="about"><strong>About</strong> <span>Under construction</span></li>
+<li id="services"><strong>Services</strong> <span>Under construction</span></li>
 </ul>
 <div class="ctas">
 <a class="cta-primary" href="https://wonplace.tidelinestrats.com/">Visit WonPlace</a>
-<a class="cta-secondary" href="#contact">Contact TideLine</a>
+<a class="cta-secondary" href="/contact/">Contact TideLine</a>
 </div>
 </div>
-</section>
-<section id="contact" aria-labelledby="contact-title">
-<div class="contact-wrap">
-<h2 id="contact-title">Contact TideLine</h2>
-<form action="/api/contact" class="contact-form" id="contactForm" method="post">
-<div class="form-row"><label for="contact-name">Name</label><input autocomplete="name" id="contact-name" maxlength="120" name="name" required=""/></div>
-<div class="form-row"><label for="contact-business">Business</label><input autocomplete="organization" id="contact-business" maxlength="180" name="business" required=""/></div>
-<div class="form-row"><label for="contact-email">Email</label><input autocomplete="email" id="contact-email" maxlength="180" name="email" required="" type="email"/></div>
-<div class="form-row"><label for="contact-phone">Phone (optional)</label><input autocomplete="tel" id="contact-phone" maxlength="80" name="phone" type="tel"/></div>
-<div class="form-row"><label for="contact-message">What work would you like to make easier?</label><textarea id="contact-message" maxlength="2000" name="message" required="" rows="5"></textarea></div>
-<div aria-hidden="true" class="form-trap"><label for="contact-website">Website</label><input autocomplete="off" id="contact-website" name="website" tabindex="-1"/></div>
-<p class="form-note">We use your details to respond to your message.</p>
-<button class="cta-primary" type="submit">Request a conversation</button>
-<p aria-live="polite" class="form-status" id="contactStatus" role="status"></p>
-</form></div>
 </section>
 </main>
-<script src="site.js" defer></script>
 
 <script src="/analytics.js" defer></script><script src="/ga4.js" defer></script>
 </body>

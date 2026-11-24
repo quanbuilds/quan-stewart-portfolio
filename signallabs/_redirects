@@ -10,5 +10,4 @@
 /preview/* / 302
 /about / 302
 /about/* / 302
-/contact /#contact 302
-/contact/ /#contact 302
+/contact /contact/ 302
