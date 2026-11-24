@@ -1,7 +1,6 @@
 # TideLine Strategies
 
-The TideLine website is under construction.
+About and Services are under construction.
 
-- [WonPlace](https://wonplace.tidelinestrats.com/): Class scheduling, attendance, makeups, enrollment, and family communication.
-- [About](https://tidelinestrats.com/#about)
-- [Contact](https://tidelinestrats.com/#contact)
+- [WonPlace](https://wonplace.tidelinestrats.com/)
+- [Contact](https://tidelinestrats.com/contact/)
