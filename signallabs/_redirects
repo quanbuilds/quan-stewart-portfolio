@@ -1,5 +1,5 @@
-/services / 302
-/services/ / 302
+/services /services/ 302
+/services/ / 200
 /services/* / 302
 /loki / 302
 /loki/ / 302
@@ -8,6 +8,7 @@
 /faq/* / 302
 /preview / 302
 /preview/* / 302
-/about / 302
+/about /about/ 302
+/about/ / 200
 /about/* / 302
 /contact /contact/ 302
