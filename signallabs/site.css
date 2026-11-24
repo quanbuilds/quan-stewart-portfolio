@@ -559,3 +559,8 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
 .construction .hero-inner{text-align:center}
 .construction h1,.construction .sub{margin-inline:auto}
 .construction .ctas{justify-content:center}
+.construction .hero-inner{padding-bottom:56px}
+.construction-status{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin:0 0 28px;padding:0;list-style:none}
+.construction-status li{display:grid;gap:4px;padding:10px 16px;border:1px solid var(--line);background:var(--paper);color:var(--navy-deep)}
+.construction-status span{font-size:13px;color:var(--steel)}
+#contact .contact-wrap{padding-top:44px}
