@@ -1,3 +1,28 @@
+
+var themeToggle = document.getElementById('themeToggle');
+var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+var savedTheme;
+try { savedTheme = localStorage.getItem('tideline-theme'); } catch (_) {}
+function applyTheme(theme){
+  document.documentElement.dataset.theme = theme;
+  if (!themeToggle) return;
+  var dark = theme === 'dark';
+  themeToggle.setAttribute('aria-pressed', String(dark));
+  themeToggle.setAttribute('aria-label', dark ? 'Turn on light mode' : 'Turn on dark mode');
+  themeToggle.querySelector('.theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
+  themeToggle.querySelector('.theme-icon').textContent = dark ? '☀' : '☾';
+}
+applyTheme(savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : (systemDark.matches ? 'dark' : 'light'));
+themeToggle?.addEventListener('click', function(){
+  var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem('tideline-theme', next); } catch (_) {}
+});
+systemDark.addEventListener?.('change', function(event){
+  var preference;
+  try { preference = localStorage.getItem('tideline-theme'); } catch (_) {}
+  if (preference !== 'dark' && preference !== 'light') applyTheme(event.matches ? 'dark' : 'light');
+});
 (function(){
   var form = document.getElementById('contactForm');
   var status = document.getElementById('contactStatus');
