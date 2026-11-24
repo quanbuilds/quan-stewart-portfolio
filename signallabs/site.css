@@ -551,3 +551,11 @@ html[data-page-direction="out"]::view-transition-new(root){animation-name:page-b
 @media(max-width:600px){.search-content{padding-top:24px}.search-content h2{font-size:25px}.search-footer{flex-direction:column}.search-content .ctas{gap:18px}.content-page .tabs{padding-left:12px;padding-right:12px}.content-page .tab{padding:12px}}
 
 @media(max-width:800px){.search-content .service-grid{grid-template-columns:1fr}}
+
+/* Temporary public landing */
+.construction .hero-inner{max-width:720px}
+.construction-stripe{width:112px;height:8px;margin:0 auto 26px;border-radius:4px;background:repeating-linear-gradient(125deg,var(--navy) 0 9px,var(--tint) 9px 17px)}
+.construction .sub{max-width:40ch}
+.construction .hero-inner{text-align:center}
+.construction h1,.construction .sub{margin-inline:auto}
+.construction .ctas{justify-content:center}
